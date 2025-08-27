@@ -1,6 +1,6 @@
 # Installing Fil-C
 
-The easiest way to install Fil-C is using a binary release. It's also possible to build from source.
+The easiest way to install [Fil-C](index.html) is using a binary release. It's also possible to build from source.
 
 Fil-C currently only supports Linux/X86_64.
 
