@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fil-C</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+<h1>Programs That Work in Fil-C</h1>
+
+<p>Lots of programs work in Fil-C with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.</p>
+
+<ul>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/usermusl">musl</a>. Used as Fil-C's libc. Significant changes required (replacing musl's inline assembly for calling syscalls with usage of Fil-C's <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h">syscall API</a>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/libcxxabi">libc++abi</a>. Required moderate changes to the C++ exception personality function so that it uses Fil-C's variant of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h">libunwind</a> and Fil-C's way of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_eh_landing_pad.h">tracking exception tables</a>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/libcxx">libc++</a>. Tiny changes only, mostly to invoke futexes using Fil-C's syscall API.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/Python-3.12.5">Python 3.12.5</a>. Moderate changes required, mostly to switch the Python GC's headers from <code>uintptr_t</code> to a pointer type so they preserve capability.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2">bzip2</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip3">bzip3</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/curl-8.9.1">curl 8.9.1</a>. <em>Build system changes only (version script handling).</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12">dask 0.5.12</a>. One tiny change: use <code>fork(2)</code> instead of <code>vfork(2)</code>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1">expat 2.7.1</a>. <em>Build system changes only (version script handling).</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1">icu4c 76.1</a>. Tiny changes (roughly 4KB patch).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b">jpeb 6b</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libarchive-3.7.4">libarchive 3.7.4</a>. Tiny changes (red-black tree and resizable array need to use pointer type instead of <code>uintptr_t</code>).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libedit-20240808-3.1">libedit 20240808-3.1</a>. Tiny changes (that are more about porting to musl than about Fil-C).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libevent-2.1.12">libevent 2.1.12</a>. <em>Changes to test suite only, works out of the box otherwise.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libffi-3.4.6">libffi 3.4.6</a>. Moderate changes needed because libffi under Fil-C has to use <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h">Fil-C reflection API</a> instead of assembly and JITing.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libuev-2.4.1">libuev 2.4.1</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libuv-v1.48.0">libuv 1.48.0</a>. Tiny change required for passing pointers across a <code>write(2)</code> syscall (this can be done using the <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h"><code>zexact_ptrtable</code> API</a>).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libxml2-2.14.4">libxml2 2.14.4</a>. One line change (missing <code>_Atomic</code> on a pointer field that gets raced).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/lua-5.4.7">lua 5.4.7</a>. <em>Build system changes only (disable libreadline dependency)</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/mg">mg</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/ncurses-6.5-20240720">ncurses 6.5-20240720</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1">nghttp2 1.62.1</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1">openssh 9.8p1</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1">openssl 3.3.1</a>. <em>Build system changes only (version script handling)</em>. Also added an assertion that <code>mem_sec</code> isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/pcre-8.39">pcre 8.39</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/pcre2-10.44">pcre2 10.44</a>. <em>Only test suite changes (needed because of musl locale handling)</em>. Works out of the box if you don't run the test suite.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/pkgconf-2.3.0">pkgconf 2.3.0</a>. <em>Build system changes only (version script handling)</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/quickjs">quickjs</a>. Tiny changes only (change a <code>uintptr_t</code> to a <code>void*</code> and use the stdlib's <code>qsort_r</code>).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/simdutf-5.5.0">simdutf 5.5.0</a>. Tiny change only (use Fil-C API for <code>cpuid</code> and <code>xgetbv</code> instead of assembly).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/sqlite">sqlite</a>. Moderate changes needed (roughly 16KB patch).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/sudo-1.9.15p5">sudo 1.9.15p5</a>. <em>Build system changes only (version script handling)</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/tcl-8.6.15">tcl 8.6.15</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/tmux-3.5a">tmux 3.5a</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/toybox-8.12">toybox 8.12</a>. Tiny changes (use <code>fork(2)</code> instead of <code>vfork(2)</code> and use pointer types instead of integer types in a few places).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/wg14_signals">wg14_signals</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/xz-5.6.2">xz 5.6.2</a>. Tiny changes (build system linker script changes, change one pointer arithmetic expression, align a union, and disable one assembly snippet).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zlib-1.3">zlib 1.3</a>. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zsh-5.8.0.1-dev">zsh 5.8.0.1-dev</a>. Tiny changes only (add a field to a struct to properly align some fields, disable custom malloc).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zstd-1.5.6">zstd 1.5.6</a>. Tiny changes only (use Fil-C cpuid API instead of assembly and disable some assembly snippets).</li>
+</ul>
+
+<hr />
+
+<p><a href="index.html"><em>Fil-C: Systems programming with confidence.</em></a></p>
+</body>
+</html>

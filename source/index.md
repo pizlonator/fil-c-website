@@ -4,12 +4,12 @@ Welcome to Fil-C, a memory safe implementation of the C and C++ programming lang
 
 ## What is Fil-C?
 
-Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities. Every C operation is checked against the capability. Fil-C has no `unsafe` escape hatch of any kind.
+Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities (InvisiCaps). Every C operation is checked against the capability. Fil-C has no `unsafe` escape hatch of any kind.
 
 ## Key Features
 
-- **Memory Safety**: Advanced runtime checks to prevent exploitable memory safety errors. Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.
-- **C and C++ Compatibility**: Your C or C++ software most likely compiles and runs in Fil-C with zero changes.
+- **Memory Safety**: Advanced runtime checks to prevent [exploitable memory safety errors](invisicaps_by_example.html). Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.
+- **C and C++ Compatibility**: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. [Many open source programs](programs_that_work.html) work great in Fil-C.
 - **Modern Tooling**: Compiler is based on a recent version of clang, supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).
 
 ## Getting Started
@@ -30,6 +30,9 @@ Fil-C's compiler is licensed under [Apache 2](https://github.com/pizlonator/fil-
 ## Documentation
 
 - [Installation Guide](installation.html)
+- [List of programs ported to Fil-C](programs_that_work.html)
+- [Invisicaps by Example](invisicaps_by_example.html)
+- [Explanation of Fil-C Disassembly](compiler_example.html)
 - [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 
 ## Community

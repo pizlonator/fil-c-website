@@ -1,0 +1,49 @@
+# Programs That Work in Fil-C
+
+Lots of programs work in Fil-C with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.
+
+- [musl](https://github.com/pizlonator/fil-c/tree/deluge/projects/usermusl). Used as Fil-C's libc. Significant changes required (replacing musl's inline assembly for calling syscalls with usage of Fil-C's [syscall API](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h).
+- [libc++abi](https://github.com/pizlonator/fil-c/tree/deluge/libcxxabi). Required moderate changes to the C++ exception personality function so that it uses Fil-C's variant of [libunwind](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h) and Fil-C's way of [tracking exception tables](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_eh_landing_pad.h).
+- [libc++](https://github.com/pizlonator/fil-c/tree/deluge/libcxx). Tiny changes only, mostly to invoke futexes using Fil-C's syscall API.
+- [Python 3.12.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/Python-3.12.5). Moderate changes required, mostly to switch the Python GC's headers from `uintptr_t` to a pointer type so they preserve capability.
+- [bzip2](https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2). *No changes, works out of the box.*
+- [bzip3](https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip3). *No changes, works out of the box.*
+- [curl 8.9.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/curl-8.9.1). *Build system changes only (version script handling).*
+- [dask 0.5.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12). One tiny change: use `fork(2)` instead of `vfork(2)`.
+- [expat 2.7.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1). *Build system changes only (version script handling).*
+- [icu4c 76.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1). Tiny changes (roughly 4KB patch).
+- [jpeb 6b](https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b). *No changes, works out of the box.*
+- [libarchive 3.7.4](https://github.com/pizlonator/fil-c/tree/deluge/projects/libarchive-3.7.4). Tiny changes (red-black tree and resizable array need to use pointer type instead of `uintptr_t`).
+- [libedit 20240808-3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/libedit-20240808-3.1). Tiny changes (that are more about porting to musl than about Fil-C).
+- [libevent 2.1.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/libevent-2.1.12). *Changes to test suite only, works out of the box otherwise.*
+- [libffi 3.4.6](https://github.com/pizlonator/fil-c/tree/deluge/projects/libffi-3.4.6). Moderate changes needed because libffi under Fil-C has to use [Fil-C reflection API](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h) instead of assembly and JITing.
+- [libuev 2.4.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/libuev-2.4.1). *No changes, works out of the box.*
+- [libuv 1.48.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/libuv-v1.48.0). Tiny change required for passing pointers across a `write(2)` syscall (this can be done using the [`zexact_ptrtable` API](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h)).
+- [libxml2 2.14.4](https://github.com/pizlonator/fil-c/tree/deluge/projects/libxml2-2.14.4). One line change (missing `_Atomic` on a pointer field that gets raced).
+- [lua 5.4.7](https://github.com/pizlonator/fil-c/tree/deluge/projects/lua-5.4.7). *Build system changes only (disable libreadline dependency)*.
+- [mg](https://github.com/pizlonator/fil-c/tree/deluge/projects/mg). *No changes, works out of the box.*
+- [ncurses 6.5-20240720](https://github.com/pizlonator/fil-c/tree/deluge/projects/ncurses-6.5-20240720). *No changes, works out of the box.*
+- [nghttp2 1.62.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1). *No changes, works out of the box.*
+- [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). *No changes, works out of the box.*
+- [openssl 3.3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1). *Build system changes only (version script handling)*. Also added an assertion that `mem_sec` isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL).
+- [pcre 8.39](https://github.com/pizlonator/fil-c/tree/deluge/projects/pcre-8.39). *No changes, works out of the box.*
+- [pcre2 10.44](https://github.com/pizlonator/fil-c/tree/deluge/projects/pcre2-10.44). *Only test suite changes (needed because of musl locale handling)*. Works out of the box if you don't run the test suite.
+- [pkgconf 2.3.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/pkgconf-2.3.0). *Build system changes only (version script handling)*.
+- [quickjs](https://github.com/pizlonator/fil-c/tree/deluge/projects/quickjs). Tiny changes only (change a `uintptr_t` to a `void*` and use the stdlib's `qsort_r`).
+- [simdutf 5.5.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/simdutf-5.5.0). Tiny change only (use Fil-C API for `cpuid` and `xgetbv` instead of assembly).
+- [sqlite](https://github.com/pizlonator/fil-c/tree/deluge/projects/sqlite). Moderate changes needed (roughly 16KB patch).
+- [sudo 1.9.15p5](https://github.com/pizlonator/fil-c/tree/deluge/projects/sudo-1.9.15p5). *Build system changes only (version script handling)*.
+- [tcl 8.6.15](https://github.com/pizlonator/fil-c/tree/deluge/projects/tcl-8.6.15). *No changes, works out of the box.*
+- [tmux 3.5a](https://github.com/pizlonator/fil-c/tree/deluge/projects/tmux-3.5a). *No changes, works out of the box.*
+- [toybox 8.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/toybox-8.12). Tiny changes (use `fork(2)` instead of `vfork(2)` and use pointer types instead of integer types in a few places).
+- [wg14_signals](https://github.com/pizlonator/fil-c/tree/deluge/projects/wg14_signals). *No changes, works out of the box.*
+- [xz 5.6.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/xz-5.6.2). Tiny changes (build system linker script changes, change one pointer arithmetic expression, align a union, and disable one assembly snippet).
+- [zlib 1.3](https://github.com/pizlonator/fil-c/tree/deluge/projects/zlib-1.3). *No changes, works out of the box*.
+- [zsh 5.8.0.1-dev](https://github.com/pizlonator/fil-c/tree/deluge/projects/zsh-5.8.0.1-dev). Tiny changes only (add a field to a struct to properly align some fields, disable custom malloc).
+- [zstd 1.5.6](https://github.com/pizlonator/fil-c/tree/deluge/projects/zstd-1.5.6). Tiny changes only (use Fil-C cpuid API instead of assembly and disable some assembly snippets).
+
+---
+
+[*Fil-C: Systems programming with confidence.*](index.html)
+
+
