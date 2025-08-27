@@ -1,0 +1,187 @@
+/* Fil-C CSS - Red, White, and Near-Black Theme */
+
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Consolas', monospace;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #c41230;
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.5em;
+    border-bottom: 3px solid #c41230;
+    padding-bottom: 0.3em;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 2em;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 0.2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.25em;
+}
+
+h5 {
+    font-size: 1.1em;
+}
+
+h6 {
+    font-size: 1em;
+}
+
+/* Paragraphs and text */
+p {
+    margin-bottom: 1em;
+}
+
+/* Links */
+a {
+    color: #c41230;
+    text-decoration: none;
+    border-bottom: 1px dotted #c41230;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    color: #8a0d22;
+    border-bottom: 1px solid #8a0d22;
+}
+
+/* Lists */
+ul, ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+li {
+    margin-bottom: 0.3em;
+}
+
+/* Code blocks */
+pre {
+    background-color: #f8f8f8;
+    border: 1px solid #e5e5e5;
+    border-left: 4px solid #c41230;
+    padding: 1em;
+    margin-bottom: 1em;
+    overflow-x: auto;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Consolas', monospace;
+    background-color: #f5f5f5;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid #c41230;
+    margin: 1.5em 0;
+    padding-left: 1em;
+    color: #555;
+    font-style: italic;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+th, td {
+    border: 1px solid #e5e5e5;
+    padding: 0.5em 1em;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f8f8;
+    color: #c41230;
+    font-weight: 700;
+}
+
+tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Horizontal rules */
+hr {
+    border: none;
+    border-top: 2px solid #c41230;
+    margin: 2em 0;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+}
+
+/* Strong and emphasis */
+strong {
+    font-weight: 700;
+    color: #0a0a0a;
+}
+
+em {
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        font-size: 15px;
+        padding: 20px 15px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    h2 {
+        font-size: 1.5em;
+    }
+    
+    h3 {
+        font-size: 1.25em;
+    }
+}

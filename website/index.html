@@ -1,9 +1,57 @@
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fil-C</title>
-  </head>
-  <body>
-    <h1>Fil-C</h1>
-    <p>Fil-C</p>
-  </body>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+<h1>Fil-C</h1>
+
+<p>Welcome to Fil-C, a memory safe implementation of the C and C++ programming languages you already know and love.</p>
+
+<h2>What is Fil-C?</h2>
+
+<p>Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities. Every C operation is checked against the capability. Fil-C has no <code>unsafe</code> escape hatch of any kind.</p>
+
+<h2>Key Features</h2>
+
+<ul>
+<li><strong>Memory Safety</strong>: Advanced runtime checks to prevent exploitable memory safety errors. Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.</li>
+<li><strong>C and C++ Compatibility</strong>: Seamlessly integrate with existing C and C++ codebases. Your C or C++ software most likely compiles and runs in Fil-C with zero changes.</li>
+<li><strong>Modern Tooling</strong>: Compiler is based on a recent version of clang, supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).</li>
+</ul>
+
+<h2>Getting Started</h2>
+
+<p>Grab <a href="https://github.com/pizlonator/fil-c/releases">recent release</a>, run <code>./setup.sh</code>, and compile your favorite C program with <code>build/bin/clang</code>:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello from Fil-C!\n");
+    return 0;
+}
+</code></pre>
+
+<h2>License</h2>
+
+<p>Fil-C's compiler is licensed under <a href="https://github.com/pizlonator/fil-c/blob/deluge/LLVM-LICENSE.txt">Apache 2</a>. Fil-C's runtime is licensed under <a href="https://github.com/pizlonator/fil-c/blob/deluge/libpas/LICENSE.txt">BSD 2-clause</a>. Fil-C's standard library is licensed under <a href="https://github.com/pizlonator/fil-c/blob/deluge/projects/usermusl/COPYRIGHT">MIT</a>.</p>
+
+<h2>Documentation</h2>
+
+<ul>
+<li><a href="installation.html">Installation Guide</a></li>
+<li><a href="https://www.github.com/pizlonator/fil-c/">More on GitHub</a></li>
+</ul>
+
+<h2>Community</h2>
+
+<p>Join the <a href="https://discord.gg/dPyNUaeajg">Fil-C Discord community</a> to discuss the language implementation, share projects, and contribute to its development.</p>
+
+<hr />
+
+<p><em>Fil-C: Systems programming with confidence.</em></p>
+</body>
 </html>

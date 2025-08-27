@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fil-C</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+<h1>Installing Fil-C</h1>
+
+<p>The easiest way to install Fil-C is using a binary release. It's also possible to build from source.</p>
+
+<p>Fil-C currently only supports Linux/X86_64.</p>
+
+<h2>Binary Release</h2>
+
+<p>You can download binary releases <a href="https://github.com/pizlonator/fil-c/releases">from the Fil-C GitHub</a>.</p>
+
+<p>Once you download a release and unpack it, simply run:</p>
+
+<pre><code>./setup.sh
+</code></pre>
+
+<p>from the directory that you unpacked it to (for example <code>/home/pizlo/filc-0.670-linux-x86_64</code>). At that point, you can run the compiler using <code>build/bin/clang</code> or <code>build/bin/clang++</code> (or via absolute path, for example <code>/home/pizlo/filc-0.670-linux-x86_64/build/bin/clang</code>).</p>
+
+<p>Note that the Fil-C libraries are in the <code>pizfix/lib</code> directory, and the headers are in <code>pizfix/include</code>.</p>
+
+<p>The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.</p>
+
+<h2>Source Release</h2>
+
+<p>Clone Fil-C from GitHub:</p>
+
+<pre><code>git clone https://github.com/pizlonator/fil-c.git
+</code></pre>
+
+<p>You can build just the base Fil-C (what comes in the binary release) by doing:</p>
+
+<pre><code>./build_all_fast.sh
+</code></pre>
+
+<p>In the <code>fil-c</code> directory. If you want to also build the Fil-C corpus, which includes a bunch of programs ported to Fil-C (like Python, zsh, and others)), then do:</p>
+
+<pre><code>./build_all.sh
+</code></pre>
+
+<hr />
+
+<p><a href="index.html"><em>Fil-C: Systems programming with confidence.</em></a></p>
+</body>
+</html>
