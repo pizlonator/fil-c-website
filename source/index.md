@@ -4,12 +4,12 @@ Welcome to Fil-C, a memory safe implementation of the C and C++ programming lang
 
 ## What is Fil-C?
 
-Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities (InvisiCaps). Every C operation is checked against the capability. Fil-C has no `unsafe` escape hatch of any kind.
+Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities (InvisiCaps). Every possibly-unsafe C and C++ operation is checked. Fil-C has no `unsafe` escape hatch of any kind.
 
 ## Key Features
 
 - **Memory Safety**: Advanced runtime checks to prevent [exploitable memory safety errors](invisicaps_by_example.html). Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.
-- **C and C++ Compatibility**: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. [Many open source programs](programs_that_work.html) work great in Fil-C.
+- **C and C++ Compatibility**: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. [Many open source programs](programs_that_work.html) work great in Fil-C. Even advanced features like threads, atomics, exceptions, signal handling, `longjmp`/`setjmp`, and shared memory (`mmap` style or Sys-V style) work.
 - **Modern Tooling**: Compiler is based on a recent version of clang, supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).
 
 ## Getting Started

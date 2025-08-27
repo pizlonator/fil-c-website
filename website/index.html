@@ -13,13 +13,13 @@
 
 <h2>What is Fil-C?</h2>
 
-<p>Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities (InvisiCaps). Every C operation is checked against the capability. Fil-C has no <code>unsafe</code> escape hatch of any kind.</p>
+<p>Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities (InvisiCaps). Every possibly-unsafe C and C++ operation is checked. Fil-C has no <code>unsafe</code> escape hatch of any kind.</p>
 
 <h2>Key Features</h2>
 
 <ul>
 <li><strong>Memory Safety</strong>: Advanced runtime checks to prevent <a href="invisicaps_by_example.html">exploitable memory safety errors</a>. Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.</li>
-<li><strong>C and C++ Compatibility</strong>: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. <a href="programs_that_work.html">Many open source programs</a> work great in Fil-C.</li>
+<li><strong>C and C++ Compatibility</strong>: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. <a href="programs_that_work.html">Many open source programs</a> work great in Fil-C. Even advanced features like threads, atomics, exceptions, signal handling, <code>longjmp</code>/<code>setjmp</code>, and shared memory (<code>mmap</code> style or Sys-V style) work.</li>
 <li><strong>Modern Tooling</strong>: Compiler is based on a recent version of clang, supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).</li>
 </ul>
 
