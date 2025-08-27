@@ -31,7 +31,7 @@ Fil-C's compiler is licensed under [Apache 2](https://github.com/pizlonator/fil-
 
 - [Installation Guide](installation.html)
 - [List of programs ported to Fil-C](programs_that_work.html)
-- [Invisicaps by Example](invisicaps_by_example.html)
+- [InvisiCaps by Example](invisicaps_by_example.html)
 - [Explanation of Fil-C Disassembly](compiler_example.html)
 - [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 
