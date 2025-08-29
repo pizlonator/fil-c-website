@@ -14,7 +14,7 @@ Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots 
 
 ## Getting Started
 
-Grab [recent release](https://github.com/pizlonator/fil-c/releases), run `./setup.sh`, and compile your favorite C program with `build/bin/clang`:
+Grab a [recent release](https://github.com/pizlonator/fil-c/releases), run `./setup.sh`, and compile your favorite C program with `build/bin/clang`:
 
     #include <stdio.h>
     

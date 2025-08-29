@@ -41,6 +41,12 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [zlib 1.3](https://github.com/pizlonator/fil-c/tree/deluge/projects/zlib-1.3). *No changes, works out of the box*.
 - [zsh 5.8.0.1-dev](https://github.com/pizlonator/fil-c/tree/deluge/projects/zsh-5.8.0.1-dev). Tiny changes only (add a field to a struct to properly align some fields, disable custom malloc).
 - [zstd 1.5.6](https://github.com/pizlonator/fil-c/tree/deluge/projects/zstd-1.5.6). Tiny changes only (use Fil-C cpuid API instead of assembly and disable some assembly snippets).
+- [cmake 3.30.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/cmake-3.30.2). *No changes, works out of the box*.
+- brotli 1.1.0. *No changes, works out of the box*.
+- google test. *No changes, works out of the box*.
+- google benchmark. *No changes, works out of the box*.
+- [ada url](https://github.com/pizlonator/pizlonated-ada). *No changes, works out of the box*.
+- [simdjson](https://github.com/pizlonator/pizlonated-simdjson/commits/master/). Tiny change only (use Fil-C API for `cpuid` and `xgetbv` instead of assembly).
 
 ---
 
