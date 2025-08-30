@@ -12,7 +12,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [dask 0.5.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12). One tiny change: use `fork(2)` instead of `vfork(2)`.
 - [expat 2.7.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1). *Build system changes only (version script handling).*
 - [icu4c 76.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1). Tiny changes (roughly 4KB patch).
-- [jpeb 6b](https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b). *No changes, works out of the box.*
+- [jpeg 6b](https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b). *No changes, works out of the box.*
 - [libarchive 3.7.4](https://github.com/pizlonator/fil-c/tree/deluge/projects/libarchive-3.7.4). Tiny changes (red-black tree and resizable array need to use pointer type instead of `uintptr_t`).
 - [libedit 20240808-3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/libedit-20240808-3.1). Tiny changes (that are more about porting to musl than about Fil-C).
 - [libevent 2.1.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/libevent-2.1.12). *Changes to test suite only, works out of the box otherwise.*
