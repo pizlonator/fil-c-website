@@ -46,19 +46,125 @@
 
 <h2>Source Release</h2>
 
-<p>Clone Fil-C from GitHub:</p>
+<p>To build Fil-C from source, first clone the repository:</p>
 
-<pre><code>git clone https://github.com/pizlonator/fil-c.git
+<pre><code>git clone --depth 1 https://github.com/pizlonator/fil-c.git
 </code></pre>
 
-<p>You can build just the base Fil-C (what comes in the binary release) by doing:</p>
+<p>Parameter <code>--depth 1</code> creates a shallow clone, which is faster and uses less disk space. This is recommended for most users.</p>
+
+<p>Change into the <code>fil-c</code> directory:</p>
+
+<pre><code>cd fil-c
+</code></pre>
+
+<h3>Building Fil-C</h3>
+
+<p>To build the base Fil-C compiler and libraries (same as the binary release):</p>
 
 <pre><code>./build_all_fast.sh
 </code></pre>
 
-<p>In the <code>fil-c</code> directory. If you want to also build the Fil-C corpus, which includes a bunch of programs ported to Fil-C (like Python, zsh, and others)), then do:</p>
+<p>To build the full Fil-C corpus (includes ported programs like Python, zsh, etc.):</p>
 
 <pre><code>./build_all.sh
+</code></pre>
+
+<p>After building, you will find:</p>
+
+<ul>
+<li>The compiler in <code>build/bin</code></li>
+<li>Libraries in <code>pizfix/lib</code></li>
+<li>Ported programs in <code>pizfix/bin</code></li>
+</ul>
+
+<h3>Building Environment Setup</h3>
+
+<h4>Arch Linux</h4>
+
+<p>Install dependencies:</p>
+
+<pre><code>sudo pacman -S base-devel cmake ninja ruby patchelf clang
+</code></pre>
+
+<p>Install the required Ruby gem:</p>
+
+<pre><code>gem install getoptlong
+</code></pre>
+
+<p>Build Fil-C as described above.</p>
+
+<h4>Ubuntu (25.04)</h4>
+
+<p>Install dependencies:</p>
+
+<pre><code>sudo apt install build-essential cmake ninja-build ruby patchelf clang
+</code></pre>
+
+<p>Build Fil-C as described above.</p>
+
+<h4>Fedora (Workstation 42)</h4>
+
+<p>Install dependencies:</p>
+
+<pre><code>sudo dnf group install development-tools
+sudo dnf install cmake ninja-build ruby patchelf clang
+</code></pre>
+
+<p>Install the required Ruby gem:</p>
+
+<pre><code>gem install getoptlong
+</code></pre>
+
+<p>Build Fil-C as described above.</p>
+
+<h3>Container (Docker/Podman)</h3>
+
+<p>A <code>Dockerfile</code> is provided to set up a build environment for Fil-C:</p>
+
+<p>Build the image:</p>
+
+<pre><code>docker build -t fil-c .
+</code></pre>
+
+<p>Run a container interactively:</p>
+
+<pre><code>docker run -it --rm \
+  --mount type=bind,source="${HOME}/projects/fil-c",target="/opt/fil-c" \
+  fil-c
+</code></pre>
+
+<p>This command assumes you cloned the Fil-C repository into <code>${HOME}/projects/fil-c</code>, adjust the <code>source</code> path as needed. Inside the container, build Fil-C as described above.</p>
+
+<p>Dockerfile Reference:</p>
+
+<pre><code>FROM ubuntu:25.04
+
+# Prevent tzdata interactive prompts during install
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update system packages
+RUN apt update &amp;&amp; apt upgrade -y
+
+# Install essential build tools
+RUN apt install -y build-essential
+
+# Install required development dependencies
+RUN apt install -y \
+    pkg-config autotools-dev automake autoconf libtool \
+    clang cmake ninja-build ruby patchelf
+
+# Install basic utilities
+RUN apt install -y vim git
+
+# Create project source directory
+RUN mkdir -p /opt/fil-c
+
+# Set working directory
+WORKDIR /opt/fil-c
+
+# Start an interactive shell by default
+CMD /usr/bin/bash
 </code></pre>
 
 <h1>Try It Out</h1>
