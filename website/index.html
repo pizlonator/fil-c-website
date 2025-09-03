@@ -7,8 +7,22 @@
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
+    <header class="header">
 <h1>Fil-C</h1>
 
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+        </aside>
+        <main class="content">
 <p>Welcome to Fil-C, a memory safe implementation of the C and C++ programming languages you already know and love.</p>
 
 <h2>What is Fil-C?</h2>
@@ -19,21 +33,9 @@
 
 <ul>
 <li><strong>Memory Safety</strong>: Advanced runtime checks to prevent <a href="invisicaps_by_example.html">exploitable memory safety errors</a>. Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.</li>
-<li><strong>C and C++ Compatibility</strong>: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. <a href="programs_that_work.html">Many open source programs</a> work great in Fil-C. Even advanced features like threads, atomics, exceptions, signal handling, <code>longjmp</code>/<code>setjmp</code>, and shared memory (<code>mmap</code> style or Sys-V style) work.</li>
-<li><strong>Modern Tooling</strong>: Compiler is based on a recent version of clang, supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).</li>
+<li><strong>C and C++ Compatibility</strong>: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. <a href="programs_that_work.html">Many open source programs</a>, including CPython, SQLite, OpenSSH, ICU and CMake work great in Fil-C. Even advanced features like threads, atomics, exceptions, signal handling, <code>longjmp</code>/<code>setjmp</code>, and shared memory (<code>mmap</code> style or Sys-V style) work.</li>
+<li><strong>Modern Tooling</strong>: Compiler is based on a recent version of clang (20.1.8), supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).</li>
 </ul>
-
-<h2>Getting Started</h2>
-
-<p>Grab a <a href="https://github.com/pizlonator/fil-c/releases">recent release</a>, run <code>./setup.sh</code>, and compile your favorite C program with <code>build/bin/clang</code>:</p>
-
-<pre><code>#include &lt;stdio.h&gt;
-
-int main() {
-    printf("Hello from Fil-C!\n");
-    return 0;
-}
-</code></pre>
 
 <h2>License</h2>
 
@@ -52,9 +54,7 @@ int main() {
 <h2>Community</h2>
 
 <p>Join the <a href="https://discord.gg/dPyNUaeajg">Fil-C Discord community</a> to discuss the language implementation, share projects, and contribute to its development.</p>
-
-<hr />
-
-<p><em>Fil-C: Systems programming with confidence.</em></p>
+        </main>
+    </div>
 </body>
 </html>

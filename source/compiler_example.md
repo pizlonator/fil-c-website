@@ -1592,7 +1592,3 @@ Fil-C can compile C in a way that makes the code memory-safe. This post shows ho
 
 - [Issue 27: Slow path calls to the runtime should use a calling convention that preserves all (or most) registers](https://github.com/pizlonator/fil-c/issues/27)
 
----
-
-[*Fil-C: Systems programming with confidence.*](index.html)
-

@@ -13,9 +13,86 @@ body {
     line-height: 1.6;
     color: #1a1a1a;
     background-color: #ffffff;
-    max-width: 900px;
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header styles */
+.header {
+    background-color: #c41230;
+    color: #ffffff;
+    padding: 20px 40px;
+    border-bottom: 4px solid #8a0d22;
+}
+
+.header h1 {
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 2.5em;
+}
+
+.header p {
+    color: #ffffff;
+    margin: 0.5em 0 0 0;
+    font-size: 1.1em;
+}
+
+.header hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 1em 0;
+}
+
+.header em {
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+/* Container for sidebar and main content */
+.container {
+    display: flex;
+    width: 100%;
+    flex: 1;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
     padding: 40px 20px;
+    background-color: #f8f8f8;
+    border-right: 2px solid #c41230;
+    flex-shrink: 0;
+}
+
+.sidebar p {
+    margin-bottom: 0.8em;
+}
+
+.sidebar a {
+    color: #c41230;
+    text-decoration: none;
+    border-bottom: 1px dotted #c41230;
+    transition: all 0.2s ease;
+    display: inline-block;
+    width: 100%;
+    padding: 0.2em 0;
+}
+
+.sidebar a:hover {
+    color: #8a0d22;
+    border-bottom: 1px solid #8a0d22;
+}
+
+/* Main content area */
+.content {
+    flex: 1;
+    padding: 40px 40px;
+    max-width: 900px;
 }
 
 /* Headings */
@@ -32,6 +109,11 @@ h1 {
     border-bottom: 3px solid #c41230;
     padding-bottom: 0.3em;
     margin-top: 0;
+}
+
+/* Add padding above h1 only if it's not the first element in content */
+.content h1:not(:first-child) {
+    padding-top: 1.5em;
 }
 
 h2 {
@@ -168,9 +250,38 @@ em {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .header p {
+        font-size: 1em;
+    }
+    
+    .container {
+        display: block;
+    }
+    
+    .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+        border-right: none;
+        border-bottom: 2px solid #c41230;
+        padding: 20px 15px;
+    }
+    
+    .content {
+        margin-left: 0;
+        padding: 20px 15px;
+    }
+    
     body {
         font-size: 15px;
-        padding: 20px 15px;
     }
     
     h1 {

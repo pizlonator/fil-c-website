@@ -1,4 +1,4 @@
-# Installing Fil-C
+# Installing
 
 The easiest way to install [Fil-C](index.html) is using a binary release. It's also possible to build from source.
 
@@ -32,7 +32,37 @@ In the `fil-c` directory. If you want to also build the Fil-C corpus, which incl
 
     ./build_all.sh
 
----
+# Try It Out
 
-[*Fil-C: Systems programming with confidence.*](index.html)
+Consider this simple C program; let's call it `hello.c`:
+
+    #include <stdio.h>
+    
+    int main() {
+        printf("Hello from Fil-C!\n");
+        return 0;
+    }
+
+You can compile it using `<path to Fil-C>/build/bin/clang` like so:
+
+    build/bin/clang -O2 -g -o hello hello.c
+
+Similarly C++ just works:
+
+    #include <iostream>
+
+    using namespace std;
+
+    int main() {
+        cout << "Hello!" << endl;
+        return 0;
+    }
+
+This builds with `clang++` like so:
+
+    build/bin/clang++ -O2 -g -o hello hello.cpp
+
+For examples of Fil-C catching memory safety issues, see
+[InvisiCaps By Example](invisicaps_by_example.html). For a list of programs that have been ported to
+Fil-C, see [Programs That Work](programs_that_work.html).
 

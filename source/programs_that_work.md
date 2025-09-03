@@ -1,4 +1,4 @@
-# Programs That Work in Fil-C
+# Programs That Work
 
 Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.
 
@@ -9,7 +9,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [bzip2](https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2). *No changes, works out of the box.*
 - [bzip3](https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip3). *No changes, works out of the box.*
 - [curl 8.9.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/curl-8.9.1). *Build system changes only (version script handling).*
-- [dask 0.5.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12). One tiny change: use `fork(2)` instead of `vfork(2)`.
+- [dash 0.5.12](https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12). One tiny change: use `fork(2)` instead of `vfork(2)`.
 - [expat 2.7.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1). *Build system changes only (version script handling).*
 - [icu4c 76.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1). Tiny changes (roughly 4KB patch).
 - [jpeb 6b](https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b). *No changes, works out of the box.*
@@ -47,9 +47,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - google benchmark. *No changes, works out of the box*.
 - [ada url](https://github.com/pizlonator/pizlonated-ada). *No changes, works out of the box*.
 - [simdjson](https://github.com/pizlonator/pizlonated-simdjson/commits/master/). Tiny change only (use Fil-C API for `cpuid` and `xgetbv` instead of assembly).
-
----
-
-[*Fil-C: Systems programming with confidence.*](index.html)
-
 

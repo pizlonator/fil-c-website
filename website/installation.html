@@ -7,7 +7,23 @@
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
-<h1>Installing Fil-C</h1>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+        </aside>
+        <main class="content">
+<h1>Installing</h1>
 
 <p>The easiest way to install <a href="index.html">Fil-C</a> is using a binary release. It's also possible to build from source.</p>
 
@@ -45,8 +61,44 @@
 <pre><code>./build_all.sh
 </code></pre>
 
-<hr />
+<h1>Try It Out</h1>
 
-<p><a href="index.html"><em>Fil-C: Systems programming with confidence.</em></a></p>
+<p>Consider this simple C program; let's call it <code>hello.c</code>:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello from Fil-C!\n");
+    return 0;
+}
+</code></pre>
+
+<p>You can compile it using <code>&lt;path to Fil-C&gt;/build/bin/clang</code> like so:</p>
+
+<pre><code>build/bin/clang -O2 -g -o hello hello.c
+</code></pre>
+
+<p>Similarly C++ just works:</p>
+
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello!" &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+
+<p>This builds with <code>clang++</code> like so:</p>
+
+<pre><code>build/bin/clang++ -O2 -g -o hello hello.cpp
+</code></pre>
+
+<p>For examples of Fil-C catching memory safety issues, see
+<a href="invisicaps_by_example.html">InvisiCaps By Example</a>. For a list of programs that have been ported to
+Fil-C, see <a href="programs_that_work.html">Programs That Work</a>.</p>
+        </main>
+    </div>
 </body>
 </html>

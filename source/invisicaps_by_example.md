@@ -1,4 +1,4 @@
-# Fil-C InvisiCaps By Example
+# InvisiCaps By Example
 
 This document describes how [Fil-C](index.html)'s pointers work. Fil-C is totally memory safe even though it gives you almost all of the power you'd expect from C, including sophisticated uses of pointers. Fil-C pointers achieve memory safety using a capability model called *invisicaps*, which have these properties:
 
@@ -1138,8 +1138,4 @@ FUGC will fix a large class of memory leaks for you. It won't fix all leaks - fo
 # Conclusion
 
 This document is meant to give you a feeling for how Fil-C pointer work by showing some examples. This is not an exhaustive list of safety checks that Fil-C performs.
-
----
-
-[*Fil-C: Systems programming with confidence.*](index.html)
 

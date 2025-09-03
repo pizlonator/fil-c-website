@@ -3,6 +3,20 @@
 # Clean and prepare website directory
 echo "Building Fil-C website..."
 
+# First, process the header
+HEADER_HTML=""
+if [ -f "extra/header.md" ]; then
+    echo "Processing header..."
+    HEADER_HTML=$(Markdown.pl "extra/header.md")
+fi
+
+# Process the sidebar
+SIDEBAR_HTML=""
+if [ -f "extra/sidebar.md" ]; then
+    echo "Processing sidebar..."
+    SIDEBAR_HTML=$(Markdown.pl "extra/sidebar.md")
+fi
+
 # Process all markdown files in source directory
 find source -name "*.md" -type f | while read -r md_file; do
     # Calculate output path
@@ -27,6 +41,14 @@ find source -name "*.md" -type f | while read -r md_file; do
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
+    <header class="header">
+$HEADER_HTML
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+$SIDEBAR_HTML
+        </aside>
+        <main class="content">
 EOF
     
     # Process markdown and add to HTML
@@ -34,6 +56,8 @@ EOF
     
     # Close HTML tags
     cat <<EOF >> "$html_path"
+        </main>
+    </div>
 </body>
 </html>
 EOF

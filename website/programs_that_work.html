@@ -7,7 +7,23 @@
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
-<h1>Programs That Work in Fil-C</h1>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+        </aside>
+        <main class="content">
+<h1>Programs That Work</h1>
 
 <p>Lots of programs work in <a href="index.html">Fil-C</a> with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.</p>
 
@@ -19,7 +35,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2">bzip2</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip3">bzip3</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/curl-8.9.1">curl 8.9.1</a>. <em>Build system changes only (version script handling).</em></li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12">dask 0.5.12</a>. One tiny change: use <code>fork(2)</code> instead of <code>vfork(2)</code>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12">dash 0.5.12</a>. One tiny change: use <code>fork(2)</code> instead of <code>vfork(2)</code>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1">expat 2.7.1</a>. <em>Build system changes only (version script handling).</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1">icu4c 76.1</a>. Tiny changes (roughly 4KB patch).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b">jpeb 6b</a>. <em>No changes, works out of the box.</em></li>
@@ -58,9 +74,7 @@
 <li><a href="https://github.com/pizlonator/pizlonated-ada">ada url</a>. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/pizlonated-simdjson/commits/master/">simdjson</a>. Tiny change only (use Fil-C API for <code>cpuid</code> and <code>xgetbv</code> instead of assembly).</li>
 </ul>
-
-<hr />
-
-<p><a href="index.html"><em>Fil-C: Systems programming with confidence.</em></a></p>
+        </main>
+    </div>
 </body>
 </html>
