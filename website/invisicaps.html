@@ -185,6 +185,15 @@
 
 <p>All builtin functions that take a <code>zthread</code> pointer check that the pointer they are given is really a <code>zthread</code> pointer by looking at the aux word's flags.</p>
 
+<h3>Freed Objects</h3>
+
+<p>Freeing an object results in deterministic panics when accessing the freed memory. This is simple to achieve:</p>
+
+<ul>
+<li><p>Freeing sets the pointer's upper bound to be equal to <em>lower</em>, thus preventing all accesses.</p></li>
+<li><p>A <em>free</em> bit is set in the aux word so that the diagnostic message printed when the program panics indicates that it was because of use after free.</p></li>
+</ul>
+
 <h2>Conclusion</h2>
 
 <p>Fil-C uses a capability model for pointers to ensure memory safety. To ensure maximum compatibility, Fil-C's <em>InvisiCap</em> capability model gives the illusion that pointers are just 64-bit on 64-bit systems and allows flexible reinterpretation of memory type (including violations of the active member union rule) while preserving the soundness of the capability model itself. No matter how evil the program is, it will either get a memory safe outcome (all pointer accesses are in bounds of a capability that the pointer legitimately had) or a Fil-C panic.</p>
