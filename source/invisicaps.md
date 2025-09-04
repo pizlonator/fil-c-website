@@ -158,6 +158,14 @@ Fil-C's internal thread abstraction, called `zthread`, is used internally by mus
 
 All builtin functions that take a `zthread` pointer check that the pointer they are given is really a `zthread` pointer by looking at the aux word's flags.
 
+### Freed Objects
+
+Freeing an object results in deterministic panics when accessing the freed memory. This is simple to achieve:
+
+- Freeing sets the pointer's upper bound to be equal to *lower*, thus preventing all accesses.
+
+- A *free* bit is set in the aux word so that the diagnostic message printed when the program panics indicates that it was because of use after free.
+
 ## Conclusion
 
 Fil-C uses a capability model for pointers to ensure memory safety. To ensure maximum compatibility, Fil-C's *InvisiCap* capability model gives the illusion that pointers are just 64-bit on 64-bit systems and allows flexible reinterpretation of memory type (including violations of the active member union rule) while preserving the soundness of the capability model itself. No matter how evil the program is, it will either get a memory safe outcome (all pointer accesses are in bounds of a capability that the pointer legitimately had) or a Fil-C panic.
