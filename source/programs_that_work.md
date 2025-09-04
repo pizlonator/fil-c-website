@@ -47,4 +47,6 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - google benchmark. *No changes, works out of the box*.
 - [ada url](https://github.com/pizlonator/pizlonated-ada). *No changes, works out of the box*.
 - [simdjson](https://github.com/pizlonator/pizlonated-simdjson/commits/master/). Tiny change only (use Fil-C API for `cpuid` and `xgetbv` instead of assembly).
-
+- [GNU coreutils 9.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/coreutils-9.5). *No changes, works out of the box - except for feature limitations due to musl*.
+- GNU bash 5.2.32. Requires a one line change due to a flex array alignment issue.
+- GNU binutils 2.43.1. Requires a 9KB patch mostly due to uses of `intptr_t` where a pointer type is required.
