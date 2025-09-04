@@ -2,7 +2,7 @@ Welcome to Fil-C, a memory safe implementation of the C and C++ programming lang
 
 ## What is Fil-C?
 
-Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities (InvisiCaps). Every possibly-unsafe C and C++ operation is checked. Fil-C has no `unsafe` escape hatch of any kind.
+Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots of software compiles and runs with Fil-C with zero or minimal changes. All memory safety errors are caught as Fil-C panics. Fil-C achieves this using a combination of concurrent garbage collection and invisible capabilities ([InvisiCaps](invisicaps.html)). Every possibly-unsafe C and C++ operation is checked. Fil-C has no `unsafe` escape hatch of any kind.
 
 ## Key Features
 
@@ -17,11 +17,9 @@ Fil-C's compiler is licensed under [Apache 2](https://github.com/pizlonator/fil-
 ## Documentation
 
 - [Installation Guide](installation.html)
-- [List of programs ported to Fil-C](programs_that_work.html)
 - [InvisiCaps: The Fil-C Capability Model](invisicaps.html)
-- [InvisiCaps by Example](invisicaps_by_example.html)
-- [Explanation of Fil-C Disassembly](compiler_example.html)
-- [More on GitHub](https://www.github.com/pizlonator/fil-c/)
+- [List of programs ported to Fil-C](programs_that_work.html)
+- [*More Documentation*](documentation.html)
 
 ## Community
 
