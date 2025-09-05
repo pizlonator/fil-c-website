@@ -295,6 +295,11 @@ em {
     h3 {
         font-size: 1.25em;
     }
+    
+    .centered-svg-60,
+    .centered-svg-80 {
+        width: 100%;
+    }
 }
 
 .centered-svg-60 {
