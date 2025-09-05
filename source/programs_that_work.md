@@ -21,7 +21,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [libuv 1.48.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/libuv-v1.48.0). Tiny change required for passing pointers across a `write(2)` syscall (this can be done using the [`zexact_ptrtable` API](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h)).
 - [libxml2 2.14.4](https://github.com/pizlonator/fil-c/tree/deluge/projects/libxml2-2.14.4). One line change (missing `_Atomic` on a pointer field that gets raced).
 - [lua 5.4.7](https://github.com/pizlonator/fil-c/tree/deluge/projects/lua-5.4.7). *Build system changes only (disable libreadline dependency)*.
-- [mg](https://github.com/pizlonator/fil-c/tree/deluge/projects/mg). *No changes, works out of the box.*
+- [mg 3.7](https://github.com/pizlonator/fil-c/tree/deluge/projects/mg-3.7). *No changes, works out of the box.*
 - [ncurses 6.5-20240720](https://github.com/pizlonator/fil-c/tree/deluge/projects/ncurses-6.5-20240720). *No changes, works out of the box.*
 - [nghttp2 1.62.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1). *No changes, works out of the box.*
 - [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). *No changes, works out of the box.*
