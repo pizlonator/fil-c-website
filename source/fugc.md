@@ -138,7 +138,7 @@ FUGC supports finalizer queues using the `zgc_finq` API in [stdfil.h](https://gi
 
 ### Weak References
 
-FUGC supports weak references using the `zweak` API in [stdfil.h](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h). Weak references work just like the weak references in Java, except there are no reference queues. Also, Fil-C 
+FUGC supports weak references using the `zweak` API in [stdfil.h](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h). Weak references work just like the weak references in Java, except there are no reference queues. Fil-C does not support phantom or soft references.
 
 ### Weak Maps
 
