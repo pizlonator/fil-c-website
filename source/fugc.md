@@ -38,7 +38,7 @@ Let's break down FUGC's features:
   nothing less. `llvm::FilPizlonator` ensures that the runtime always knows where the root pointers are
   on the stack and in globals. The Fil-C runtime has a clever API and Ruby code generator for tracking
   pointers in low-level code that interacts with pizlonated code. All objects know where their outgoing
-  pointers are - they can only be in the InvisiCap auxiliary allocation.
+  pointers are - they can only be in the [InvisiCap](invisicaps.html) auxiliary allocation.
 
 - Non-moving: the GC doesn't move objects. This makes concurrency easy to implement and avoids
   a lot of synchronization between mutator and collector. However, FUGC will "move" pointers to free
