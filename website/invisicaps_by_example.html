@@ -27,7 +27,7 @@
         <main class="content">
 <h1>InvisiCaps By Example</h1>
 
-<p>This document describes how <a href="index.html">Fil-C</a>'s pointers work. Fil-C is totally memory safe even though it gives you almost all of the power you'd expect from C, including sophisticated uses of pointers. Fil-C pointers achieve memory safety using a capability model called <em>invisicaps</em>, which have these properties:</p>
+<p>This document describes how <a href="index.html">Fil-C</a>'s pointers work using examples. Fil-C is totally memory safe even though it gives you almost all of the power you'd expect from C, including sophisticated uses of pointers. Fil-C pointers achieve memory safety using a capability model called <em>invisicaps</em>, which have these properties:</p>
 
 <ul>
 <li><p>Pointers appear to have their native size. Fil-C currently only works on 64-bit systems, so pointers appear to be 64-bit.</p></li>
@@ -36,7 +36,7 @@
 
 <p>The capability is invisible because other than via Fil-C reflection operations (compiler intrinsics and runtime functions unique to Fil-C), there is no way for a Fil-C program to see the capability. It's always there, but you cannot find it if you access memory.</p>
 
-<p>Invisicaps offer a similar programming model to SoftBound and CHERI. However, unlike CHERI, which uses wide pointers (<code>sizeof(void*)</code> is 16 or more) to store the capability, Fil-C's capabilities are invisible in the address space and do not affect pointer size. And unlike SoftBound, Fil-C's capabilities have a complete story for atomics (you cannot break invisicap protections by racing, and atomic pointer loads/stores really are atomic). <a href="https://github.com/pizlonator/fil-c/blob/deluge/gimso_semantics.md">This document is a work-in-progress description of Fil-C's semantics.</a></p>
+<p>InvisiCaps offer a similar programming model to SoftBound and CHERI. However, unlike CHERI, which uses wide pointers (<code>sizeof(void*)</code> is 16 or more) to store the capability, Fil-C's capabilities are invisible in the address space and do not affect pointer size. And unlike SoftBound, Fil-C's capabilities have a complete story for atomics (you cannot break invisicap protections by racing, and atomic pointer loads/stores really are atomic). <a href="invisicaps.html">I also wrote a document that describes InvisiCaps work using words and diagrams.</a></p>
 
 <p>I'll show you how that works with a bunch of example programs. In these programs I'll use the Fil-C header <code>&lt;stdfil.h&gt;</code>, which you only need to <code>#include</code> if you want to mess with Fil-C's guts.</p>
 

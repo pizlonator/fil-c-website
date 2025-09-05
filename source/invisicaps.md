@@ -26,7 +26,7 @@ Designing a capability model that satisfies these requirements is sufficiently h
 
 - SideCaps (Sidecar plus Capability): This was an ingenious capability model that solved the thread safety of PLUTs. SideCaps were a heroic racy atomic protocol that allowed 256 bits of data to be encoded atomically using only 128-bit atomic operations. I am very proud of SideCaps, but they were awful. They were extremely slow (back then, Fil-C was 200x slower than normal C). And, they required knowing the type at allocation time, so they did not meaningfully support unions. Use-after free was not an error (was not detected), but could not be used to corrupt any SideCaps.
 
-- MonoCaps (Monotonic Capabilities): The main advantage of switching to MonoCaps was that the type of an object did not have to be determined at allocation time, but could be monotonically revealed as the program used the object. This allowed somewhat meaningful union usage, and obviated the need to infer the type at malloc callsites. MonoCaps also reduced the perf overhead of Fil-C to about 10x, reduced pointer size to 128 bits, unlocked C++ support, and added the ability to deterministically panic on use-after-free rather than only preventing capability corruption on use-after-free. MonoCaps also coincided with the introduction of Fil's Unbelievable Garbage Collector. It's not possible to do MonoCaps without a GC.
+- MonoCaps (Monotonic Capabilities): The main advantage of switching to MonoCaps was that the type of an object did not have to be determined at allocation time, but could be monotonically revealed as the program used the object. This allowed somewhat meaningful union usage, and obviated the need to infer the type at malloc callsites. MonoCaps also reduced the perf overhead of Fil-C to about 10x, reduced pointer size to 128 bits, unlocked C++ support, and added the ability to deterministically panic on use-after-free rather than only preventing capability corruption on use-after-free. MonoCaps also coincided with the introduction of [Fil's Unbelievable Garbage Collector](fugc.html). It's not possible to do MonoCaps without a GC.
 
 InvisiCaps are a major improvement over MonoCaps:
 
@@ -104,7 +104,7 @@ In this example, let's consider two objects. Object #1 has a pointer at rest in 
 
 Hence, all nonatomic pointer loads and stores access both the aux allocation (via the aux word, which is just below where *lower* points) and the object payload. Stores may cause the aux allocation to be lazily created.
 
-Note that this is approach is very friendly to garbage collection:
+Note that this is approach is very friendly to [garbage collection](fugc.html):
 
 - If the aux word isn't set, then the GC treats the object as a leaf (it has no outgoing pointers from the GC's perspective).
 

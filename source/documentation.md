@@ -4,6 +4,8 @@
 
 [InvisiCaps: The Fil-C Capability Model](invisicaps.html)
 
+[Fil's Unbelievable Garbage Collector](fugc.html)
+
 [List of programs ported to Fil-C](programs_that_work.html)
 
 [InvisiCaps by Example](invisicaps_by_example.html)
