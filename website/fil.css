@@ -248,6 +248,20 @@ em {
     font-style: italic;
 }
 
+.centered-svg-60 {
+    display: block;
+    margin: 2em auto;
+    width: 60%;
+    height: auto;
+}
+
+.centered-svg-80 {
+    display: block;
+    margin: 2em auto;
+    width: 80%;
+    height: auto;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .header {
@@ -300,18 +314,4 @@ em {
     .centered-svg-80 {
         width: 100%;
     }
-}
-
-.centered-svg-60 {
-    display: block;
-    margin: 2em auto;
-    width: 60%;
-    height: auto;
-}
-
-.centered-svg-80 {
-    display: block;
-    margin: 2em auto;
-    width: 80%;
-    height: auto;
 }
