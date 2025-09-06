@@ -10,7 +10,7 @@ The capability is invisible because other than via Fil-C reflection operations (
 
 InvisiCaps offer a similar programming model to SoftBound and CHERI. However, unlike CHERI, which uses wide pointers (`sizeof(void*)` is 16 or more) to store the capability, Fil-C's capabilities are invisible in the address space and do not affect pointer size. And unlike SoftBound, Fil-C's capabilities have a complete story for atomics (you cannot break invisicap protections by racing, and atomic pointer loads/stores really are atomic).
 
-I'll show you how that works with a bunch of example programs. In these programs I'll use the Fil-C header `<stdfil.h>`, which you only need to `#include` if you want to mess with Fil-C's guts.
+I'll show you how that works with a bunch of example programs. In these programs I'll use the Fil-C header [`<stdfil.h>`](stdfil.html), which you only need to `#include` if you want to mess with Fil-C's guts.
 
 All examples are compiled with `build/bin/clang -O -g` from my Fil-C working directory. If you want to try these examples yourself, [you can grab a recent binary release for Linux/X86_64](https://github.com/pizlonator/fil-c/releases).
 

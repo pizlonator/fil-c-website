@@ -159,15 +159,15 @@ typically spends &lt;5% of its time sweeping.</p>
 
 <h3>Finalizers</h3>
 
-<p>FUGC supports finalizer queues using the <code>zgc_finq</code> API in <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h">stdfil.h</a>. This feature allows you to implement finalizers in the style of Java, except that you get to set up your own finalizer queues and choose which thread processes them.</p>
+<p>FUGC supports finalizer queues using the <code>zgc_finq</code> API in <a href="stdfil.html"><code>stdfil.h</code></a>. This feature allows you to implement finalizers in the style of Java, except that you get to set up your own finalizer queues and choose which thread processes them.</p>
 
 <h3>Weak References</h3>
 
-<p>FUGC supports weak references using the <code>zweak</code> API in <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h">stdfil.h</a>. Weak references work just like the weak references in Java, except there are no reference queues. Fil-C does not support phantom or soft references.</p>
+<p>FUGC supports weak references using the <code>zweak</code> API in <a href="stdfil.html"><code>stdfil.h</code></a>. Weak references work just like the weak references in Java, except there are no reference queues. Fil-C does not support phantom or soft references.</p>
 
 <h3>Weak Maps</h3>
 
-<p>FUGC supports weak maps using the <code>zweak_map</code> API in <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h">stdfil.h</a>. This API works almost exactly like the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap">WeakMap</a>, except that Fil-C's weak maps allow you to iterate all of their elements and get a count of elements.</p>
+<p>FUGC supports weak maps using the <code>zweak_map</code> API in <a href="stdfil.html"><code>stdfil.h</code></a>. This API works almost exactly like the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap">WeakMap</a>, except that Fil-C's weak maps allow you to iterate all of their elements and get a count of elements.</p>
 
 <h1>Conclusion</h1>
 

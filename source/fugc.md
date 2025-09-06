@@ -134,15 +134,15 @@ This means that freeing objects can be used to prevent *GC-induced leaks*. Surpr
 
 ### Finalizers
 
-FUGC supports finalizer queues using the `zgc_finq` API in [stdfil.h](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h). This feature allows you to implement finalizers in the style of Java, except that you get to set up your own finalizer queues and choose which thread processes them.
+FUGC supports finalizer queues using the `zgc_finq` API in [`stdfil.h`](stdfil.html). This feature allows you to implement finalizers in the style of Java, except that you get to set up your own finalizer queues and choose which thread processes them.
 
 ### Weak References
 
-FUGC supports weak references using the `zweak` API in [stdfil.h](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h). Weak references work just like the weak references in Java, except there are no reference queues. Fil-C does not support phantom or soft references.
+FUGC supports weak references using the `zweak` API in [`stdfil.h`](stdfil.html). Weak references work just like the weak references in Java, except there are no reference queues. Fil-C does not support phantom or soft references.
 
 ### Weak Maps
 
-FUGC supports weak maps using the `zweak_map` API in [stdfil.h](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h). This API works almost exactly like the JavaScript [WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap), except that Fil-C's weak maps allow you to iterate all of their elements and get a count of elements.
+FUGC supports weak maps using the `zweak_map` API in [`stdfil.h`](stdfil.html). This API works almost exactly like the JavaScript [WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap), except that Fil-C's weak maps allow you to iterate all of their elements and get a count of elements.
 
 # Conclusion
 
