@@ -758,7 +758,7 @@ this one. Returns the requested cycle number.
 
 Call this if you know you created garbage, and you want it cleaned up.
 
-## `zgc_wait
+## `zgc_wait`
 
     void zgc_wait(zgc_cycle_number cycle);
 
