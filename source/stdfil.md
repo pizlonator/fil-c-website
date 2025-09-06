@@ -81,11 +81,11 @@ memory.
 Just like `zgc_realloc`, but allocated the reallocated memory using the same alignment constraint
 that the original memory was allocated with.
 
-It's valid to call this with NULL old_ptr (just like realloc), and then you get default alignment.
+It's valid to call this with NULL `old_ptr` (just like `realloc`), and then you get default alignment.
 
 This is a useful function and it would be great if something like it was part of the C stdlib.
-Note that you can call this even for memory returned from malloc, since malloc just forwards to
-zgc_alloc.
+Note that you can call this even for memory returned from `malloc`, since `malloc` just forwards to
+`zgc_alloc`.
 
 ## `zgc_free`
 
