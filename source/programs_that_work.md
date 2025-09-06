@@ -53,3 +53,5 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [lz4 1.10.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/lz4-1.10.0). *No changes, works out of the box*.
 - [perl 5.40.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/perl-5.40.0). Needs a 30KB patch, mostly because of how `SV` (a perl innard you probably don't want to understand) uses integers as pointers.
 - [git 2.46.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/git-2.46.0). Needs a 26KB patch, mostly because of how options processing uses `intptr_t`.
+- [GNU m4 1.4.19](https://github.com/pizlonator/fil-c/tree/deluge/projects/m4-1.4.19). Needs a 11KB patch, mostly to turn off bizarre gnulib tests. If you didn't care about the test suite, the patch would be much smaller.
+
