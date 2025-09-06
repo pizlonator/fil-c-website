@@ -643,8 +643,10 @@ to call <code>zsprintf</code> instead of <code>zsnprintf</code>.</p>
 <p>The main difference from the libc <code>sprintf</code> is that it uses a different implementation under the hood.
 This is based on the samba <code>snprintf</code>, origindally by Patrick Powell, but it uses the <code>zstrlen</code>/<code>zisdigit</code>/etc functions rather than the libc ones, and it has one additional feature:</p>
 
-<pre><code>- `%P`, which prints the full Fil-C pointer (i.e. `0xptr,0xlower,0xupper,...type...`).
-</code></pre>
+<ul>
+<li><p><code>%P</code>, which prints the full Fil-C pointer (i.e. <code>0xptr,0xlower,0xupper,...type...</code>).</p></li>
+<li><p><code>%O</code>, which prints the full Fil-C object contents.</p></li>
+</ul>
 
 <p>It's not obvious that this code will do the right thing for floating point formats. But this code is
 pizlonated, so if it goes wrong, at least it'll stop your program from causing any more damage.</p>

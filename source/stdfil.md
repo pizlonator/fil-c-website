@@ -556,7 +556,9 @@ In the Fil-C libc, `sprintf` (without the z) behaves kinda like `zsprintf`, but 
 The main difference from the libc `sprintf` is that it uses a different implementation under the hood.
 This is based on the samba `snprintf`, origindally by Patrick Powell, but it uses the `zstrlen`/`zisdigit`/etc functions rather than the libc ones, and it has one additional feature:
 
-    - `%P`, which prints the full Fil-C pointer (i.e. `0xptr,0xlower,0xupper,...type...`).
+- `%P`, which prints the full Fil-C pointer (i.e. `0xptr,0xlower,0xupper,...type...`).
+
+- `%O`, which prints the full Fil-C object contents.
 
 It's not obvious that this code will do the right thing for floating point formats. But this code is
 pizlonated, so if it goes wrong, at least it'll stop your program from causing any more damage.
