@@ -236,8 +236,10 @@ It's not possible to use this function unsafely in the sense that you can only g
 
 The Fil-C compiler will infer `zmkptr` in "obvious" (to the compiler) situations, like:
 
-    // Get a pointer to the even array element.
-    int* ptr = (int*)((uintptr_t)ptr & -8);
+    int* get_ptr_to_even_array_element(int* ptr)
+    {
+        return (int*)((uintptr_t)ptr & -8);
+    }
 
 You do not need to use `zmkptr` here; the compiler's gotchu.
 

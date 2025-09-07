@@ -290,8 +290,10 @@ ptr -= (unsigned long)object;
 
 <p>The Fil-C compiler will infer <code>zmkptr</code> in "obvious" (to the compiler) situations, like:</p>
 
-<pre><code>// Get a pointer to the even array element.
-int* ptr = (int*)((uintptr_t)ptr &amp; -8);
+<pre><code>int* get_ptr_to_even_array_element(int* ptr)
+{
+    return (int*)((uintptr_t)ptr &amp; -8);
+}
 </code></pre>
 
 <p>You do not need to use <code>zmkptr</code> here; the compiler's gotchu.</p>
