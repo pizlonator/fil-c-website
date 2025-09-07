@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fil-C</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+        </aside>
+        <main class="content">
+<h1>Fil-C Runtime</h1>
+
+<p>Programs compiled with Fil-C enjoy comprehensive memory safety thanks to the entire userland stack being compiled with the Fil-C compiler. There is no interoperability with Yolo-C (i.e. classic C). This is both a <em>goal</em> and the outcome of a <em>non goal</em>.</p>
+
+<p><strong>Goal:</strong> <em>To prevent memory safety issues arising from code linked into your Fil-C program.</em> Lots of memory safety solutions make it easy to lock down just a small part of your program. While this can be a satisfying thing to do for systems builders as it shows progress towards memory safety, it's also easy for the attackers to work around. Software that's in a perpetually "partly memory safe" state is really in a perpetually unsafe state. It's a goal of Fil-C to take a giant leap towards complete memory safety, rather than slowly inching towards it.</p>
+
+<p><strong>Non-Goal:</strong> <s><em>To support interoperability with Yolo-C.</em></s> That kind of interoperability is hard to engineer, both from a language design and a language implementation standpoint. Fil-C uses pointers that carry <a href="invisicaps.html">capabilities</a>. It's hard to imagine a satisfactory language design that allows Yolo-C code to pass a pointer to Fil-C while having some kind of meaningful capability associated with that pointer. Even if a design existed, actually making it work is even harder, particularly since Fil-C uses <a href="fugc.html">accurate garbage collection</a> and Yolo-C++ has <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2186r2.html">explicitly removed support for garbage collection of any kind</a>. It's a non-goal of Fil-C to try to marry its garbage collected capabilities with languages that disallow garbage collection and lack capabilities.</p>
+
+<p>Building a meaningful product often means accepting what you can and cannot do and then embracing the limitations that fall out. Fil-C proudly embraces <em>comprehensive memory safety</em>.</p>
+
+<p>What does this look like in practice? This document shows the current status.</p>
+
+<h2>The libc Sandwich</h2>
+
+<p>Fil-C has a runtime (<code>libpizlo.so</code> and <code>filc_crt.o</code>) that is written in Yolo-C and that links to a libc compiled with Yolo-C. Another libc, compiled with Fil-C, lives on top of the runtime. The rest of your software stack then lives on top of that libc.</p>
+
+<p><img src="sandwich.svg" class="centered-svg-60" alt="Fil-C Sandwich Runtime"></p>
+
+<p>Let's review the components:</p>
+
+<ul>
+<li><p><code>ld-yolo-x86_64.so</code>. This is the ELF loader. Because Fil-C currently uses musl as the libc, this is really a symbolic link to <code>libyoloc.so</code> (this loader-symlibs-libc trick is a musl-ism). It's compiled with Yolo-C.</p></li>
+<li><p><code>libyoloc.so</code>. This is a mostly unmodified musl libc, compiled with Yolo-C. The only changes are to expose some libc internal functionality that is useful for implementing <code>libpizlo.so</code>. Note that <code>libpizlo.so</code> only relies on this library for system calls and a few low level functions. In the future, it's possible that the Fil-C runtime would not have a libc in Yolo Land, but instead <code>libpizlo.so</code> would make syscalls directly.</p></li>
+<li><p><code>crt*.o</code>. These are the Yolo-C program startup trampolines that call musl's libc start function.</p></li>
+<li><p><code>libpizlo.so</code>. The Fil-C runtime lives in this library. It is based on the libpas memory management toolkit, the <a href="fugc.html">FUGC</a>, and everything needed to support memory safe threading, system calls, signal handling, capability slow paths, and other things not provided by the compiler. Programs compiled with the Fil-C compiler strongly depend on <code>libpizlo.so</code> (you will see symbols with the <code>filc_</code> prefix imported by any module compiled with the Fil-C compiler; this symbols are defined in <code>libpizlo.so</code>). <code>libpizlo.so</code> contains some code written in Fil-C, like the C personality function (for supporting C exceptions), and some of the logic to make <code>epoll(2)</code> work in Fil-C.</p></li>
+<li><p><code>filc_crt.o</code>. This provides the Yolo-C <code>main</code> function that the libc start function expects to be able to call, and imports the <code>pizlonated_main</code> function that a Fil-C program would define. <code>filc_crt.o</code>'s job is to call <code>libpizlo.so</code>'s <code>filc_start_program</code> function, passing it the program arguments and pointer to <code>pizlonated_main</code>.</p></li>
+<li><p><code>libc.so</code>. This is a modified musl libc compiled with Fil-C. Most of the modifications are about replacing inline assembly for system calls with calls to <code>libpizlo.so</code>'s <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h">syscall API</a>.</p></li>
+<li><p><code>libc++abi.so</code>. This is a modified LLVM project libc++abi compiled with Fil-C. The largest modification is to use <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h">Fil-C's variant of libunwind</a> and Fil-C's way of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_eh_landing_pad.h">tracking exception tables</a>. <code>libpizlo.so</code> provides the core unwind functionality, like <code>_Unwind_RaiseException</code>. <code>libc++abi.so</code> provides the C++ personability function. Note that the personality function is compiled with Fil-C (so it's totally memory safe).</p></li>
+<li><p><code>libc++.so</code>. A lightly modified LLVM project libc++ compiled with Fil-C.</p></li>
+<li><p>Your program and your libraries. Your whole program must be compiled with Fil-C. Your programs dependencies must be compiled with Fil-C as well.</p></li>
+</ul>
+
+<p>Note that while I'm showing shared libraries (<code>.so</code>s), it's possible to compile a static Fil-C executable, in which case <code>ld-yolo-x86_64</code> doesn't come into play at all and the rest of the stack is statically linked into your program.</p>
+
+<p>You can see a bit of this architecture by calling the <a href="stdfil.html">stdfil.h</a> <code>zdump_stack</code> function:</p>
+
+<pre><code>#include &lt;stdfil.h&gt;
+
+int main()
+{
+    zdump_stack();
+    return 0;
+}
+</code></pre>
+
+<p>This program prints:</p>
+
+<pre><code>    &lt;runtime&gt;: zdump_stack
+    stack.c:5:5: main
+    src/env/__libc_start_main.c:79:7: __libc_start_main
+    &lt;runtime&gt;: start_program
+</code></pre>
+
+<p>Let's examine these frames starting from the bottom:</p>
+
+<ul>
+<li><p><code>&lt;runtime&gt;: start_program</code>. This is the <code>libpizlo.so</code> <code>filc_start_program</code> function called by <code>filc_crt.o</code>. Note that this is sandwiched between two <code>__libc_start_main</code> functions. Further below the stack (where the Fil-C stack scan cannot see) is the Yolo-C <code>__libc_start_main</code> function from <code>libyoloc.so</code>, and directly above this is the Fil-C <code>__libc_start_main</code> from <code>libc.so</code>.</p></li>
+<li><p><code>src/env/__libc_start_main.c:79:7: __libc_start_main</code>. This is the user <code>libc.so</code> start function, compiled with Fil-C.</p></li>
+<li><p><code>stack.c:5:5: main</code>. This is our actual <code>main</code> function, compiled with Fil-C.</p></li>
+<li><p><code>&lt;runtime&gt;: zdump_stack</code>. This is <code>libpizlo.so</code>'s implementation of <code>zdump_stack</code>.</p></li>
+</ul>
+
+<h2>Memory Safe Linking And Loading</h2>
+
+<p>Fil-C relies on ELF. I have also previously demonstrated it working on Mach-O. Fil-C does not require changes to the linker. The only changes to the musl loader are to teach it that from its standpoint, the libc that it cares about is called <code>libyoloc.so</code> not <code>libc.so</code>. Fil-C even supports advanced ELF features like weak symbols, weak or strong aliases, comdats, and even ifuncs. Fil-C ifuncs are just Fil-C functions and they are totally memory safe.</p>
+
+<p>Linking and loading "just works" because of the following three tricks:</p>
+
+<ul>
+<li><p>Mangling: each symbol in your program is mangled by having <code>pizlonated_</code> prepended to it. This prevents <code>libc</code> symbols from colliding with <code>libyoloc</code> symbols, for example. It also prevents any of your code from colliding with <code>libpizlo</code>.</p></li>
+<li><p>Getter indirection: the <code>pizlonated_</code> symbols, like <code>pizlonated_main</code>, are getters that return the <a href="invisicaps.html">Fil-C flight pointer (so intval and capability)</a> to the thing that the symbol refers to. When you access a symbol in your C or C++ code, the compiler emits a call to the relevant getter (with minimal optimizations to eliminate redundant calls to the same getter), and then your code uses the returned pointer and capability <em>without trusting anything about it</em> (i.e. function calls do the function check, reads and writes do full bounds and permission checking, etc). Note that ifuncs are implemented by having the getter call back into Fil-C (with special shenanigans to catch recursive calls).</p></li>
+<li><p>Demotion of ODR to Any: Fil-C does not allow the compiler or linker to assume that multiple definitions by the same name are equivalent; it forces the more conservative assumption that they may differ.</p></li>
+</ul>
+
+<p>Put together, this means that even wild misuse of linker capabilities in your Fil-C program will at worst result in a memory safe outcome (like a Fil-C panic).</p>
+
+<p>To learn more, check out <a href="compiler_example.html">Explanation of Fil-C Disassembly</a>.</p>
+        </main>
+    </div>
+</body>
+</html>

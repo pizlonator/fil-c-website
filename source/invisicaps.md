@@ -98,7 +98,7 @@ The key insight behind how this is achieved is the InvisiCaps inductive hypothes
 
 The aux word of an object that has no pointers is simply NULL. But if an object had any pointers stored into it, an *aux allocation* is allocated, which has the same size as the object's payload. The aux word then points at the aux allocation. *If we ignore atomic pointers for now,* all pointers at rest in the object have their *lower* in the aux allocation and their *intval* in the object payload.
 
-<img src="object-with-aux.svg" class="centered-svg-80" alt="Layout of a Fil-C object and flight pointer">
+<img src="object-with-aux.svg" class="centered-svg-80" alt="Layout of a Fil-C object that points at another object">
 
 In this example, let's consider two objects. Object #1 has a pointer at rest in its payload, which points at Object #2. So, its aux word points at an aux alloation that contains that pointer's *lower*. The pointer's *intval* is in the object's payload. Note that the flight pointer in our example points at the pointer at rest in object #1.
 
@@ -114,7 +114,7 @@ Note that this is approach is very friendly to [garbage collection](fugc.html):
 
 But what if a pointer at rest is `_Atomic`, `volatile`, `std::atomic`, or was stored using any other type or mechanism that clang considers to require atomicity?
 
-<img src="object-with-atomic.svg" class="centered-svg-80" alt="Layout of a Fil-C object and flight pointer">
+<img src="object-with-atomic.svg" class="centered-svg-80" alt="Layout of a Fil-C atomic pointer">
 
 The aux allocation can contain either *lower*s or *atomic box* pointers. The type of entry in the aux allocation is determined by the low bit of that entry (zero indicates *lower*, one indicates atomic box pointer). Atomic boxes are 16-byte, 16-byte-aligned allocations that contain a flight pointer that we store using 128-bit atomics. Or, if the system does not support double-CAS, we could use 64-bit atomics on the atomic box pointer itself and allocate a new atomic box every time an atomic mutation happens (luckily both X86_64 and ARM64 have 128-bit atomics, so that's not necessary).
 

@@ -8,6 +8,8 @@
 
 [`stdfil.h` Reference](stdfil.html)
 
+[Fil-C Runtime](runtime.html)
+
 [List of programs ported to Fil-C](programs_that_work.html)
 
 [InvisiCaps by Example](invisicaps_by_example.html)

@@ -124,7 +124,7 @@
 
 <p>The aux word of an object that has no pointers is simply NULL. But if an object had any pointers stored into it, an <em>aux allocation</em> is allocated, which has the same size as the object's payload. The aux word then points at the aux allocation. <em>If we ignore atomic pointers for now,</em> all pointers at rest in the object have their <em>lower</em> in the aux allocation and their <em>intval</em> in the object payload.</p>
 
-<p><img src="object-with-aux.svg" class="centered-svg-80" alt="Layout of a Fil-C object and flight pointer"></p>
+<p><img src="object-with-aux.svg" class="centered-svg-80" alt="Layout of a Fil-C object that points at another object"></p>
 
 <p>In this example, let's consider two objects. Object #1 has a pointer at rest in its payload, which points at Object #2. So, its aux word points at an aux alloation that contains that pointer's <em>lower</em>. The pointer's <em>intval</em> is in the object's payload. Note that the flight pointer in our example points at the pointer at rest in object #1.</p>
 
@@ -141,7 +141,7 @@
 
 <p>But what if a pointer at rest is <code>_Atomic</code>, <code>volatile</code>, <code>std::atomic</code>, or was stored using any other type or mechanism that clang considers to require atomicity?</p>
 
-<p><img src="object-with-atomic.svg" class="centered-svg-80" alt="Layout of a Fil-C object and flight pointer"></p>
+<p><img src="object-with-atomic.svg" class="centered-svg-80" alt="Layout of a Fil-C atomic pointer"></p>
 
 <p>The aux allocation can contain either <em>lower</em>s or <em>atomic box</em> pointers. The type of entry in the aux allocation is determined by the low bit of that entry (zero indicates <em>lower</em>, one indicates atomic box pointer). Atomic boxes are 16-byte, 16-byte-aligned allocations that contain a flight pointer that we store using 128-bit atomics. Or, if the system does not support double-CAS, we could use 64-bit atomics on the atomic box pointer itself and allocate a new atomic box every time an atomic mutation happens (luckily both X86_64 and ARM64 have 128-bit atomics, so that's not necessary).</p>
 
