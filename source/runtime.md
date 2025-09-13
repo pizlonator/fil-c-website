@@ -67,15 +67,17 @@ Let's examine these frames starting from the bottom:
 
 ## Memory Safe Linking And Loading
 
-Fil-C relies on ELF. I have also previously demonstrated it working on Mach-O. Fil-C does not require changes to the linker. The only changes to the musl loader are to teach it that from its standpoint, the libc that it cares about is called `libyoloc.so` not `libc.so`. Fil-C even supports advanced ELF features like weak symbols, weak or strong aliases, comdats, and even ifuncs. Fil-C ifuncs are just Fil-C functions and they are totally memory safe.
+Fil-C relies on ELF. I have also previously demonstrated it working on Mach-O. Fil-C does not require changes to the linker. The only changes to the musl loader are to teach it that from its standpoint, the libc that it cares about is called `libyoloc.so` not `libc.so`. Fil-C even supports advanced ELF features like weak symbols, weak or strong aliases, comdats, and even ifuncs. Fil-C ifuncs are just Fil-C functions and they are totally memory safe. That said, Fil-C has its own ABI (Application Binary Interface) and that ABI is not compatible with Yolo-C.
 
-Linking and loading "just works" because of the following three tricks:
+Linking and loading "just works" because of the following four ABI modifications:
 
 - Mangling: each symbol in your program is mangled by having `pizlonated_` prepended to it. This prevents `libc` symbols from colliding with `libyoloc` symbols, for example. It also prevents any of your code from colliding with `libpizlo`.
 
 - Getter indirection: the `pizlonated_` symbols, like `pizlonated_main`, are getters that return the [Fil-C flight pointer (so intval and capability)](invisicaps.html) to the thing that the symbol refers to. When you access a symbol in your C or C++ code, the compiler emits a call to the relevant getter (with minimal optimizations to eliminate redundant calls to the same getter), and then your code uses the returned pointer and capability *without trusting anything about it* (i.e. function calls do the function check, reads and writes do full bounds and permission checking, etc). Note that ifuncs are implemented by having the getter call back into Fil-C (with special shenanigans to catch recursive calls).
 
 - Demotion of ODR to Any: Fil-C does not allow the compiler or linker to assume that multiple definitions by the same name are equivalent; it forces the more conservative assumption that they may differ.
+
+- The compiler and loader (`ld-yolo-x86_64.so`) both search for headers and libraries in the [pizfix](pizfix.html), so that Fil-C gets its own *slice* separate from system libraries that follow Yolo-C ABI rather than Fil-C ABI.
 
 Put together, this means that even wild misuse of linker capabilities in your Fil-C program will at worst result in a memory safe outcome (like a Fil-C panic).
 

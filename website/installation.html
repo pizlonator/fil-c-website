@@ -42,9 +42,7 @@
 
 <p>from the directory that you unpacked it to (for example <code>/home/pizlo/filc-0.670-linux-x86_64</code>). At that point, you can run the compiler using <code>build/bin/clang</code> or <code>build/bin/clang++</code> (or via absolute path, for example <code>/home/pizlo/filc-0.670-linux-x86_64/build/bin/clang</code>).</p>
 
-<p>Note that the Fil-C libraries are in the <code>pizfix/lib</code> directory, and the headers are in <code>pizfix/include</code>.</p>
-
-<p>The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.</p>
+<p>The Fil-C installation currently operates using the <a href="pizfix.html">pizfix slice</a>: the Fil-C libraries are in the <code>pizfix/lib</code> directory, and the headers are in <code>pizfix/include</code>. The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.</p>
 
 <h2>Source Release</h2>
 
@@ -97,9 +95,14 @@ int main() {
 <pre><code>build/bin/clang++ -O2 -g -o hello hello.cpp
 </code></pre>
 
-<p>For examples of Fil-C catching memory safety issues, see
-<a href="invisicaps_by_example.html">InvisiCaps By Example</a>. For a list of programs that have been ported to
-Fil-C, see <a href="programs_that_work.html">Programs That Work</a>.</p>
+<p>Additional reading:</p>
+
+<ul>
+<li><p>For examples of Fil-C catching memory safety issues, see
+<a href="invisicaps_by_example.html">InvisiCaps By Example</a>.</p></li>
+<li><p>For a list of programs that have been ported to Fil-C, see <a href="programs_that_work.html">Programs That Work</a>.</p></li>
+<li><p>For more information about your Fil-C installation, see <a href="pizfix.html">Pizfix: The Fil-C Staging Area</a> and <a href="runtime.html">Fil-C Runtime</a>.</p></li>
+</ul>
         </main>
     </div>
 </body>

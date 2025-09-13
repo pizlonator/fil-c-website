@@ -14,9 +14,7 @@ Once you download a release and unpack it, simply run:
 
 from the directory that you unpacked it to (for example `/home/pizlo/filc-0.670-linux-x86_64`). At that point, you can run the compiler using `build/bin/clang` or `build/bin/clang++` (or via absolute path, for example `/home/pizlo/filc-0.670-linux-x86_64/build/bin/clang`).
 
-Note that the Fil-C libraries are in the `pizfix/lib` directory, and the headers are in `pizfix/include`.
-
-The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.
+The Fil-C installation currently operates using the [pizfix slice](pizfix.html): the Fil-C libraries are in the `pizfix/lib` directory, and the headers are in `pizfix/include`. The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.
 
 ## Source Release
 
@@ -62,7 +60,13 @@ This builds with `clang++` like so:
 
     build/bin/clang++ -O2 -g -o hello hello.cpp
 
-For examples of Fil-C catching memory safety issues, see
-[InvisiCaps By Example](invisicaps_by_example.html). For a list of programs that have been ported to
-Fil-C, see [Programs That Work](programs_that_work.html).
+Additional reading:
+
+- For examples of Fil-C catching memory safety issues, see
+[InvisiCaps By Example](invisicaps_by_example.html).
+
+- For a list of programs that have been ported to Fil-C, see [Programs That Work](programs_that_work.html).
+
+- For more information about your Fil-C installation, see [Pizfix: The Fil-C Staging Area](pizfix.html) and [Fil-C Runtime](runtime.html).
+
 
