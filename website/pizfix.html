@@ -46,7 +46,12 @@
 
 <ul>
 <li><p><code>fil-c/pizfix/include/</code> contains libc headers.</p></li>
+<li><p><code>fil-c/pizfix/stdfil-include/</code> contains Fil-C headers like <a href="stdfil.html"><code>stdfil.h</code></a> and <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h"><code>unwind.h</code></a> (Fil-C has the functionality of libunwind built in).</p></li>
+<li><p><code>fil-c/pizfix/os-include/</code> contains symlinks to kernel headers.</p></li>
 <li><p><code>fil-c/pizfix/lib/</code> contains Fil-C <a href="runtime.html">libraries</a>, including <code>libc.so</code> and <code>libpizlo.so</code>.</p></li>
+<li><p><code>fil-c/pizfix/lib_test/</code> contains a version of <code>libpizlo.so</code> that enables internal assertions. You can set <code>LD_LIBRARY_PATH</code> to point to this directory if you want to run with aggressive internal checking (which can cost a lot of perf).</p></li>
+<li><p><code>fil-c/pizfix/lib_gcverify/</code> contains a version of <code>libpizlo.so</code> that has the GC verifier enabled by default. You can set <code>LD_LIBRARY_PATH</code> to point to this directory if you want to run with the verifier. The verifier makes the GC a lot slower. You can also enable the verifier with the <code>FUGC_VERIFY=1</code>, <code>FUGC_MIN_THRESHOLD=0</code>, and <code>FUGC_THRESHOLD_MULTIPLIER=1.01</code> environment variable settings. Using the library in this directory instead of environment variables is appropriate for those cases where it's easier to interpose a library than to set environment variables.</p></li>
+<li><p><code>fil-c/pizfix/lib_test_gcverify/</code> contains a version of <code>libpizlo.so</code> that has internal assertions and the GC verifier enabled by default.</p></li>
 </ul></li>
 </ul>
 
@@ -56,7 +61,7 @@
 <li><p>Observe that the clang binary is at <code>filc/build/bin/clang</code>.</p></li>
 <li><p>Locate clang's own headers in <code>filc/build/bin/../lib/clang/20/include</code>.</p></li>
 <li><p>Locate the pizfix at <code>filc/build/bin/../../pizfix</code>.</p></li>
-<li><p>Locate the headers in <code>filc/build/bin/../../pizfix/include</code>.</p></li>
+<li><p>Locate the headers in <code>filc/build/bin/../../pizfix/include</code>, <code>filc/build/bin/../../pizfix/stdfil-include</code>, and <code>filc/build/bin/../../pizfix/os-include</code>.</p></li>
 <li><p>Locate the libraries in <code>filc/build/bin/../../pizfix/lib</code>.</p></li>
 </ol>
 

@@ -18,7 +18,17 @@ When you [install](installation.html) Fil-C, either from source or from binary, 
 
     - `fil-c/pizfix/include/` contains libc headers.
 
+    - `fil-c/pizfix/stdfil-include/` contains Fil-C headers like [`stdfil.h`](stdfil.html) and [`unwind.h`](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h) (Fil-C has the functionality of libunwind built in).
+
+    - `fil-c/pizfix/os-include/` contains symlinks to kernel headers.
+
     - `fil-c/pizfix/lib/` contains Fil-C [libraries](runtime.html), including `libc.so` and `libpizlo.so`.
+
+    - `fil-c/pizfix/lib_test/` contains a version of `libpizlo.so` that enables internal assertions. You can set `LD_LIBRARY_PATH` to point to this directory if you want to run with aggressive internal checking (which can cost a lot of perf).
+
+    - `fil-c/pizfix/lib_gcverify/` contains a version of `libpizlo.so` that has the GC verifier enabled by default. You can set `LD_LIBRARY_PATH` to point to this directory if you want to run with the verifier. The verifier makes the GC a lot slower. You can also enable the verifier with the `FUGC_VERIFY=1`, `FUGC_MIN_THRESHOLD=0`, and `FUGC_THRESHOLD_MULTIPLIER=1.01` environment variable settings. Using the library in this directory instead of environment variables is appropriate for those cases where it's easier to interpose a library than to set environment variables.
+
+    - `fil-c/pizfix/lib_test_gcverify/` contains a version of `libpizlo.so` that has internal assertions and the GC verifier enabled by default.
 
 This allows for users to easily set up a Fil-C slice anywhere on their Linux machine, and the Fil-C compiler and loader both search for headers and libraries in the pizfix. The compiler knows to do this by finding the pizfix relative to the location of its own binary. The clang driver is just doing this logic:
 
@@ -28,7 +38,7 @@ This allows for users to easily set up a Fil-C slice anywhere on their Linux mac
 
 3. Locate the pizfix at `filc/build/bin/../../pizfix`.
 
-4. Locate the headers in `filc/build/bin/../../pizfix/include`.
+4. Locate the headers in `filc/build/bin/../../pizfix/include`, `filc/build/bin/../../pizfix/stdfil-include`, and `filc/build/bin/../../pizfix/os-include`.
 
 5. Locate the libraries in `filc/build/bin/../../pizfix/lib`.
 
