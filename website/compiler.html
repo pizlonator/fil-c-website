@@ -63,7 +63,7 @@
 <li><p>Tracking pointers in Pizderson frames. A Pizderson frame is like a <a href="https://dl.acm.org/doi/10.1145/512429.512449">Henderson frame</a> except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.</p></li>
 </ul>
 
-<p><code>FilPizlonator</code> started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. Over time, many optimizations have been added:</p>
+<p><code>FilPizlonator</code> started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. <a href="programs_that_work.html">Since it did work out</a>, many optimizations have been added:</p>
 
 <ul>
 <li><p>Allocations and many other intrinsic operations are now inlined.</p></li>

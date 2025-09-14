@@ -82,6 +82,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/perl-5.40.0">perl 5.40.0</a>. Needs a 30KB patch, mostly because of how <code>SV</code> (a perl innard you probably don't want to understand) uses integers as pointers.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/git-2.46.0">git 2.46.0</a>. Needs a 26KB patch, mostly because of how options processing uses <code>intptr_t</code>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/m4-1.4.19">GNU m4 1.4.19</a>. Needs a 11KB patch, mostly to turn off bizarre gnulib tests. If you didn't care about the test suite, the patch would be much smaller.</li>
+<li>GNU Emacs 30.1. Replaced the elisp GC with calls to <a href="stdfil.html">zgc_alloc</a>. Disabled dumping, for now.</li>
 </ul>
         </main>
     </div>

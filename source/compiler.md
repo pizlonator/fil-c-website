@@ -38,7 +38,7 @@ This pass applies memory safety rules *to every single construct in LLVM IR*, in
 
 - Tracking pointers in Pizderson frames. A Pizderson frame is like a [Henderson frame](https://dl.acm.org/doi/10.1145/512429.512449) except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.
 
-`FilPizlonator` started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. Over time, many optimizations have been added:
+`FilPizlonator` started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. [Since it did work out](programs_that_work.html), many optimizations have been added:
 
 - Allocations and many other intrinsic operations are now inlined.
 
