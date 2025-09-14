@@ -55,4 +55,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [git 2.46.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/git-2.46.0). Needs a 26KB patch, mostly because of how options processing uses `intptr_t`.
 - [GNU m4 1.4.19](https://github.com/pizlonator/fil-c/tree/deluge/projects/m4-1.4.19). Needs a 11KB patch, mostly to turn off bizarre gnulib tests. If you didn't care about the test suite, the patch would be much smaller.
 - [GNU Emacs 30.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/emacs-30.1). Replaced the elisp GC with calls to [zgc_alloc](stdfil.html). Disabled dumping, for now.
-- vim 9.1.0660. Requires just a tiny change (disable sigaltstack usage and fix a bug where vim passed SIG_ERR as a new handler to sigaction).
+- vim 9.1.0660. Requires just a tiny change (disable `sigaltstack` usage and fix a bug where vim passed `SIG_ERR` as a new handler to `sigaction`).
