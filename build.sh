@@ -30,6 +30,13 @@ find source -name "*.md" -type f | while read -r md_file; do
     # Convert markdown to HTML
     echo "Processing: $md_file -> $html_path"
     
+    # Extract title from first # heading if it exists
+    TITLE="Fil-C"
+    FIRST_HEADING=$(grep -m 1 "^# " "$md_file" | sed 's/^# //')
+    if [ -n "$FIRST_HEADING" ]; then
+        TITLE="$FIRST_HEADING"
+    fi
+    
     # Generate HTML with CSS reference
     cat <<EOF > "$html_path"
 <!DOCTYPE html>
@@ -37,7 +44,7 @@ find source -name "*.md" -type f | while read -r md_file; do
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fil-C</title>
+    <title>$TITLE</title>
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
