@@ -1,6 +1,6 @@
 # Fil-C Runtime
 
-Programs compiled with Fil-C enjoy comprehensive memory safety thanks to the entire userland stack being compiled with the Fil-C compiler. There is no interoperability with Yolo-C (i.e. classic C). This is both a *goal* and the outcome of a *non goal*.
+Programs compiled with Fil-C enjoy comprehensive memory safety thanks to the entire userland stack being compiled with the [Fil-C compiler](compiler.html). There is no interoperability with Yolo-C (i.e. classic C). This is both a *goal* and the outcome of a *non goal*.
 
 **Goal:** *To prevent memory safety issues arising from code linked into your Fil-C program.* Lots of memory safety solutions make it easy to lock down just a small part of your program. While this can be a satisfying thing to do for systems builders as it shows progress towards memory safety, it's also easy for the attackers to work around. Software that's in a perpetually "partly memory safe" state is really in a perpetually unsafe state. It's a goal of Fil-C to take a giant leap towards complete memory safety, rather than slowly inching towards it.
 

@@ -1,6 +1,6 @@
 # Fil's Unbelievable Garbage Collector
 
-Fil-C uses a *parallel concurrent on-the-fly grey-stack Dijkstra accurate non-moving* garbage collector called FUGC (Fil's Unbelievable Garbage Collector). You can find the source code for the collector itself in [fugc.c](https://github.com/pizlonator/fil-c/blob/deluge/libpas/src/libpas/fugc.c), though be warned, that code cannot possibly work without lots of support logic in the rest of the runtime and in the compiler.
+Fil-C uses a *parallel concurrent on-the-fly grey-stack Dijkstra accurate non-moving* garbage collector called FUGC (Fil's Unbelievable Garbage Collector). You can find the source code for the collector itself in [fugc.c](https://github.com/pizlonator/fil-c/blob/deluge/libpas/src/libpas/fugc.c), though be warned, that code cannot possibly work without lots of support logic in the rest of the [runtime](runtime.html) and in the [compiler](compiler.html).
 
 Let's break down FUGC's features:
 

@@ -4,6 +4,8 @@
 
 [InvisiCaps: The Fil-C Capability Model](invisicaps.html)
 
+[Fil's Unbelievable C Compiler](compiler.html)
+
 [Fil's Unbelievable Garbage Collector](fugc.html)
 
 [`stdfil.h` Reference](stdfil.html)

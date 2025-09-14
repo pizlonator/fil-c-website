@@ -30,7 +30,7 @@ When you [install](installation.html) Fil-C, either from source or from binary, 
 
     - `fil-c/pizfix/lib_test_gcverify/` contains a version of `libpizlo.so` that has internal assertions and the GC verifier enabled by default.
 
-This allows for users to easily set up a Fil-C slice anywhere on their Linux machine, and the Fil-C compiler and loader both search for headers and libraries in the pizfix. The compiler knows to do this by finding the pizfix relative to the location of its own binary. The clang driver is just doing this logic:
+This allows for users to easily set up a Fil-C slice anywhere on their Linux machine, and the [Fil-C compiler](compiler.html) and loader both search for headers and libraries in the pizfix. The compiler knows to do this by finding the pizfix relative to the location of its own binary. The clang driver is just doing this logic:
 
 1. Observe that the clang binary is at `filc/build/bin/clang`.
 

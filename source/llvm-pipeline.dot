@@ -1,0 +1,199 @@
+digraph LLVMPipeline {
+    rankdir=TB;
+    node [shape=box, fontname="Courier New", fontsize=10];
+    edge [fontname="Courier New", fontsize=9];
+    
+    // Graph attributes
+    label="LLVM Pass Pipeline with Fil-C Additions\nRed = Fil-C passes, Black = Standard LLVM passes";
+    labelloc=t;
+    fontname="Courier New";
+    fontsize=14;
+    
+    // Fil-C specific passes (red)
+    subgraph cluster_filc {
+        label="Fil-C Additions";
+        style=filled;
+        fillcolor="#ffe0e5";
+        fontcolor="#c41230";
+        node [fillcolor="#ffcccc", style=filled, fontcolor="#c41230", color="#c41230"];
+        
+        // Initial Fil-C passes
+        verify [label="verify"];
+        annotation2metadata [label="annotation2metadata"];
+        forceattrs [label="forceattrs"];
+        declare_to_assign [label="declare-to-assign"];
+        
+        // First function pipeline
+        subgraph cluster_func1 {
+            label="function<eager-inv>";
+            style=dashed;
+            color="#c41230";
+            fillcolor="#ffe8ed";
+            
+            lower_expect1 [label="lower-expect"];
+            simplifycfg1 [label="simplifycfg<bonus-inst-threshold=1;\nno-forward-switch-cond;...>"];
+            sroa1 [label="sroa<modify-cfg>"];
+            early_cse1 [label="early-cse<>"];
+            
+            lower_expect1 -> simplifycfg1 -> sroa1 -> early_cse1;
+        }
+        
+        require_globals_aa1 [label="require<globals-aa>"];
+        func_invalidate_aa [label="function(invalidate<aa>)"];
+        require_profile_summary1 [label="require<profile-summary>"];
+        
+        // CGSCC pipeline
+        subgraph cluster_cgscc1 {
+            label="cgscc";
+            style=dashed;
+            color="#c41230";
+            fillcolor="#ffe8ed";
+            
+            subgraph cluster_devirt {
+                label="devirt<4>";
+                style=dotted;
+                color="#c41230";
+                fillcolor="#fff0f3";
+                
+                inline_mandatory [label="inline<only-mandatory>"];
+                inline1 [label="inline"];
+                function_attrs1 [label="function-attrs<skip-non-recursive...>"];
+                
+                subgraph cluster_func2 {
+                    label="function<eager-inv;no-rerun>";
+                    style=dotted;
+                    color="#c41230";
+                    fillcolor="#fff5f7";
+                    
+                    sroa2 [label="sroa<modify-cfg>"];
+                    early_cse_memssa [label="early-cse<memssa>"];
+                    jump_threading1 [label="jump-threading"];
+                    correlated_prop1 [label="correlated-propagation"];
+                    simplifycfg2 [label="simplifycfg<...>"];
+                    instcombine1 [label="instcombine<max-iterations=1>"];
+                    gvn1 [label="gvn<>"];
+                    sccp1 [label="sccp"];
+                    adce1 [label="adce"];
+                    instcombine2 [label="instcombine<max-iterations=1>"];
+                    
+                    sroa2 -> early_cse_memssa -> jump_threading1 -> correlated_prop1;
+                    correlated_prop1 -> simplifycfg2 -> instcombine1 -> gvn1;
+                    gvn1 -> sccp1 -> adce1 -> instcombine2;
+                }
+                
+                function_attrs2 [label="function-attrs"];
+                func_should_not_run [label="function(require<should-not-run-function-passes>)"];
+                
+                inline_mandatory -> inline1 -> function_attrs1 -> sroa2;
+                instcombine2 -> function_attrs2 -> func_should_not_run;
+            }
+        }
+        
+        FilPizlonatorPass [label="FilPizlonatorPass", shape=doubleoctagon, fillcolor="#c41230", fontcolor="white", penwidth=2];
+        
+        // Connect Fil-C passes
+        verify -> annotation2metadata -> forceattrs -> declare_to_assign -> lower_expect1;
+        early_cse1 -> require_globals_aa1 -> func_invalidate_aa -> require_profile_summary1;
+        require_profile_summary1 -> inline_mandatory;
+        func_should_not_run -> FilPizlonatorPass;
+    }
+    
+    // Standard LLVM passes (black)
+    subgraph cluster_llvm {
+        label="Standard LLVM Pipeline";
+        style=filled;
+        fillcolor="#f0f0f0";
+        node [fillcolor="white", style=filled, fontcolor="black", color="black"];
+        
+        inferattrs [label="inferattrs"];
+        coro_early [label="coro-early"];
+        
+        // Function pipeline
+        subgraph cluster_func3 {
+            label="function<eager-inv>";
+            style=dashed;
+            color="black";
+            fillcolor="#f8f8f8";
+            
+            ee_instrument [label="ee-instrument<>"];
+            lower_expect2 [label="lower-expect"];
+            simplifycfg3 [label="simplifycfg<...>"];
+            sroa3 [label="sroa<modify-cfg>"];
+            early_cse2 [label="early-cse<>"];
+            
+            ee_instrument -> lower_expect2 -> simplifycfg3 -> sroa3 -> early_cse2;
+        }
+        
+        openmp_opt [label="openmp-opt"];
+        ipsccp [label="ipsccp"];
+        called_value_prop [label="called-value-propagation"];
+        globalopt1 [label="globalopt"];
+        
+        // Another function pipeline
+        subgraph cluster_func4 {
+            label="function<eager-inv>";
+            style=dashed;
+            color="black";
+            fillcolor="#f8f8f8";
+            
+            mem2reg [label="mem2reg"];
+            instcombine3 [label="instcombine<max-iterations=1>"];
+            simplifycfg4 [label="simplifycfg<...>"];
+            
+            mem2reg -> instcombine3 -> simplifycfg4;
+        }
+        
+        always_inline [label="always-inline"];
+        require_globals_aa2 [label="require<globals-aa>"];
+        func_invalidate_aa2 [label="function(invalidate<aa>)"];
+        require_profile_summary2 [label="require<profile-summary>"];
+        
+        // Large CGSCC pipeline (simplified)
+        subgraph cluster_cgscc2 {
+            label="cgscc(devirt<4>(...))";
+            style=dashed;
+            color="black";
+            fillcolor="#f8f8f8";
+            
+            cgscc_passes [label="inline, function-attrs,\nopenmp-opt-cgscc,\nfunction<...>(many passes),\ncoro-split, coro-annotation-elide", shape=ellipse];
+        }
+        
+        deadargelim [label="deadargelim"];
+        coro_cleanup [label="coro-cleanup"];
+        globalopt2 [label="globalopt"];
+        globaldce1 [label="globaldce"];
+        elim_avail_extern [label="elim-avail-extern"];
+        rpo_function_attrs [label="rpo-function-attrs"];
+        recompute_globalsaa [label="recompute-globalsaa"];
+        
+        // Final function pipeline (simplified)
+        subgraph cluster_func5 {
+            label="function<eager-inv>";
+            style=dashed;
+            color="black";
+            fillcolor="#f8f8f8";
+            
+            final_func_passes [label="float2int, lower-constant-intrinsics,\nloop passes, instsimplify,\ndiv-rem-pairs, tailcallelim,\nsimplifycfg<...>", shape=ellipse];
+        }
+        
+        globaldce2 [label="globaldce"];
+        constmerge [label="constmerge"];
+        cg_profile [label="cg-profile"];
+        rel_lookup_table [label="rel-lookup-table-converter"];
+        annotation_remarks [label="function(annotation-remarks)"];
+        
+        // Connect LLVM passes
+        inferattrs -> coro_early -> ee_instrument;
+        early_cse2 -> openmp_opt -> ipsccp -> called_value_prop -> globalopt1;
+        globalopt1 -> mem2reg;
+        simplifycfg4 -> always_inline -> require_globals_aa2 -> func_invalidate_aa2;
+        func_invalidate_aa2 -> require_profile_summary2 -> cgscc_passes;
+        cgscc_passes -> deadargelim -> coro_cleanup -> globalopt2 -> globaldce1;
+        globaldce1 -> elim_avail_extern -> rpo_function_attrs -> recompute_globalsaa;
+        recompute_globalsaa -> final_func_passes -> globaldce2 -> constmerge;
+        constmerge -> cg_profile -> rel_lookup_table -> annotation_remarks;
+    }
+    
+    // Connect Fil-C to LLVM
+    FilPizlonatorPass -> inferattrs [penwidth=2, color="#c41230"];
+}

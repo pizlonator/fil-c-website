@@ -63,4 +63,10 @@ EOF
 EOF
 done
 
+# Generate SVG from dot file if it exists
+if [ -f "source/llvm-pipeline.dot" ]; then
+    echo "Generating LLVM pipeline diagram..."
+    dot -Tsvg source/llvm-pipeline.dot -o website/llvm-pipeline.svg
+fi
+
 echo "Build complete!"

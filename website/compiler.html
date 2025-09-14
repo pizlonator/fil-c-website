@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fil-C</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+        </aside>
+        <main class="content">
+<h1>Fil's Unbelievable C Compiler</h1>
+
+<p>Fil-C is a fork of clang 20.1.8 that includes:</p>
+
+<ul>
+<li><p>A new LLVM pass called <a href="https://github.com/pizlonator/fil-c/blob/deluge/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp"><code>llvm::FilPizlonator</code></a> that enforces <em>garbage in, memory safety out</em> semantics: either the pass will fail to generate any output (the compiler will crash), or the generated IR follows the <a href="invisicaps.html">memory safety doctrine of Fil-C</a>. So, the resulting code will get a <a href="invisicaps_by_example.html">Fil-C panic</a> if it does something that violates the rules but otherwise has identical semantics to normal C/C++.</p></li>
+<li><p>Surgical changes to the clang frontend, including:</p>
+
+<ul>
+<li><p>Small changes in clang CodeGen to make the generated LLVM code consistently use the <code>ptr</code> type for pointers as well as other tweaks to make the code obey Fil-C rules. In cases where CodeGen fails to obey these rules, the Fil-C checks end up being overzealous and a perfectly valid C or C++ program might get a Fil-C panic.</p></li>
+<li><p>Changes to the clang Driver, mostly to support the <a href="pizfix.html">pizfix slice</a>.</p></li>
+<li><p>Changes to <a href="https://github.com/pizlonator/fil-c/blob/deluge/clang/lib/CodeGen/BackendUtil.cpp">BackendUtil.cpp</a> to use a Fil-C pass pipeline that invokes the <code>FilPizlonator</code>.</p></li>
+</ul></li>
+<li><p>Surgical changes to LLVM itself, to remove or slightly tweak optimizations that fail to follow Fil-C rules. These changes only affect passes when they run before <code>FilPizlonator</code> in the pipeline. In particular, <a href="https://github.com/pizlonator/fil-c/blob/deluge/llvm/include/llvm/IR/DataLayout.h"><code>DataLayout</code></a> has a method to detect if the IR must follow Fil-C rules.</p></li>
+</ul>
+
+<h2>The <code>FilPizlonator</code></h2>
+
+<p>This pass applies memory safety rules <em>to every single construct in LLVM IR</em>, including:</p>
+
+<ul>
+<li><p>All memory access instructions, including SIMD memory access intrinsics.</p></li>
+<li><p>All control flow instructions, including computed goto (i.e. <code>indirectbr</code>) and function calls. Function calls check that the pointer you're calling is a valid function and the calling convention is totally changed to ensure that type confusion of arguments and return values has safe outcomes.</p></li>
+<li><p>All kinds of allocations (globals and <code>alloca</code>s).</p></li>
+<li><p>All linker shenanigans (including ifuncs, comdats, etc).</p></li>
+<li><p>All assembly (module level and inline). In practice this means that assembly is effectively disallowed (but blank assembly idioms, which are super common, work as expected).</p></li>
+<li><p>Everything else in LLVM IR.</p></li>
+</ul>
+
+<p><code>FilPizlonator</code> will turn code into an always-panic if it doesn't know how to check it. If the code is particularly evil, <code>FilPizlonator</code> will simply crash and refuse to compile.</p>
+
+<p><code>FilPizlonator</code> also has extensive support for <a href="fugc.html">accurate GC</a>, including:</p>
+
+<ul>
+<li><p>Inserting pollchecks at back edges.</p></li>
+<li><p>Tracking pointers in Pizderson frames. A Pizderson frame is like a <a href="https://dl.acm.org/doi/10.1145/512429.512449">Henderson frame</a> except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.</p></li>
+</ul>
+
+<p><code>FilPizlonator</code> started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. Over time, many optimizations have been added:</p>
+
+<ul>
+<li><p>Allocations and many other intrinsic operations are now inlined.</p></li>
+<li><p>Bounds checks are scheduled and redundant ones are removed. (However, this is an area that could be massively improved).</p></li>
+<li><p>Local variables are escape-analyzed so that those that are treated as escaping for SROA, but don't actually escape in the classic sense, are stack-allocated rather than heap-allocated.</p></li>
+<li><p>Many other small optimizations.</p></li>
+</ul>
+
+<h2>The Fil-C Pass Pipeline</h2>
+
+<p>Below is a graphic showing the Fil-C pass pipeline.</p>
+
+<p><img src="llvm-pipeline.svg" class="centered-svg-60" alt="Fil-C pass pipeline"></p>
+
+<p>Fil-C reuses the LLVM pass pipeline after <code>FilPizlonator</code>, and also runs a mini version of that pipeline before <code>FilPizlonator</code>. The pre-pizlonating passes achieve:</p>
+
+<ul>
+<li><p>Promotion of locals to registers. This is the job of passes like SROA. Note, due to clang CodeGen and SROA changes, SROA will give up on any local that has <code>union</code>-like behavior. This is why <code>FilPizlonator</code>'s escape analysis capability is so important.</p></li>
+<li><p>Inlining.</p></li>
+<li><p>Elimination of obviously redundant loads and stores.</p></li>
+<li><p>Lots of other optimizations (like all of the ones in InstCombine).</p></li>
+</ul>
+        </main>
+    </div>
+</body>
+</html>
