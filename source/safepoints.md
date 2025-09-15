@@ -137,7 +137,7 @@ Fil-C's pollchecks also support stop-the-world (via the `FILC_THREAD_STATE_STOP_
 
 - Implementing `fork(2)`, which needs all threads to stop at a known-good point before the fork child jettisons them.
 
-- Debuggint the [FUGC](fugc.html). If you set the `FUGC_STW=1` environment variable, then the GC runs in a stop-the-world mode. This is useful for figuring out if a crash bug is due specifically to the concurrency support.
+- Debugging the [FUGC](fugc.html). If you set the `FUGC_STW=1` environment variable, then the GC runs in a stop-the-world mode. This is useful for figuring out if a crash bug is due specifically to the concurrency support.
 
 ## Further Reading
 
