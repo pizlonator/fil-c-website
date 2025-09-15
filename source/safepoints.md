@@ -40,7 +40,7 @@ If our compiler did happen to have the ability to report that a pointer is in so
 
 Making safepoints efficient is a bottomless pit of innovation across many virtual machines. There are many ways to do it! Fil-C currently does it in a very simple way that focuses in maximum concurrency rather than peak throughput. Let's look at how it works.
 
-<a name="pollchecks">
+<a name="pollchecks"></a>
 ## How Fil-C Compiles Safepoints
 
 The Fil-C compiler inserts *pollchecks* at each backward control flow edge. A pollcheck is just:
@@ -57,7 +57,7 @@ Where `my_thread` is a register-allocated pointer to the internal Fil-C represen
 
 We want to bound the amount of code that can execute between pollcheck executions, so it's worth dwelling a bit on what a *backward control flow edge* is and why it's important. Notably, we're not specifically talking about *loop edges*. In a compiler, a *loop* is whenever it's possible to prove that a structured looping construct is in use; usually it means *any set of blocks that is backwards-reachable from a block whose terminator branches to a block that dominates it*. In other words, *loop* doesn't actually encompass all of the cases where control flow leads to reexecution of the same code. On the other hand *backwards control flow edge* does conservatively encompass all of those cases, using a different definition: *any control flow edge from a descendant in the control flow graph's DFS tree to its ancestor*. Fil-C focuses only on such edges, and does not do any pollcheck insertion for calls. This is acceptable since Fil-C doesn't currently have tail calls (if it did, then pollchecks would have to be inserted at those).
 
-<a name="pizderson">
+<a name="pizderson"></a>
 ## How Fil-C Tracks Pointers
 
 Fil-C uses *Pizderson frames* to track pointers. A Pizderson frame is like a [Henderson frame](https://dl.acm.org/doi/10.1145/512429.512449) except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame. Here's the struct layout of a Pizderson frame:
@@ -70,7 +70,7 @@ Fil-C uses *Pizderson frames* to track pointers. A Pizderson frame is like a [He
 
 The compiler stack-allocates such a frame, with enough room in `lowers` to track the high watermark of how many GC pointers are live at any time at any pollcheck. The compiler ensures that any pointer that may be live across a pollcheck is stored somewhere into the `lowers` array before that pollcheck fires.
 
-<a name="softhandshake">
+<a name="softhandshake"></a>
 ## How The GC Synchronizes With Safepoints
 
 [FUGC](fugc.html) is an *on-the-fly* collector, meaning that there is no global stop-the-world where all threads are stopped for the GC. Instead of stop-the-world, Fil-C uses the *soft handshake* style of safepointing. In a soft handshake, the GC tells each thread what it would like it to do at the next safepoint and then sets the `FILC_THREAD_STATE_CHECK_REQUESTED` bit. Then the GC waits until all threads have executed the requested action at a safepoint.
@@ -85,7 +85,7 @@ Each thread has a lock and condition variable in addition to the `state` field. 
 
 - Some changes to `state` require the lock to be held even if they are made by the owning thread, and some changes to `state` require a broadcast on the condition variable.
 
-<a name="native">
+<a name="native"></a>
 ## What About Native Code?
 
 Pollchecks are only executed by Fil-C-compiled code. So, if a Fil-C thread makes a blocking system call (like `read(2)` or one of the `futex` wait calls), then the thread may not execute any pollchecks for an unbounded amount of time. We still want the GC to make progress then!

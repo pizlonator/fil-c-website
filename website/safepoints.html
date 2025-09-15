@@ -70,7 +70,7 @@
 
 <p>Making safepoints efficient is a bottomless pit of innovation across many virtual machines. There are many ways to do it! Fil-C currently does it in a very simple way that focuses in maximum concurrency rather than peak throughput. Let's look at how it works.</p>
 
-<p><a name="pollchecks"></p>
+<p><a name="pollchecks"></a></p>
 
 <h2>How Fil-C Compiles Safepoints</h2>
 
@@ -90,7 +90,7 @@ jne    &lt;somewhere&gt;
 
 <p>We want to bound the amount of code that can execute between pollcheck executions, so it's worth dwelling a bit on what a <em>backward control flow edge</em> is and why it's important. Notably, we're not specifically talking about <em>loop edges</em>. In a compiler, a <em>loop</em> is whenever it's possible to prove that a structured looping construct is in use; usually it means <em>any set of blocks that is backwards-reachable from a block whose terminator branches to a block that dominates it</em>. In other words, <em>loop</em> doesn't actually encompass all of the cases where control flow leads to reexecution of the same code. On the other hand <em>backwards control flow edge</em> does conservatively encompass all of those cases, using a different definition: <em>any control flow edge from a descendant in the control flow graph's DFS tree to its ancestor</em>. Fil-C focuses only on such edges, and does not do any pollcheck insertion for calls. This is acceptable since Fil-C doesn't currently have tail calls (if it did, then pollchecks would have to be inserted at those).</p>
 
-<p><a name="pizderson"></p>
+<p><a name="pizderson"></a></p>
 
 <h2>How Fil-C Tracks Pointers</h2>
 
@@ -105,7 +105,7 @@ jne    &lt;somewhere&gt;
 
 <p>The compiler stack-allocates such a frame, with enough room in <code>lowers</code> to track the high watermark of how many GC pointers are live at any time at any pollcheck. The compiler ensures that any pointer that may be live across a pollcheck is stored somewhere into the <code>lowers</code> array before that pollcheck fires.</p>
 
-<p><a name="softhandshake"></p>
+<p><a name="softhandshake"></a></p>
 
 <h2>How The GC Synchronizes With Safepoints</h2>
 
@@ -120,7 +120,7 @@ jne    &lt;somewhere&gt;
 <li><p>Some changes to <code>state</code> require the lock to be held even if they are made by the owning thread, and some changes to <code>state</code> require a broadcast on the condition variable.</p></li>
 </ul>
 
-<p><a name="native"></p>
+<p><a name="native"></a></p>
 
 <h2>What About Native Code?</h2>
 
