@@ -928,7 +928,7 @@ typedef pizlonated_return_value (*pizlonated_function)(
     2440:       0f 8f 2f 01 00 00       jg     2575 &lt;Jf_insert_sorted+0x315&gt;
 </code></pre>
 
-<p>Now we do the pollcheck. Fil-C's GC uses safepointing to synchronize with the mutator, which requires the mutator to periodically execute pollchecks. Loop backedges must have pollchecks. This pollcheck ended up here:</p>
+<p>Now we do the pollcheck. Fil-C's GC uses <a href="safepoints.html">safepointing</a> to synchronize with the mutator, which requires the mutator to periodically execute pollchecks. Loop backedges must have <a href="safepoints.html#pollchecks">pollchecks</a>. This pollcheck ended up here:</p>
 
 <pre><code>    2446:       f6 43 08 0e             testb  $0xe,0x8(%rbx)
     244a:       75 24                   jne    2470 &lt;Jf_insert_sorted+0x210&gt;

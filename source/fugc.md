@@ -1,6 +1,6 @@
 # Fil's Unbelievable Garbage Collector
 
-Fil-C uses a *parallel concurrent on-the-fly grey-stack Dijkstra accurate non-moving* garbage collector called FUGC (Fil's Unbelievable Garbage Collector). You can find the source code for the collector itself in [fugc.c](https://github.com/pizlonator/fil-c/blob/deluge/libpas/src/libpas/fugc.c), though be warned, that code cannot possibly work without lots of support logic in the rest of the [runtime](runtime.html) and in the [compiler](compiler.html).
+Fil-C uses a *parallel concurrent on-the-fly grey-stack Dijkstra accurate non-moving* garbage collector called FUGC (Fil's Unbelievable Garbage Collector). You can find the source code for the collector itself in [fugc.c](https://github.com/pizlonator/fil-c/blob/deluge/libpas/src/libpas/fugc.c), though be warned, that code cannot possibly work without [lots of support logic](safepoints.html) in the rest of the [runtime](runtime.html) and in the [compiler](compiler.html).
 
 Let's break down FUGC's features:
 
@@ -13,7 +13,7 @@ Let's break down FUGC's features:
   allocation slow paths).
 
 - On-the-fly: there is no global stop-the-world, but instead we use
-  "soft handshakes" (aka "ragged safepoints"). This means that the GC may ask threads to do some work (like scan stack), but threads do this
+  ["soft handshakes"](safepoints.html) (aka "ragged safepoints"). This means that the GC may ask threads to do some work (like scan stack), but threads do this
   asynchronously, on their own time, without waiting for the collector or other threads. The only "pause"
   threads experience is the callback executed in response to the soft handshake, which does work bounded
   by that thread's stack height. That "pause" is usually shorter than the slowest path you might take
@@ -51,16 +51,16 @@ object is marked, it'll stay marked for that GC cycle. It's also an *incremental
 some objects that would have been live at the start of GC might get freed if they become free during the
 collection cycle.
 
-FUGC relies on *safepoints*, which comprise:
+FUGC relies on [*safepoints*](safepoints.html), which comprise:
 
-- *Pollchecks* emitted by the compiler. The `llvm::FilPizlonator` compiler pass emits pollchecks often enough that only a
+- [*Pollchecks* emitted by the compiler](safepoints.html#pollchecks). The `llvm::FilPizlonator` compiler pass emits pollchecks often enough that only a
   bounded amount of progress is possible before a pollcheck happens. The fast path of a pollcheck is
   just a load-and-branch. The slow path runs a *pollcheck callback*, which does work for FUGC.
 
-- Soft handshakes, which request that a pollcheck callback is run on all threads and then waits for
+- [Soft handshakes](safepoints.html#softhandshake), which request that a pollcheck callback is run on all threads and then waits for
   this to happen.
 
-- *Enter*/*exit* functionality. This is for allowing threads to block in syscalls or long-running
+- [*Enter*/*exit* functionality](safepoints.html#native). This is for allowing threads to block in syscalls or long-running
   runtime functions without executing pollchecks. Threads that are in the *exited* state will have
   pollcheck callbacks executed by the collector itself (when it does the soft handshake). The only
   way for a Fil-C program to block is either by looping while entered (which means executing a

@@ -56,11 +56,11 @@
 
 <p><code>FilPizlonator</code> will turn code into an always-panic if it doesn't know how to check it. If the code is particularly evil, <code>FilPizlonator</code> will simply crash and refuse to compile.</p>
 
-<p><code>FilPizlonator</code> also has extensive support for <a href="fugc.html">accurate GC</a>, including:</p>
+<p><code>FilPizlonator</code> also has <a href="safepoints.html">extensive support for accurate GC</a>, including:</p>
 
 <ul>
-<li><p>Inserting pollchecks at back edges.</p></li>
-<li><p>Tracking pointers in Pizderson frames. A Pizderson frame is like a <a href="https://dl.acm.org/doi/10.1145/512429.512449">Henderson frame</a> except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.</p></li>
+<li><p><a href="safepoints.html#pollchecks">Inserting pollchecks at back edges</a>.</p></li>
+<li><p><a href="safepoints.html#pizderson">Tracking pointers in Pizderson frames</a>. A Pizderson frame is like a <a href="https://dl.acm.org/doi/10.1145/512429.512449">Henderson frame</a> except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.</p></li>
 </ul>
 
 <p><code>FilPizlonator</code> started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. <a href="programs_that_work.html">Since it did work out</a>, many optimizations have been added:</p>

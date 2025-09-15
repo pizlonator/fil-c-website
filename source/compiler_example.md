@@ -835,7 +835,7 @@ Finally we check if `(*next_ptr)->value > value`, and if it is, we exit the loop
         243d:       44 39 10                cmp    %r10d,(%rax)
         2440:       0f 8f 2f 01 00 00       jg     2575 <Jf_insert_sorted+0x315>
 
-Now we do the pollcheck. Fil-C's GC uses safepointing to synchronize with the mutator, which requires the mutator to periodically execute pollchecks. Loop backedges must have pollchecks. This pollcheck ended up here:
+Now we do the pollcheck. Fil-C's GC uses [safepointing](safepoints.html) to synchronize with the mutator, which requires the mutator to periodically execute pollchecks. Loop backedges must have [pollchecks](safepoints.html#pollchecks). This pollcheck ended up here:
 
         2446:       f6 43 08 0e             testb  $0xe,0x8(%rbx)
         244a:       75 24                   jne    2470 <Jf_insert_sorted+0x210>

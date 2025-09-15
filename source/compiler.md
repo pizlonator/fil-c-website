@@ -32,11 +32,11 @@ This pass applies memory safety rules *to every single construct in LLVM IR*, in
 
 `FilPizlonator` will turn code into an always-panic if it doesn't know how to check it. If the code is particularly evil, `FilPizlonator` will simply crash and refuse to compile.
 
-`FilPizlonator` also has extensive support for [accurate GC](fugc.html), including:
+`FilPizlonator` also has [extensive support for accurate GC](safepoints.html), including:
 
-- Inserting pollchecks at back edges.
+- [Inserting pollchecks at back edges](safepoints.html#pollchecks).
 
-- Tracking pointers in Pizderson frames. A Pizderson frame is like a [Henderson frame](https://dl.acm.org/doi/10.1145/512429.512449) except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.
+- [Tracking pointers in Pizderson frames](safepoints.html#pizderson). A Pizderson frame is like a [Henderson frame](https://dl.acm.org/doi/10.1145/512429.512449) except optimized for non-moving GC. Pointer register allocation is still possible since pointers are just mirrored into Pizderson frames, as opposed to being outright stored there like a Henderson frame.
 
 `FilPizlonator` started out as a zero-optimizations, instrument-everything-with-function-calls style, since I wasn't even sure if the technique would conceptually work out. [Since it did work out](programs_that_work.html), many optimizations have been added:
 

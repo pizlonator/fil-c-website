@@ -14,6 +14,8 @@
 
 [Pizfix: The Fil-C Staging Area](pizfix.html)
 
+[Safepoints and Fil-C](safepoints.html)
+
 [List of programs ported to Fil-C](programs_that_work.html)
 
 [InvisiCaps by Example](invisicaps_by_example.html)

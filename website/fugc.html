@@ -27,7 +27,7 @@
         <main class="content">
 <h1>Fil's Unbelievable Garbage Collector</h1>
 
-<p>Fil-C uses a <em>parallel concurrent on-the-fly grey-stack Dijkstra accurate non-moving</em> garbage collector called FUGC (Fil's Unbelievable Garbage Collector). You can find the source code for the collector itself in <a href="https://github.com/pizlonator/fil-c/blob/deluge/libpas/src/libpas/fugc.c">fugc.c</a>, though be warned, that code cannot possibly work without lots of support logic in the rest of the <a href="runtime.html">runtime</a> and in the <a href="compiler.html">compiler</a>.</p>
+<p>Fil-C uses a <em>parallel concurrent on-the-fly grey-stack Dijkstra accurate non-moving</em> garbage collector called FUGC (Fil's Unbelievable Garbage Collector). You can find the source code for the collector itself in <a href="https://github.com/pizlonator/fil-c/blob/deluge/libpas/src/libpas/fugc.c">fugc.c</a>, though be warned, that code cannot possibly work without <a href="safepoints.html">lots of support logic</a> in the rest of the <a href="runtime.html">runtime</a> and in the <a href="compiler.html">compiler</a>.</p>
 
 <p>Let's break down FUGC's features:</p>
 
@@ -39,7 +39,7 @@ program's threads). Mutator threads don't have to stop and wait for the collecto
 between the collector thread and mutator threads is mostly non-blocking (locking is only used on
 allocation slow paths).</p></li>
 <li><p>On-the-fly: there is no global stop-the-world, but instead we use
-"soft handshakes" (aka "ragged safepoints"). This means that the GC may ask threads to do some work (like scan stack), but threads do this
+<a href="safepoints.html">"soft handshakes"</a> (aka "ragged safepoints"). This means that the GC may ask threads to do some work (like scan stack), but threads do this
 asynchronously, on their own time, without waiting for the collector or other threads. The only "pause"
 threads experience is the callback executed in response to the soft handshake, which does work bounded
 by that thread's stack height. That "pause" is usually shorter than the slowest path you might take
@@ -74,15 +74,15 @@ object is marked, it'll stay marked for that GC cycle. It's also an <em>incremen
 some objects that would have been live at the start of GC might get freed if they become free during the
 collection cycle.</p>
 
-<p>FUGC relies on <em>safepoints</em>, which comprise:</p>
+<p>FUGC relies on <a href="safepoints.html"><em>safepoints</em></a>, which comprise:</p>
 
 <ul>
-<li><p><em>Pollchecks</em> emitted by the compiler. The <code>llvm::FilPizlonator</code> compiler pass emits pollchecks often enough that only a
+<li><p><a href="safepoints.html#pollchecks"><em>Pollchecks</em> emitted by the compiler</a>. The <code>llvm::FilPizlonator</code> compiler pass emits pollchecks often enough that only a
 bounded amount of progress is possible before a pollcheck happens. The fast path of a pollcheck is
 just a load-and-branch. The slow path runs a <em>pollcheck callback</em>, which does work for FUGC.</p></li>
-<li><p>Soft handshakes, which request that a pollcheck callback is run on all threads and then waits for
+<li><p><a href="safepoints.html#softhandshake">Soft handshakes</a>, which request that a pollcheck callback is run on all threads and then waits for
 this to happen.</p></li>
-<li><p><em>Enter</em>/<em>exit</em> functionality. This is for allowing threads to block in syscalls or long-running
+<li><p><a href="safepoints.html#native"><em>Enter</em>/<em>exit</em> functionality</a>. This is for allowing threads to block in syscalls or long-running
 runtime functions without executing pollchecks. Threads that are in the <em>exited</em> state will have
 pollcheck callbacks executed by the collector itself (when it does the soft handshake). The only
 way for a Fil-C program to block is either by looping while entered (which means executing a
