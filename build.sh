@@ -51,8 +51,13 @@ find source -name "*.md" -type f | while read -r md_file; do
     <header class="header">
 $HEADER_HTML
     </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
     <div class="container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
 $SIDEBAR_HTML
         </aside>
         <main class="content">
@@ -65,6 +70,27 @@ EOF
     cat <<EOF >> "$html_path"
         </main>
     </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
 EOF
