@@ -4,7 +4,7 @@ Fil-C is fanatically compatible with C/C++ at the source level, but [not compati
 
 - Fil-C cannot share headers with your system. You cannot `#include` anything from `/usr/include`, for example.
 
-- Fil-C cannot share libraries with your system. You cannot link to any thing in `/usr/lib`, for example.
+- Fil-C cannot share libraries with your system. You cannot link to anything in `/usr/lib`, for example.
 
 Fil-C requires its own separate *slice* of headers, libraries, and executables. This document describes the current approach (called the Pizfix) as well as two potential alternative approaches (Pizlix and `/opt/filc`).
 
@@ -50,7 +50,7 @@ Currently, the Fil-C clang will only pull this trick if it locates the pizfix. O
 
 One implication of Fil-C is that it is possible to build a Linux distribution where the entire userland is memory safe. Fil-C has already demonstrated sufficient compatibility with C/C++ to make this a reality. It hasn't been done yet, but it'll happen eventually. In such a distribution, there would either be no Yolo-C at all in userland, or the Yolo-C would be in a secondary slice (in some odd directory, not `/usr/include`/`/lib`/`/usr/lib`) in the same way that we currently put Fil-C in a secondary slice.
 
-In Pizlix, there would be no staging area, and so the Fil-C compiler and loader would just use default Linux directories. This enables Fil-C-compiled software to just be installed with `--prefix/usr`.
+In Pizlix, there would be no staging area, and so the Fil-C compiler and loader would just use default Linux directories. This enables Fil-C-compiled software to just be installed with `--prefix=/usr`.
 
 Stay tuned for more information about Pizlix!
 

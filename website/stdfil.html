@@ -557,7 +557,7 @@ have different capabilities.</p>
 
 <p>Reports the number of entries currently in the weak map.</p>
 
-<p>Note that the value returned by this function is sensitive to GC. For example, if the weak map contains mappings based on dead keys bu the GC hasn't run yet, then this will count those keys.</p>
+<p>Note that the value returned by this function is sensitive to GC. For example, if the weak map contains mappings based on dead keys but the GC hasn't run yet, then this will count those keys.</p>
 
 <h2><code>zweak_map_get_iter</code></h2>
 
@@ -594,7 +594,7 @@ while (zweak_map_iter_next(iter)) {
 
 <h2><code>zweak_map_iter_value</code></h2>
 
-<pre><code>void* zweak_map_iter_valkue(zweak_map_iter* iter);
+<pre><code>void* zweak_map_iter_value(zweak_map_iter* iter);
 </code></pre>
 
 <p>Get the value of the iterator from the current position. Only valid to call if you have called <code>zweak_map_iter_next</code> and it returned true.</p>
@@ -672,14 +672,14 @@ pizlonated, so if it goes wrong, at least it'll stop your program from causing a
 <pre><code>int zvsnprintf(char* buf, __SIZE_TYPE__ size, const char* format, __builtin_va_list args);
 </code></pre>
 
-<p>Like <code>zvsnprintf</code>, but takes the size explicitly.</p>
+<p>Like <code>zvsprintf</code>, but takes the size explicitly.</p>
 
 <h2><code>zsnprintf</code></h2>
 
 <pre><code>int zsnprintf(char* buf, __SIZE_TYPE__ size, const char* format, ...);
 </code></pre>
 
-<p>Like <code>zsnprintf</code>, but takes the size explicitly.</p>
+<p>Like <code>zsprintf</code>, but takes the size explicitly.</p>
 
 <h2><code>zvasprintf</code></h2>
 
@@ -894,7 +894,7 @@ this one. Returns the requested cycle number.</p>
 
 <p>Request a synchronous scavenge. This decommits all memory that can be decommitted.</p>
 
-<p>If we you want to free all memory that can possibly be freed and you're happy to wait, then you should
+<p>If you want to free all memory that can possibly be freed and you're happy to wait, then you should
 first <code>zgc_request_and_wait()</code> and then <code>zscavenge_synchronously()</code>.</p>
 
 <p>Note that it's fine to call this whether the scavenger is suspended or not. Even if the scavenger is

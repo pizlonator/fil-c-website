@@ -51,6 +51,8 @@
 
 <p>The Fil-C installation currently operates using the <a href="pizfix.html">pizfix slice</a>: the Fil-C libraries are in the <code>pizfix/lib</code> directory, and the headers are in <code>pizfix/include</code>. The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.</p>
 
+<p>Binary releases of Fil-C use musl as the libc.</p>
+
 <h2>Source Release</h2>
 
 <p>Clone Fil-C from GitHub:</p>
@@ -58,15 +60,27 @@
 <pre><code>git clone https://github.com/pizlonator/fil-c.git
 </code></pre>
 
-<p>You can build just the base Fil-C (what comes in the binary release) by doing:</p>
+<p>Source releases can be built in four different ways:</p>
+
+<ol>
+<li>Fast build with musl using <code>./build_all_fast.sh</code>.</li>
+<li>Fast build with glibc using <code>./build_all_fast_glibc.sh</code>.</li>
+<li>Full build with musl using <code>./build_all.sh</code>.</li>
+<li>Full build with glibc using <code>./build_all_glibc.sh</code>.</li>
+</ol>
+
+<p>Building with glibc means getting a more GNU/Linux-compatible environment. Some software (like coreutils and OpenSSH) have minor issues or missing features when built against musl.</p>
+
+<p>The fast build just builds the compiler, runtime, libc (either musl or glibc), libc++abi, and libc++. When building with glibc, the fast build also builds libxcrypt.</p>
+
+<p>The full build builds everything that the fast build builds plus the full Fil-C corpus, i.e. <a href="programs_that_work.html">most of the programs that have been ported to Fil-C</a>. Full builds require more prerequisites and take much longer.</p>
+
+<p>The most well-supported option right now is:</p>
 
 <pre><code>./build_all_fast.sh
 </code></pre>
 
-<p>In the <code>fil-c</code> directory. If you want to also build the Fil-C corpus, which includes a bunch of programs ported to Fil-C (like Python, zsh, and others)), then do:</p>
-
-<pre><code>./build_all.sh
-</code></pre>
+<p>This gives you the same environment you would get if you downloaded a binary release.</p>
 
 <h1>Try It Out</h1>
 

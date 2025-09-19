@@ -98,7 +98,7 @@ Here's the basic flow of the FUGC collector loop:
 7. Turn off the store barrier and prepare for sweeping, then soft handshake to reset thread-local
    caches again.
 8. Perform the sweep. During the sweep, objects are allocated black if they happen to be allocated out
-   of not-yet-swept pages, or white if they are allocated out of alraedy-swept pages.
+   of not-yet-swept pages, or white if they are allocated out of already-swept pages.
 9. Victory! Go back to step 1.
 
 If you're familiar with the literature, FUGC is sort of like the DLG (Doligez-Leroy-Gonthier) collector

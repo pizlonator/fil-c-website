@@ -474,7 +474,7 @@ This is an atomic operation with respect to other calls to `zweak_map_set` and `
 
 Reports the number of entries currently in the weak map.
 
-Note that the value returned by this function is sensitive to GC. For example, if the weak map contains mappings based on dead keys bu the GC hasn't run yet, then this will count those keys.
+Note that the value returned by this function is sensitive to GC. For example, if the weak map contains mappings based on dead keys but the GC hasn't run yet, then this will count those keys.
 
 ## `zweak_map_get_iter`
 
@@ -507,7 +507,7 @@ Get the key of the iterator from the current position. Only valid to call if you
 
 ## `zweak_map_iter_value`
 
-    void* zweak_map_iter_valkue(zweak_map_iter* iter);
+    void* zweak_map_iter_value(zweak_map_iter* iter);
 
 Get the value of the iterator from the current position. Only valid to call if you have called `zweak_map_iter_next` and it returned true.
 
@@ -575,13 +575,13 @@ Like `zvsprintf`, but takes variadic arguments rather than the `va_list`.
 
     int zvsnprintf(char* buf, __SIZE_TYPE__ size, const char* format, __builtin_va_list args);
 
-Like `zvsnprintf`, but takes the size explicitly.
+Like `zvsprintf`, but takes the size explicitly.
 
 ## `zsnprintf`
 
     int zsnprintf(char* buf, __SIZE_TYPE__ size, const char* format, ...);
 
-Like `zsnprintf`, but takes the size explicitly.
+Like `zsprintf`, but takes the size explicitly.
 
 ## `zvasprintf`
 
@@ -774,7 +774,7 @@ Wait for the given GC cycle to finish.
 
 Request a synchronous scavenge. This decommits all memory that can be decommitted.
 
-If we you want to free all memory that can possibly be freed and you're happy to wait, then you should
+If you want to free all memory that can possibly be freed and you're happy to wait, then you should
 first `zgc_request_and_wait()` and then `zscavenge_synchronously()`.
 
 Note that it's fine to call this whether the scavenger is suspended or not. Even if the scavenger is

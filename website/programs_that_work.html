@@ -37,7 +37,8 @@
 <p>Lots of programs work in <a href="index.html">Fil-C</a> with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.</p>
 
 <ul>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/usermusl">musl</a>. Used as Fil-C's libc. Significant changes required (replacing musl's inline assembly for calling syscalls with usage of Fil-C's <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h">syscall API</a>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/usermusl">musl</a>. Used as Fil-C's original libc, and the one you'll get if you download a binary release. Significant changes required (replacing musl's inline assembly for calling syscalls with usage of Fil-C's <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h">syscall API</a>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/user-glibc-2.40">glibc 2.40</a>. Used as Fil-C's other libc. Significant changes required (<a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h">due to syscalls</a>).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/libcxxabi">libc++abi</a>. Required moderate changes to the C++ exception personality function so that it uses Fil-C's variant of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h">libunwind</a> and Fil-C's way of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_eh_landing_pad.h">tracking exception tables</a>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/libcxx">libc++</a>. Tiny changes only, mostly to invoke futexes using Fil-C's syscall API.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/Python-3.12.5">Python 3.12.5</a>. Moderate changes required, mostly to switch the Python GC's headers from <code>uintptr_t</code> to a pointer type so they preserve capability.</li>
@@ -47,7 +48,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12">dash 0.5.12</a>. One tiny change: use <code>fork(2)</code> instead of <code>vfork(2)</code>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1">expat 2.7.1</a>. <em>Build system changes only (version script handling).</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1">icu4c 76.1</a>. Tiny changes (roughly 4KB patch).</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b">jpeb 6b</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b">jpeg 6b</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libarchive-3.7.4">libarchive 3.7.4</a>. Tiny changes (red-black tree and resizable array need to use pointer type instead of <code>uintptr_t</code>).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libedit-20240808-3.1">libedit 20240808-3.1</a>. Tiny changes (that are more about porting to musl than about Fil-C).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libevent-2.1.12">libevent 2.1.12</a>. <em>Changes to test suite only, works out of the box otherwise.</em></li>
@@ -77,12 +78,12 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zsh-5.8.0.1-dev">zsh 5.8.0.1-dev</a>. Tiny changes only (add a field to a struct to properly align some fields, disable custom malloc).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zstd-1.5.6">zstd 1.5.6</a>. Tiny changes only (use Fil-C cpuid API instead of assembly and disable some assembly snippets).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/cmake-3.30.2">cmake 3.30.2</a>. <em>No changes, works out of the box</em>.</li>
-<li>brotli 1.1.0. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/brotli-1.1.0">brotli 1.1.0</a>. <em>No changes, works out of the box</em>.</li>
 <li>google test. <em>No changes, works out of the box</em>.</li>
 <li>google benchmark. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/pizlonated-ada">ada url</a>. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/pizlonated-simdjson/commits/master/">simdjson</a>. Tiny change only (use Fil-C API for <code>cpuid</code> and <code>xgetbv</code> instead of assembly).</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/coreutils-9.5">GNU coreutils 9.5</a>. <em>No changes, works out of the box - except for feature limitations due to musl</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/coreutils-9.5">GNU coreutils 9.5</a>. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bash-5.2.32">GNU bash 5.2.32</a>. Requires a one line change due to a flex array alignment issue.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/binutils-2.43.1">GNU binutils 2.43.1</a>. Requires a 9KB patch mostly due to uses of <code>intptr_t</code> where a pointer type is required.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/lz4-1.10.0">lz4 1.10.0</a>. <em>No changes, works out of the box</em>.</li>
@@ -91,6 +92,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/m4-1.4.19">GNU m4 1.4.19</a>. Needs a 11KB patch, mostly to turn off bizarre gnulib tests. If you didn't care about the test suite, the patch would be much smaller.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/emacs-30.1">GNU Emacs 30.1</a>. Replaced the elisp GC with calls to <a href="stdfil.html">zgc_alloc</a>. Disabled dumping, for now.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/vim-9.1.0660">vim 9.1.0660</a>. Requires just a tiny change (disable <code>sigaltstack</code> usage and fix a bug where vim passed <code>SIG_ERR</code> as a new handler to <code>sigaction</code>).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libxcrypt-4.4.36">libxcrypt 4.4.36</a>. Requires small changes (one line build system change for version scripts, small change to disable an inline asm path, and another small change to symbol versioning).</li>
 </ul>
         </main>
     </div>

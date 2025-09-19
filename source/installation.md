@@ -16,19 +16,32 @@ from the directory that you unpacked it to (for example `/home/pizlo/filc-0.670-
 
 The Fil-C installation currently operates using the [pizfix slice](pizfix.html): the Fil-C libraries are in the `pizfix/lib` directory, and the headers are in `pizfix/include`. The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.
 
+Binary releases of Fil-C use musl as the libc.
+
 ## Source Release
 
 Clone Fil-C from GitHub:
 
     git clone https://github.com/pizlonator/fil-c.git
 
-You can build just the base Fil-C (what comes in the binary release) by doing:
+Source releases can be built in four different ways:
+
+1. Fast build with musl using `./build_all_fast.sh`.
+2. Fast build with glibc using `./build_all_fast_glibc.sh`.
+3. Full build with musl using `./build_all.sh`.
+4. Full build with glibc using `./build_all_glibc.sh`.
+
+Building with glibc means getting a more GNU/Linux-compatible environment. Some software (like coreutils and OpenSSH) have minor issues or missing features when built against musl.
+
+The fast build just builds the compiler, runtime, libc (either musl or glibc), libc++abi, and libc++. When building with glibc, the fast build also builds libxcrypt.
+
+The full build builds everything that the fast build builds plus the full Fil-C corpus, i.e. [most of the programs that have been ported to Fil-C](programs_that_work.html). Full builds require more prerequisites and take much longer.
+
+The most well-supported option right now is:
 
     ./build_all_fast.sh
 
-In the `fil-c` directory. If you want to also build the Fil-C corpus, which includes a bunch of programs ported to Fil-C (like Python, zsh, and others)), then do:
-
-    ./build_all.sh
+This gives you the same environment you would get if you downloaded a binary release.
 
 # Try It Out
 

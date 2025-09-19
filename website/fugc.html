@@ -129,7 +129,7 @@ stack). Do this until the mark stack is empty. Then go to step 5.</li>
 <li>Turn off the store barrier and prepare for sweeping, then soft handshake to reset thread-local
 caches again.</li>
 <li>Perform the sweep. During the sweep, objects are allocated black if they happen to be allocated out
-of not-yet-swept pages, or white if they are allocated out of alraedy-swept pages.</li>
+of not-yet-swept pages, or white if they are allocated out of already-swept pages.</li>
 <li>Victory! Go back to step 1.</li>
 </ol>
 

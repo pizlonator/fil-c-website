@@ -16,7 +16,7 @@ Achieving memory safety using a pointer capability model means:
 
 In addition to memory safety, Fil-C's other goal is fanatical compatibility. This means that Fil-C's capability model also has to allow most (or ideally all) "safe" uses of C pointers; that is, idioms that are in widespread use and don't lead to exploitation unless they violate the above rules. This means even supporting uses of pointers that the C spec deems to be undefined behavior. And it means preserving `sizeof(T*)` to be the same as what you'd expect - i.e. 8 bytes on 64-bit platforms.
 
-This article describes how Fil-C's capability mode, called InvisiCaps (Invisible Capapabilities), achieves all of these goals while also providing reasonable performance and memory usage.
+This article describes how Fil-C's capability mode, called InvisiCaps (Invisible Capabilities), achieves all of these goals while also providing reasonable performance and memory usage.
 
 ## How Hard Can It Be?
 
@@ -148,7 +148,7 @@ Function pointer casts are handled dynamically (the Fil-C calling convention dyn
 
 ### Threads
 
-Fil-C's internal thread abstraction, called `zthread`, is used internally by musl's pthread implementation. Because the `zthread` contains a lot of internal runtime state, it needs to be specially protected. A pointer to a `zthread` - or to any of the other builtin types - has the following structure:
+Fil-C's internal thread abstraction, called `zthread`, is used internally by musl's and glibc's pthread implementations. Because the `zthread` contains a lot of internal runtime state, it needs to be specially protected. A pointer to a `zthread` - or to any of the other builtin types - has the following structure:
 
 - The *lower* points at the internal `zthread` payload.
 

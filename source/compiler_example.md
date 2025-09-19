@@ -42,7 +42,7 @@ In this document I will explain what is going on in the machine code generated b
 
 The goal of this document is to explain to you how Fil-C works today. Since it's such a young implementation, Fil-C has lots of optimization opportunities. This document links to GH issues for all of the optimization opportunities it identifies.
 
-I compiled this program with my build of the Fil-C compiler (revision 61e304b42d01e3fc132dac802fe3f4b2c299653d, not for off from Fil-C release 0.668.3):
+I compiled this program with my build of the Fil-C compiler (revision 61e304b42d01e3fc132dac802fe3f4b2c299653d, not far off from Fil-C release 0.668.3):
 
     build/bin/clang -o test43 test43.c -O2 -g
 

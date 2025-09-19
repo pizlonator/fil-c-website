@@ -229,7 +229,7 @@ int main()
 Trace/breakpoint trap (core dumped)
 </code></pre>
 
-<p>Fil-C's lowest level API is the syscall layer it exposes to libc (Fil-C uses musl as its libc). Fil-C's syscall implementation enforces memory safety. Here, the <code>zsys_write</code> function in the runtime is failing because we passed an out-of-bounds pointer.</p>
+<p>Fil-C's lowest level API is the syscall layer it exposes to libc (Fil-C is using musl as its libc in this test). Fil-C's syscall implementation enforces memory safety. Here, the <code>zsys_write</code> function in the runtime is failing because we passed an out-of-bounds pointer.</p>
 
 <p>Here's another example:</p>
 

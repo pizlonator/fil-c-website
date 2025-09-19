@@ -14,6 +14,8 @@ What does this look like in practice? This document shows the current status.
 
 Fil-C has a runtime (`libpizlo.so` and `filc_crt.o`) that is written in Yolo-C and that links to a libc compiled with Yolo-C. Another libc, compiled with Fil-C, lives on top of the runtime. The rest of your software stack then lives on top of that libc.
 
+Fil-C supports both musl and glibc. Because of the coupling between the loader, libc, and runtime, Fil-C always uses the same libc in Yolo Land as in User Land. So, when running with musl, we use two versions of musl (one compiled with Yolo-C and another compiled with Fil-C). And when running with glibc, we use two versions of glibc (one compiled with Yolo-C and another compiled with Fil-C). The rest of this page documents how the runtime looks with musl. If you build with glibc, you'll see minor differences.
+
 <img src="sandwich.svg" class="centered-svg-60" alt="Fil-C Sandwich Runtime">
 
 Let's review the components:
