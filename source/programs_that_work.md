@@ -58,4 +58,15 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [GNU Emacs 30.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/emacs-30.1). Replaced the elisp GC with calls to [zgc_alloc](stdfil.html). Disabled dumping, for now.
 - [vim 9.1.0660](https://github.com/pizlonator/fil-c/tree/deluge/projects/vim-9.1.0660). Requires just a tiny change (disable `sigaltstack` usage and fix a bug where vim passed `SIG_ERR` as a new handler to `sigaction`).
 - [libxcrypt 4.4.36](https://github.com/pizlonator/fil-c/tree/deluge/projects/libxcrypt-4.4.36). Requires small changes (one line build system change for version scripts, small change to disable an inline asm path, and another small change to symbol versioning).
+- [wayland 1.24.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/wayland-1.24.0). Requires 4KB patch (mostly to test suite's usage of append sections).
+- [libevdev 1.11.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/libevdev-1.11.0). Requires 3KB patch (mostly to test suite's usage of append sections).
+- [libinput 1.29.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/libinput-1.29.1). Requires 4KB patch (mostly to test suite's usage of append sections).
+- [xkbcommon 1.11.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/libxkbcommon-xkbcommon-1.11.0). Requires 2KB patch (due to version scripts).
+- [libpng 1.6.43](https://github.com/pizlonator/fil-c/tree/deluge/projects/libpng-1.6.43). Requires 1KB patch (due to version scripts).
+- pixman 0.43.4. *No changes, works out of the box*.
+- [glib 2.80.4](https://github.com/pizlonator/fil-c/tree/deluge/projects/glib-2.80.4). Requires 100KB patch mostly due to changing the type of `GType` to a pointer type.
+- [cairo 1.18.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/cairo-1.18.0). Requires 17KB patch due to `GType` changes.
+- [libdrm 2.4.122](https://github.com/pizlonator/fil-c/tree/deluge/projects/libdrm-2.4.122). Requires 4KB patch, mostly due to how `ioctl(2)` is used.
+- [seatd 0.9.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/seatd-0.9.1). Requires <1KB patch (version scripts).
+- [weston 12.0.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/weston-12.0.5). Requires 8KB patch (due to test suite's usage of append sections).
 

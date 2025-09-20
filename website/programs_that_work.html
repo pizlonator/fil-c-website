@@ -93,6 +93,17 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/emacs-30.1">GNU Emacs 30.1</a>. Replaced the elisp GC with calls to <a href="stdfil.html">zgc_alloc</a>. Disabled dumping, for now.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/vim-9.1.0660">vim 9.1.0660</a>. Requires just a tiny change (disable <code>sigaltstack</code> usage and fix a bug where vim passed <code>SIG_ERR</code> as a new handler to <code>sigaction</code>).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libxcrypt-4.4.36">libxcrypt 4.4.36</a>. Requires small changes (one line build system change for version scripts, small change to disable an inline asm path, and another small change to symbol versioning).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/wayland-1.24.0">wayland 1.24.0</a>. Requires 4KB patch (mostly to test suite's usage of append sections).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libevdev-1.11.0">libevdev 1.11.0</a>. Requires 3KB patch (mostly to test suite's usage of append sections).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libinput-1.29.1">libinput 1.29.1</a>. Requires 4KB patch (mostly to test suite's usage of append sections).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libxkbcommon-xkbcommon-1.11.0">xkbcommon 1.11.0</a>. Requires 2KB patch (due to version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libpng-1.6.43">libpng 1.6.43</a>. Requires 1KB patch (due to version scripts).</li>
+<li>pixman 0.43.4. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/glib-2.80.4">glib 2.80.4</a>. Requires 100KB patch mostly due to changing the type of <code>GType</code> to a pointer type.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/cairo-1.18.0">cairo 1.18.0</a>. Requires 17KB patch due to <code>GType</code> changes.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libdrm-2.4.122">libdrm 2.4.122</a>. Requires 4KB patch, mostly due to how <code>ioctl(2)</code> is used.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/seatd-0.9.1">seatd 0.9.1</a>. Requires &lt;1KB patch (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/weston-12.0.5">weston 12.0.5</a>. Requires 8KB patch (due to test suite's usage of append sections).</li>
 </ul>
         </main>
     </div>
