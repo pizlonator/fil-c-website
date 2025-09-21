@@ -69,4 +69,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [libdrm 2.4.122](https://github.com/pizlonator/fil-c/tree/deluge/projects/libdrm-2.4.122). Requires 4KB patch, mostly due to how `ioctl(2)` is used.
 - [seatd 0.9.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/seatd-0.9.1). Requires <1KB patch (version scripts).
 - [weston 12.0.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/weston-12.0.5). Requires 8KB patch (due to test suite's usage of append sections).
-
+- daemon 0.6.4.  *No changes, works out of the box*.
