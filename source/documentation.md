@@ -22,5 +22,7 @@
 
 [Explanation of Fil-C Disassembly](compiler_example.html)
 
+[Pizlix: Memory Safe Linux From Scratch](pizlix.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 

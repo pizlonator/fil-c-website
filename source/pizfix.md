@@ -48,11 +48,11 @@ Currently, the Fil-C clang will only pull this trick if it locates the pizfix. O
 
 ## The Pizlix Distribution
 
-One implication of Fil-C is that it is possible to build a Linux distribution where the entire userland is memory safe. Fil-C has already demonstrated sufficient compatibility with C/C++ to make this a reality. It hasn't been done yet, but it'll happen eventually. In such a distribution, there would either be no Yolo-C at all in userland, or the Yolo-C would be in a secondary slice (in some odd directory, not `/usr/include`/`/lib`/`/usr/lib`) in the same way that we currently put Fil-C in a secondary slice.
+Fil-C is so compatible with C and C++ that it's possible to take the software that makes up the GNU/Linux userland and compile it with the Fil-C compiler to get a totally memory safe userland. [I have a prototype of this called Pizlix](pizlix.html). In Pizfix, the only things compiled with Yolo-C are the Fil-C [compiler](compiler.html), the GCC compiler used to compile the Linux kernel, and the Linux kernel.
 
-In Pizlix, there would be no staging area, and so the Fil-C compiler and loader would just use default Linux directories. This enables Fil-C-compiled software to just be installed with `--prefix=/usr`.
+In Pizlix, all of `/usr/include` and `/usr/lib` (and `/lib`) is Fil-C based. Almost all of `/usr/bin` and `/bin` is Fil-C based (only the compiler isn't).
 
-Stay tuned for more information about Pizlix!
+In Pizlix, there is no staging area, and so the Fil-C compiler and loader just use default Linux directories. This enables Fil-C-compiled software to just be installed with `--prefix=/usr`.
 
 ## The `/opt/filc` Slice
 

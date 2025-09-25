@@ -12,7 +12,7 @@ Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots 
 
 ## License
 
-Fil-C's compiler is licensed under [Apache 2](https://github.com/pizlonator/fil-c/blob/deluge/LLVM-LICENSE.txt). Fil-C's runtime is licensed under [BSD 2-clause](https://github.com/pizlonator/fil-c/blob/deluge/libpas/LICENSE.txt). Fil-C's standard library is licensed under [MIT](https://github.com/pizlonator/fil-c/blob/deluge/projects/usermusl/COPYRIGHT).
+Fil-C's compiler is licensed under [Apache 2](https://github.com/pizlonator/fil-c/blob/deluge/LLVM-LICENSE.txt). Fil-C's runtime is licensed under [BSD 2-clause](https://github.com/pizlonator/fil-c/blob/deluge/libpas/LICENSE.txt). Fil-C has two standard libraries; musl is used in binary distributions and is licensed under [MIT](https://github.com/pizlonator/fil-c/blob/deluge/projects/usermusl/COPYRIGHT), while glibc is available for source builds and in [Pizlix](pizlix.html) and is licensed under [LGPL 2.1](https://github.com/pizlonator/fil-c/blob/deluge/projects/user-glibc-2.40/COPYING.LIB).
 
 ## Documentation
 
