@@ -155,7 +155,7 @@ Then, I studied the build process to identify the best injection point for Fil-C
 
 - At this point, we are no longer building temporary cross versions of libraries in tools. We're building the final versions.
 
-- We have built good-enough versions of libraries and tools to support running [the Fil-C compiler](compiler.html). Note that in preparation for this, I had already adjusted the clang build so that it the binary has minimal dependencies and happens to dynamically link to a glibc with the same ABI version as LFS's glibc (version 2.40). It's great that glibc ABI is so stable these days that this is possible!
+- We have built good-enough versions of libraries and tools to support running [the Fil-C compiler](compiler.html). Note that in preparation for this, I had already adjusted the clang build so that the binary has minimal dependencies and happens to dynamically link to a glibc with the same ABI version as LFS's glibc (version 2.40). It's great that glibc ABI is so stable these days that this is possible!
 
 This is why the build stages have the names that they do:
 
