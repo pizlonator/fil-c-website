@@ -48,7 +48,7 @@ Currently, the Fil-C clang will only pull this trick if it locates the pizfix. O
 
 ## The Pizlix Distribution
 
-Fil-C is so compatible with C and C++ that it's possible to take the software that makes up the GNU/Linux userland and compile it with the Fil-C compiler to get a totally memory safe userland. [I have a prototype of this called Pizlix](pizlix.html). In Pizfix, the only things compiled with Yolo-C are the Fil-C [compiler](compiler.html), the GCC compiler used to compile the Linux kernel, and the Linux kernel.
+Fil-C is so compatible with C and C++ that it's possible to take the software that makes up the GNU/Linux userland and compile it with the Fil-C compiler to get a totally memory safe userland. [I have a prototype of this called Pizlix](pizlix.html). In Pizlix, the only things compiled with Yolo-C are the Fil-C [compiler](compiler.html), the GCC compiler used to compile the Linux kernel, and the Linux kernel.
 
 In Pizlix, all of `/usr/include` and `/usr/lib` (and `/lib`) is Fil-C based. Almost all of `/usr/bin` and `/bin` is Fil-C based (only the compiler isn't).
 
