@@ -7,7 +7,7 @@ Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots 
 ## Key Features
 
 - **Memory Safety**: Advanced runtime checks to prevent [exploitable memory safety errors](invisicaps_by_example.html). Unlike other approaches to increasing the safety of C, Fil-C achieves complete memory safety with zero escape hatches.
-- **C and C++ Compatibility**: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. [Many open source programs](programs_that_work.html), including CPython, OpenSSH, GNU Emacs, and Wayland work great in Fil-C. Even advanced features like threads, atomics, exceptions, signal handling, `longjmp`/`setjmp`, and shared memory (`mmap` style or Sys-V style) work.
+- **C and C++ Compatibility**: Your C or C++ software most likely compiles and runs in Fil-C with zero changes. [Many open source programs](programs_that_work.html), including CPython, OpenSSH, GNU Emacs, and Wayland work great in Fil-C. Even advanced features like threads, atomics, exceptions, signal handling, `longjmp`/`setjmp`, and shared memory (`mmap` style or Sys-V style) work. It's possible to run a [totally memory safe Linux userland](pizlix.html), including GUI, with Fil-C.
 - **Modern Tooling**: [Compiler](compiler.html) is based on a recent version of clang (20.1.8), supports all clang extensions, most GCC extensions, and works with existing C/C++ build systems (make, autotools, cmake, meson, etc).
 
 ## License

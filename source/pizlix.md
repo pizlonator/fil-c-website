@@ -1,5 +1,10 @@
 # Pizlix: Memory Safe Linux From Scratch
 
+<a href="cropped10.png">
+   <img src="cropped10.png" style="max-width: 100%; height: auto; display: block;
+        margin: 0 auto;" alt="Weston desktop built with Fil-C">
+</a>
+
 Pizlix is [LFS (Linux From Scratch) 12.2](https://www.linuxfromscratch.org/lfs/view/12.2/) with some added components, where userland is compiled with Fil-C. This means you get the most memory safe Linux-like OS currently available.
 
 Caveats:
@@ -36,7 +41,7 @@ First, clone the [Fil-C GH repo](https://github.com/pizlonator/fil-c/):
 
     git clone https://github.com/pizlonator/fil-c.git
 
-Then go into the `pizlix` directory under `fil-c`.
+Then go into the [`pizlix` directory](https://github.com/pizlonator/fil-c/tree/deluge/pizlix) under `fil-c`.
 
 Pizlix requires you to set up your machine thusly:
 
