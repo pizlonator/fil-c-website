@@ -194,10 +194,10 @@
 
 <ul>
 <li><p>At this point, we are no longer building temporary cross versions of libraries in tools. We're building the final versions.</p></li>
-<li><p>We have built good-enough versions of libraries and tools to support running <a href="compiler.html">the Fil-C compiler</a>. Note that in preparation for this, I had already adjusted the clang build so that it the binary has minimal dependencies and happens to dynamically link to a glibc with the same ABI version as LFS's glibc (version 2.40). It's great that glibc ABI is so stable these days that this is possible!</p></li>
+<li><p>We have built good-enough versions of libraries and tools to support running <a href="compiler.html">the Fil-C compiler</a>. Note that in preparation for this, I had already adjusted the clang build so that the binary has minimal dependencies and happens to dynamically link to a glibc with the same ABI version as LFS's glibc (version 2.40). It's great that glibc ABI is so stable these days that this is possible!</p></li>
 </ul>
 
-<p>This is why the build stages have the names that they do:</p>
+<p>This is why the build stages have the names that they have:</p>
 
 <ul>
 <li><p>Pre-LC: this is the "pre libc" part of the build, i.e. Chapters 5-7.</p></li>
