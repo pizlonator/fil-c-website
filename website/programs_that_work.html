@@ -42,11 +42,11 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/libcxxabi">libc++abi</a>. Required moderate changes to the C++ exception personality function so that it uses Fil-C's variant of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h">libunwind</a> and Fil-C's way of <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_eh_landing_pad.h">tracking exception tables</a>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/libcxx">libc++</a>. Tiny changes only, mostly to invoke futexes using Fil-C's syscall API.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/Python-3.12.5">Python 3.12.5</a>. Moderate changes required, mostly to switch the Python GC's headers from <code>uintptr_t</code> to a pointer type so they preserve capability.</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2">bzip2</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2">bzip2</a>. <em>No changes, works out of the box.</em> Version 1.0.8 also works out of the box.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip3">bzip3</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/curl-8.9.1">curl 8.9.1</a>. <em>Build system changes only (version script handling).</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/dash-0.5.12">dash 0.5.12</a>. One tiny change: use <code>fork(2)</code> instead of <code>vfork(2)</code>.</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1">expat 2.7.1</a>. <em>Build system changes only (version script handling).</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/expat-2.7.1">expat 2.7.1</a> and 2.6.2. <em>Build system changes only (version script handling).</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/icu-76.1">icu4c 76.1</a>. Tiny changes (roughly 4KB patch).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/jpeg-6b">jpeg 6b</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libarchive-3.7.4">libarchive 3.7.4</a>. Tiny changes (red-black tree and resizable array need to use pointer type instead of <code>uintptr_t</code>).</li>
@@ -69,12 +69,12 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/simdutf-5.5.0">simdutf 5.5.0</a>. Tiny change only (use Fil-C API for <code>cpuid</code> and <code>xgetbv</code> instead of assembly).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/sqlite">sqlite</a>. Moderate changes needed (roughly 16KB patch).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/sudo-1.9.15p5">sudo 1.9.15p5</a>. <em>Build system changes only (version script handling)</em>.</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/tcl-8.6.15">tcl 8.6.15</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/tcl-8.6.15">tcl 8.6.15</a> and 8.6.14. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/tmux-3.5a">tmux 3.5a</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/toybox-8.12">toybox 8.12</a>. Tiny changes (use <code>fork(2)</code> instead of <code>vfork(2)</code> and use pointer types instead of integer types in a few places).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/wg14_signals">wg14_signals</a>. <em>No changes, works out of the box.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/xz-5.6.2">xz 5.6.2</a>. Tiny changes (build system linker script changes, change one pointer arithmetic expression, align a union, and disable one assembly snippet).</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zlib-1.3">zlib 1.3</a>. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zlib-1.3">zlib 1.3</a> and 1.3.1. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zsh-5.8.0.1-dev">zsh 5.8.0.1-dev</a>. Tiny changes only (add a field to a struct to properly align some fields, disable custom malloc).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/zstd-1.5.6">zstd 1.5.6</a>. Tiny changes only (use Fil-C cpuid API instead of assembly and disable some assembly snippets).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/cmake-3.30.2">cmake 3.30.2</a>. <em>No changes, works out of the box</em>.</li>
@@ -105,6 +105,61 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/seatd-0.9.1">seatd 0.9.1</a>. Requires &lt;1KB patch (version scripts).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/weston-12.0.5">weston 12.0.5</a>. Requires 8KB patch (due to test suite's usage of append sections).</li>
 <li>daemon 0.6.4.  <em>No changes, works out of the box</em>.</li>
+<li>file 5.45. <em>No changes, works out of the box</em>.</li>
+<li>readline 8.2.13. <em>No changes, works out of the box</em>.</li>
+<li>bc 6.7.6. <em>No changes, works out of the box</em>.</li>
+<li>flex 2.6.4. <em>No changes, works out of the box</em>.</li>
+<li>expect 5.45.4. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/gmp-6.3.0">gmp 6.3.0</a>. Requires tiny change to configure script.</li>
+<li>mpfr 4.2.1. <em>No changes, works out of the box</em>.</li>
+<li>mpc 1.3.1. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/attr-2.5.2">attr 2.5.2</a>. Requires a tiny change to build system (version scripts), and a tiny change to a symbol versioning macro.</li>
+<li>acl 2.3.2. <em>No changes, works out of the box</em>.</li>
+<li>libcap 2.70. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/shadow-4.16.0">shadow 4.16.0</a>. Requires changes to build system (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/sed-4.9">sed 4.9</a>. Requires fixes to <code>obstack.h</code> and some bizarre gnulib tests.</li>
+<li>psmisc 23.7. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/gettext-0.22.5">gettext 0.22.5</a>. Needs build system changes (version scripts) and a two-line change due to an <a href="invisicaps_by_example.html#outofboundsbutinbounds">out-of-bounds-but-in-bounds pointer</a>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/bison-3.8.2">bison 3.8.2</a>. Requires fixes to <code>obstack.h</code>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/grep-3.11">grep 3.11</a>. Requires fixes to <code>obstack.h</code> and disabling hacky stack overflow handling (Fil-C catches stack overflows more rigorously).</li>
+<li>libtool 2.4.7. <em>No changes, works out of the box</em>.</li>
+<li>gdbm 1.24. <em>No changes, works out of the box</em>.</li>
+<li>gperf 3.1. <em>No changes, works out of the box</em>.</li>
+<li>inetutils 2.5. <em>No changes, works out of the box</em>.</li>
+<li>less 661. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/XML-Parser-2.47">XML Parser 2.47</a>. Needs a one line change to Perl bindings due to pointer-as-integer usage.</li>
+<li>intltool 0.51.0. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/kmod-33">kmod 33</a>. Needs tiny changes to build system (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/elfutils-0.191">elfutils 0.191</a>. Needs changes to build system (version scripts) and two files need a pragma to ignore a warning.</li>
+<li>ninja 1.12.1. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/check-0.15.2">check 0.15.2</a>. Needs a tiny change to configure script (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/diffutils-3.10">diffutils 3.10</a>. Needs tiny changes (ignoring warnings, disabling hacky stack overflow handling).</li>
+<li>gawk 5.3.0. <em>No changes, works out of the box</em>.</li>
+<li>findutils 4.10.0. <em>No changes, works out of the box</em>.</li>
+<li>groff 1.23.0. <em>No changes, works out of the box</em>.</li>
+<li>gzip 1.13. <em>No changes, works out of the box</em>.</li>
+<li>iproute2 6.10.0. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/kbd-2.6.4">kbd 2.6.4</a>. Requires tiny changes to <code>ioctl</code> calls (kbd was casting pointers to integers for no good reason).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libpipeline-1.5.7">libpipeline 1.5.7</a>. Requires small changes to build system (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/make-4.4.1">make 4.4.1</a>. Fix a silly and likely benign memory safety bug in environment variable handling.</li>
+<li>patch 2.7.6. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/tar-1.35">tar 1.35</a>. Requires fixes to <code>obstack.h</code>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/texinfo-7.1">texinfo 7.1</a>. Requires fixes to <code>obstack.h</code> and replacing a <code>intptr_t</code> with a <code>void*</code> in a generic data structure.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/util-linux-2.40.2">util-linux 2.40.2</a>. Requires small changes to build system (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/systemd-256.4">udev from systemd 256.4</a>. I haven't checked if all of systemd works, but I know that udev works. Required changes to version scripts, a small change to how signal handlers are reset, and removal of section hacks for setting up the error map.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/man-db-2.12.1">man-db 2.12.1</a>. One line change to how <code>ioctl</code> is called (remove pointless pointer-to-integer cast).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/procps-ng-4.0.4">procps-ng 4.0.4</a>. One line build system change (version scripts) and a one line change to fix benign out-of-bounds <code>va_arg</code>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/e2fsprogs-1.47.1">e2fsprogs 1.47.1</a>. Remove silly use of <code>sbrk</code> to measure memory usage.</li>
+<li>sysklogd 2.6.1. <em>No changes, works out of the box</em>.</li>
+<li>sysvinit 3.10. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/linux-6.10.5">linux 6.10.5</a>. Only the userland parts of the kernel source build with Fil-C, and those required small changes due to pointer tagging in the red-black tree.</li>
+<li>patchelf 0.18.0. <em>No changes, works out of the box</em>.</li>
+<li>libunistring 1.2. <em>No changes, works out of the box</em>.</li>
+<li>libpsl 0.12.5. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libtasn1-4.19.0">libtasn1 4.19.0</a>. One line change to build system (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/p11-kit-0.25.5">p11-kit 0.25.5</a>. Two line change to build system (version scripts).</li>
+<li>wget 1.24.5. <em>No changes, works out of the box</em>.</li>
+<li>which 2.21. <em>No changes, works out of the box</em>.</li>
 </ul>
         </main>
     </div>
