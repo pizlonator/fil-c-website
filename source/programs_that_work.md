@@ -118,7 +118,6 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - sysklogd 2.6.1. *No changes, works out of the box*.
 - sysvinit 3.10. *No changes, works out of the box*.
 - [linux 6.10.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/linux-6.10.5). Only the userland parts of the kernel source build with Fil-C, and those required small changes due to pointer tagging in the red-black tree.
-- patchelf 0.18.0. *No changes, works out of the box*.
 - libunistring 1.2. *No changes, works out of the box*.
 - libpsl 0.12.5. *No changes, works out of the box*.
 - [libtasn1 4.19.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/libtasn1-4.19.0). One line change to build system (version scripts).
