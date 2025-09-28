@@ -6,7 +6,7 @@ Fil-C currently only supports Linux/X86_64.
 
 ## Binary Release
 
-You can download binary releases [from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases).
+You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases).
 
 Once you download a release and unpack it, simply run:
 
