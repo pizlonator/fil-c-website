@@ -12,7 +12,7 @@ Fil-C is a fanatically compatible memory-safe implementation of C and C++. Lots 
 
 ## Quick Links
 
-- [Download Fil-C 0.671](https://github.com/pizlonator/fil-c/releases/tag/v0.671).
+- [Download Fil-C 0.671](https://github.com/pizlonator/fil-c/releases/tag/v0.671)
 - [Installation Guide](installation.html)
 - [InvisiCaps: The Fil-C Capability Model](invisicaps.html)
 - [Fil's Unbelievable C Compiler](compiler.html)
