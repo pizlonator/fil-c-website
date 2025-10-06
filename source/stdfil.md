@@ -34,6 +34,33 @@ The error message is formatted using the Fil-C runtime's internal snprintf imple
 
 This is an *always on* assert macro. The `exp` is always executed, and its result is always checked. Use this assert macro if you want asserts that don't get disabled in any compilation mode (even if `NDEBUG` is set, even if optimizations are enabled).
 
+## `zsafety_error`
+
+    void zsafety_error(const char* str);
+
+Prints the given error message and shuts the program down usingg the Fil-C panic mechanism. Exactly like `zerror` except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of `zerror` if you want to emphasize that the error is memory safety related.
+
+## `zsafety_errorf`
+
+    void zsafety_errorf(const char* str, ...);
+
+Prints the given error message and shuts the program down usingg the Fil-C panic mechanism. Exactly like `zerrorf` except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of `zerrorf` if you want to emphasize that the error is memory safety related.
+
+The error message is formatted using the Fil-C runtime's internal snprintf implementation (the same one used for `zprintf`).
+
+## `ZSAFETY_CHECK`
+
+    #define ZSAFETY_CHECK(exp) do { \
+            if ((exp)) \
+                break; \
+            zsafety_errorf("%s:%d: %s: safety check %s failed.", \
+                           __FILE__, __LINE__, __PRETTY_FUNCTION__, #exp); \
+        } while (0)
+
+This is an *always on* assert macro. The `exp` is always executed, and its result is always checked. Use this assert macro if you want asserts that don't get disabled in any compilation mode (even if `NDEBUG` is set, even if optimizations are enabled).
+
+This is exactly like `ZASSERT` except that failures use `zsafety_errorf`, so that the error message emphasizes that the failure has to do with memory safery violations.
+
 ## `zgc_alloc`
 
     void* zgc_alloc(__SIZE_TYPE__ count);
@@ -633,6 +660,33 @@ special parameter that is a pointer to the buffer where the return value is stor
     void zreturn(void* rets);
 
 Returns from the calling function, passing the contents of the rets object as the return value.
+
+## `zunsafe_call`
+
+    unsigned long zunsafe_call(const char* symbol_name, ...);
+
+Performs an unsafe call to Yolo-land.
+
+This barely works! It's not intended for full-blown interop with Yolo code. In particular, right
+now Fil-C code expects to live in a Fil-C runtime, which precludes the use of a Yolo libc.
+
+This function is mostly useful for implementing constant-time crypto libraries or other kernels
+that need to be written in assembly.
+
+The first argument is the Yolo symbol name of the function to be called. It must be a string
+literal. The remaining arguments are passed along using Yolo C ABI conventions.
+
+## `zcheck`
+
+    void zcheck(void* ptr, __SIZE_TYPE__ size);
+
+Checks that you can read and write `size` bytes at `ptr` using a similar kind of safety check that Fil-C would use if you accessed a `size` byte struct at `ptr`.
+
+## `zcheck_readonly`
+
+    void zcheck_readonly(void* ptr, __SIZE_TYPE__ size);
+
+Checks that you can *read* `size` bytes at `ptr` using a similar kind of safety check that Fil-C would use if you read a `size` byte struct at `ptr`.
 
 ## `zcan_va_arg`
 

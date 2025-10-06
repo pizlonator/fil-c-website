@@ -12,7 +12,7 @@ Once you download a release and unpack it, simply run:
 
     ./setup.sh
 
-from the directory that you unpacked it to (for example `/home/pizlo/filc-0.671-linux-x86_64`). At that point, you can run the compiler using `build/bin/clang` or `build/bin/clang++` (or via absolute path, for example `/home/pizlo/filc-0.671-linux-x86_64/build/bin/clang`).
+from the directory that you unpacked it to (for example `/home/pizlo/filc-0.672-linux-x86_64`). At that point, you can run the compiler using `build/bin/clang` or `build/bin/clang++` (or via absolute path, for example `/home/pizlo/filc-0.672-linux-x86_64/build/bin/clang`).
 
 The Fil-C installation currently operates using the [pizfix slice](pizfix.html): the Fil-C libraries are in the `pizfix/lib` directory, and the headers are in `pizfix/include`. The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.
 
