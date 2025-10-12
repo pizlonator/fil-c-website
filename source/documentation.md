@@ -24,5 +24,7 @@
 
 [Pizlix: Memory Safe Linux From Scratch](pizlix.html)
 
+[Constant-Time Crypto](constant_time_crypto.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 
