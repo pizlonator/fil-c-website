@@ -12,7 +12,9 @@
 
 [Fil-C Runtime](runtime.html)
 
-[Pizfix: The Fil-C Staging Area](pizfix.html)
+[Pizfix: The Original Fil-C Staging Area](pizfix.html)
+
+[`/opt/fil`](optfil.html)
 
 [Safepoints and Fil-C](safepoints.html)
 
