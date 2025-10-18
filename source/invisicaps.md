@@ -86,7 +86,7 @@ When a pointer is stored to the heap, we call this a *pointer at rest*. Like a p
 
 - If you store an integer to the heap and load it back as a pointer, you get a pointer with a null *lower*, or whatever *lower* the last pointer stored to that location had. You never get an invalid or corrupted *lower*.
 
-- It's not possible to access a pointer at the location where the *lower* is stored; no capability has the locations used for storing *lower*s (or any other Fil-C metadata) within its bounds. *This is the key property of InvisiCaps, and the thing that makes the "invisible" -- the C program just sees the intval portion of pointers.*
+- It's not possible to access a pointer at the location where the *lower* is stored; no capability has the locations used for storing *lower*s (or any other Fil-C metadata) within its bounds. *This is the key property of InvisiCaps, and the thing that makes them "invisible" -- the C program just sees the intval portion of pointers.*
 
 - Racing on pointer accesses results in the program loading some valid *lower* (it just might not be the *lower* you wanted, so you might trap on access).
 

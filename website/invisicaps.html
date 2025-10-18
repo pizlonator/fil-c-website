@@ -120,7 +120,7 @@
 <ul>
 <li><p>If you store a pointer to the heap and load it back as an integer, you get the intval.</p></li>
 <li><p>If you store an integer to the heap and load it back as a pointer, you get a pointer with a null <em>lower</em>, or whatever <em>lower</em> the last pointer stored to that location had. You never get an invalid or corrupted <em>lower</em>.</p></li>
-<li><p>It's not possible to access a pointer at the location where the <em>lower</em> is stored; no capability has the locations used for storing <em>lower</em>s (or any other Fil-C metadata) within its bounds. <em>This is the key property of InvisiCaps, and the thing that makes the "invisible" -- the C program just sees the intval portion of pointers.</em></p></li>
+<li><p>It's not possible to access a pointer at the location where the <em>lower</em> is stored; no capability has the locations used for storing <em>lower</em>s (or any other Fil-C metadata) within its bounds. <em>This is the key property of InvisiCaps, and the thing that makes them "invisible" -- the C program just sees the intval portion of pointers.</em></p></li>
 <li><p>Racing on pointer accesses results in the program loading some valid <em>lower</em> (it just might not be the <em>lower</em> you wanted, so you might trap on access).</p></li>
 <li><p>Atomic pointer accesses (using <code>_Atomic</code>, <code>volatile</code>, or <code>std::atomic</code>) are really atomic and lock-free.</p></li>
 </ul>

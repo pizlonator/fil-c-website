@@ -1,6 +1,6 @@
 # Safepoints and Fil-C
 
-Safepointing is an underappreciated aspect of modern multithreaded VM/GC tech. It forms the foundation of Fil-C's accurate stack scanning, safe signal handling, and safe forking. It also forms the foundation of accurate GC, debugging, and profiling in modern lots of other virtual machines (JVMs in particular). Perhaps most crucially:
+Safepointing is an underappreciated aspect of modern multithreaded VM/GC tech. It forms the foundation of Fil-C's accurate stack scanning, safe signal handling, and safe forking. It also forms the foundation of accurate GC, debugging, and profiling in lots of other virtual machines (JVMs in particular). Perhaps most crucially:
 
 *Safepointing is the reason why multiple threads can race on the heap in Fil-C using non-atomic unordered instructions, under any widely used hardware memory model, without breaking the soundness guarantees of the garbage collector.*
 

@@ -38,13 +38,13 @@ This is an *always on* assert macro. The `exp` is always executed, and its resul
 
     void zsafety_error(const char* str);
 
-Prints the given error message and shuts the program down usingg the Fil-C panic mechanism. Exactly like `zerror` except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of `zerror` if you want to emphasize that the error is memory safety related.
+Prints the given error message and shuts the program down using the Fil-C panic mechanism. Exactly like `zerror` except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of `zerror` if you want to emphasize that the error is memory safety related.
 
 ## `zsafety_errorf`
 
     void zsafety_errorf(const char* str, ...);
 
-Prints the given error message and shuts the program down usingg the Fil-C panic mechanism. Exactly like `zerrorf` except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of `zerrorf` if you want to emphasize that the error is memory safety related.
+Prints the given error message and shuts the program down using the Fil-C panic mechanism. Exactly like `zerrorf` except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of `zerrorf` if you want to emphasize that the error is memory safety related.
 
 The error message is formatted using the Fil-C runtime's internal snprintf implementation (the same one used for `zprintf`).
 

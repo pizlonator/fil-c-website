@@ -77,14 +77,14 @@
 <pre><code>void zsafety_error(const char* str);
 </code></pre>
 
-<p>Prints the given error message and shuts the program down usingg the Fil-C panic mechanism. Exactly like <code>zerror</code> except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of <code>zerror</code> if you want to emphasize that the error is memory safety related.</p>
+<p>Prints the given error message and shuts the program down using the Fil-C panic mechanism. Exactly like <code>zerror</code> except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of <code>zerror</code> if you want to emphasize that the error is memory safety related.</p>
 
 <h2><code>zsafety_errorf</code></h2>
 
 <pre><code>void zsafety_errorf(const char* str, ...);
 </code></pre>
 
-<p>Prints the given error message and shuts the program down usingg the Fil-C panic mechanism. Exactly like <code>zerrorf</code> except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of <code>zerrorf</code> if you want to emphasize that the error is memory safety related.</p>
+<p>Prints the given error message and shuts the program down using the Fil-C panic mechanism. Exactly like <code>zerrorf</code> except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of <code>zerrorf</code> if you want to emphasize that the error is memory safety related.</p>
 
 <p>The error message is formatted using the Fil-C runtime's internal snprintf implementation (the same one used for <code>zprintf</code>).</p>
 
