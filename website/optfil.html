@@ -37,7 +37,7 @@
 <p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/filc</code> prefix. <strong>This includes a memory-safe OpenSSH client and server</strong> as well as many other useful programs compiled with Fil-C. In this world:</p>
 
 <ul>
-<li><p>The compiler is <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>.</p></li>
+<li><p>The compiler is <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>. These are symlinks to <code>/opt/fil/bin/filcc-clang-20</code>.</p></li>
 <li><p>Fil-C system headers are in <code>/opt/fil/include</code>.</p></li>
 <li><p>All of the compiler's headers are in <code>/opt/fil/lib/clang/20/include</code>.</p></li>
 <li><p>Fil-C libraries are in <code>/opt/fil/lib</code>.</p></li>
@@ -57,7 +57,13 @@
 
 <p>Additionally, <code>/opt/fil/bin/pkgconf</code> knows about the packages available in <code>/opt/fil</code>.</p>
 
-<p>This allows Fil-C libraries and programs to coexist with non-Fil-C libraries and programs on any modern Linux distribution.</p>
+<p>This allows Fil-C libraries and programs to coexist with non-Fil-C libraries and programs on any modern Linux distribution. Segregating Fil-C libraries and binaries into a separate directory structure avoids <a href="runtime.html">ABI compatibility problems</a>. The Fil-C compiler is smart enough to know that if it finds itself installed in <code>/opt/fil/bin</code>, then it should:</p>
+
+<ul>
+<li>Use <code>/opt/fil/include</code> and <code>/opt/fil/lib/clang/20/include</code> for headers.</li>
+<li>Use <code>/opt/fil/lib</code> for libraries and CRT object files.</li>
+<li>Use <code>/opt/fil/bin/ld</code> as its linker.</li>
+</ul>
 
 <p>The alternatives to <code>/opt/fil</code> are the <a href="pizfix.html">pizfix slice</a> and the <a href="pizlix.html">Pizlix Linux distribution</a>.</p>
         </main>

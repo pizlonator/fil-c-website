@@ -2,7 +2,7 @@
 
 My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html), which places a Fil-C slice into the `/opt/filc` prefix. **This includes a memory-safe OpenSSH client and server** as well as many other useful programs compiled with Fil-C. In this world:
 
-- The compiler is `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
+- The compiler is `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`. These are symlinks to `/opt/fil/bin/filcc-clang-20`.
 
 - Fil-C system headers are in `/opt/fil/include`.
 
@@ -23,6 +23,10 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 
 Additionally, `/opt/fil/bin/pkgconf` knows about the packages available in `/opt/fil`.
 
-This allows Fil-C libraries and programs to coexist with non-Fil-C libraries and programs on any modern Linux distribution.
+This allows Fil-C libraries and programs to coexist with non-Fil-C libraries and programs on any modern Linux distribution. Segregating Fil-C libraries and binaries into a separate directory structure avoids [ABI compatibility problems](runtime.html). The Fil-C compiler is smart enough to know that if it finds itself installed in `/opt/fil/bin`, then it should:
+
+- Use `/opt/fil/include` and `/opt/fil/lib/clang/20/include` for headers.
+- Use `/opt/fil/lib` for libraries and CRT object files.
+- Use `/opt/fil/bin/ld` as its linker.
 
 The alternatives to `/opt/fil` are the [pizfix slice](pizfix.html) and the [Pizlix Linux distribution](pizlix.html).
