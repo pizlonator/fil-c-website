@@ -6,7 +6,7 @@ Fil-C currently only supports Linux/X86_64.
 
 ## Binary Release
 
-You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The Pizfix slice binary releases are named `filc-0.673-linux-x86_64.tar.xz`.
+You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The Pizfix slice binary releases are named [`filc-0.673-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.673/filc-0.673-linux-x86_64.tar.xz).
 
 Once you download a release and unpack it, simply run:
 
