@@ -4,7 +4,7 @@ The most unobtrusive way to try out Fil-C is using a [pizfix slice](pizfix.html)
 
 Fil-C currently only supports Linux/X86_64.
 
-## Binary Release
+## Download And Install
 
 You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The Pizfix slice binary releases are named [`filc-0.673-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.673/filc-0.673-linux-x86_64.tar.xz).
 
@@ -18,7 +18,7 @@ This kind of Fil-C installation operates using the [pizfix slice](pizfix.html): 
 
 The pizfix binary releases of Fil-C use musl as the libc.
 
-# Try It Out
+## Try It Out
 
 Consider this simple C program; let's call it `hello.c`:
 

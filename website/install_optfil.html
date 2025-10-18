@@ -34,11 +34,17 @@
         <main class="content">
 <h1>Installing The <code>/opt/fil</code> Distribution</h1>
 
-<p>My favorite way to demonstrate is using a <a href="optfil.html"><code>/opt/fil</code></a> binary release.</p>
+<p>My favorite way to demonstrate is using a <a href="optfil.html"><code>/opt/fil</code></a> binary release, since it:</p>
+
+<ul>
+<li>Installs everything into <code>/opt/fil</code> for peaceful coexistence with your usual Linux userland.</li>
+<li>The Fil-C compiler, named <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>.</li>
+<li>A bunch of useful programs compiled with Fil-C, including a memory safe OpenSSH client and server.</li>
+</ul>
 
 <p>Fil-C currently only supports Linux/X86_64.</p>
 
-<h2>Binary Release</h2>
+<h2>Download And Install</h2>
 
 <p>You can <a href="https://github.com/pizlonator/fil-c/releases">download binary releases from the Fil-C GitHub</a>. The <code>/opt/fil</code> binary releases are named <a href="https://github.com/pizlonator/fil-c/releases/download/v0.673/optfil-0.673-linux-x86_64.tar.xz"><code>optfil-0.673-linux-x86_64.tar.xz</code></a>.</p>
 
@@ -51,7 +57,7 @@
 
 <p>This style of Fil-C installation places all Fil-C headers, libraries, and tools in the <a href="optfil.html"><code>/opt/fil</code> slice</a>. The compiler automatically knows how to find those headers and libraries and will link programs in such a way that they will look for their dependent shared libraries there.</p>
 
-<h1>Try It Out</h1>
+<h2>Try It Out</h2>
 
 <p>First, add <code>/opt/fil/bin</code> to your <code>$PATH</code>:</p>
 

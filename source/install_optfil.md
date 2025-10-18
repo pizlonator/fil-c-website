@@ -1,10 +1,14 @@
 # Installing The `/opt/fil` Distribution
 
-My favorite way to demonstrate is using a [`/opt/fil`](optfil.html) binary release.
+My favorite way to demonstrate is using a [`/opt/fil`](optfil.html) binary release, since it:
+
+- Installs everything into `/opt/fil` for peaceful coexistence with your usual Linux userland.
+- The Fil-C compiler, named `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
+- A bunch of useful programs compiled with Fil-C, including a memory safe OpenSSH client and server.
 
 Fil-C currently only supports Linux/X86_64.
 
-## Binary Release
+## Download And Install
 
 You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.673-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.673/optfil-0.673-linux-x86_64.tar.xz).
 
@@ -16,7 +20,7 @@ Assuming the script finds no issues, it will prompt you if you really want to un
 
 This style of Fil-C installation places all Fil-C headers, libraries, and tools in the [`/opt/fil` slice](optfil.html). The compiler automatically knows how to find those headers and libraries and will link programs in such a way that they will look for their dependent shared libraries there.
 
-# Try It Out
+## Try It Out
 
 First, add `/opt/fil/bin` to your `$PATH`:
 

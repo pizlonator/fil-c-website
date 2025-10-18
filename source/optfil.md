@@ -4,11 +4,13 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 
 - The compiler is `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
 
-- All of the compiler's headers are in `/opt/fil/lib/clang/20/include`.
-
 - Fil-C system headers are in `/opt/fil/include`.
 
+- All of the compiler's headers are in `/opt/fil/lib/clang/20/include`.
+
 - Fil-C libraries are in `/opt/fil/lib`.
+
+- Fil-C programs use `/opt/fil/etc` for configuration files.
 
 - Programs compiled with Fil-C are in `/opt/fil/bin` and `/opt/fil/sbin`. This includes:
     - GNU bash
