@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizfix: The Fil-C Staging Area</title>
+    <title>Pizfix: The Original Fil-C Staging Area</title>
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
@@ -32,7 +32,7 @@
 <p><a href="meet_fil.html">Meet Fil</a></p>
         </aside>
         <main class="content">
-<h1>Pizfix: The Fil-C Staging Area</h1>
+<h1>Pizfix: The Original Fil-C Staging Area</h1>
 
 <p>Fil-C is fanatically compatible with C/C++ at the source level, but <a href="runtime.html">not compatible at all at the ABI level</a>. This means that:</p>
 
@@ -41,11 +41,13 @@
 <li><p>Fil-C cannot share libraries with your system. You cannot link to anything in <code>/usr/lib</code>, for example.</p></li>
 </ul>
 
-<p>Fil-C requires its own separate <em>slice</em> of headers, libraries, and executables. This document describes the current approach (called the Pizfix) as well as two potential alternative approaches (Pizlix and <code>/opt/filc</code>).</p>
+<p>Fil-C requires its own separate <em>slice</em> of headers, libraries, and executables. This document describes the simplest approach, called the Pizfix, which makes it easy to have a self-contained installation of Fil-C headers and libraries without requiring root privileges.</p>
+
+<p>Two alternatives to the Pizfix are <a href="optfil.html"><code>/opt/fil</code></a> and the <a href="pizlix.html">Pizlix</a> Linux distribution.</p>
 
 <h2>The Pizfix Slice</h2>
 
-<p>When you <a href="installation.html">install</a> Fil-C, either from source or from binary, you will get relevant libraries, binaries, and headers in two places, assuming you unpacked Fil-C in the <code>fil-c</code> directory:</p>
+<p>When you <a href="install_pizfix.html">install</a> Fil-C, either from source or from binary, you will get relevant libraries, binaries, and headers in two places, assuming you unpacked Fil-C in the <code>fil-c</code> directory:</p>
 
 <ul>
 <li><p><code>fil-c/build/</code> contains clang and clang's own headers. For example, you can run clang using <code>fil-c/build/bin/clang</code> or <code>fil-c/build/bin/clang++</code>.</p></li>
@@ -75,27 +77,6 @@
 <p>When installing additional libraries and software, it's easiest to tell the build system that <code>--prefix=fil-c/pizfix</code> - i.e. put all software in the pizfix staging area. Additionally, it's useful to build <code>pkgconf</code> and put it in the pizfix and then run all build systems with <code>PATH=fil-c/pizfix/bin:$PATH</code> so that various packages in the pizfix are able to find one another the "pkg" way.</p>
 
 <p>Currently, the Fil-C clang will only pull this trick if it locates the pizfix. Otherwise, it will look for headers and libraries the normal Linux way (i.e. <code>/usr/include</code>, <code>/lib</code>, and <code>/usr/lib</code>). In other words, Fil-C is already set up to support being used as the primary slice of a Linux distribution with a Fil-C userland.</p>
-
-<h2>The Pizlix Distribution</h2>
-
-<p>Fil-C is so compatible with C and C++ that it's possible to take the software that makes up the GNU/Linux userland and compile it with the Fil-C compiler to get a totally memory safe userland. <a href="pizlix.html">I have a prototype of this called Pizlix</a>. In Pizlix, the only things compiled with Yolo-C are the Fil-C <a href="compiler.html">compiler</a>, the GCC compiler used to compile the Linux kernel, and the Linux kernel.</p>
-
-<p>In Pizlix, all of <code>/usr/include</code> and <code>/usr/lib</code> (and <code>/lib</code>) is Fil-C based. Almost all of <code>/usr/bin</code> and <code>/bin</code> is Fil-C based (only the compiler isn't).</p>
-
-<p>In Pizlix, there is no staging area, and so the Fil-C compiler and loader just use default Linux directories. This enables Fil-C-compiled software to just be installed with <code>--prefix=/usr</code>.</p>
-
-<h2>The <code>/opt/filc</code> Slice</h2>
-
-<p>An alternative approach to making Fil-C available to users would be to have an <code>/opt/filc</code> prefix. In this world, we would:</p>
-
-<ul>
-<li><p>Rename clang to <code>/opt/filc/bin/filcc</code>.</p></li>
-<li><p>Place all of clang's headers in <code>/opt/filc/lib/clang/20/include</code>.</p></li>
-<li><p>Place Fil-C system headers in <code>/opt/filc/include</code>.</p></li>
-<li><p>Place Fil-C libraries in <code>/opt/filc/lib</code>.</p></li>
-</ul>
-
-<p>This would be an awesome way to distribute Fil-C, and you could set it up yourself by hacking the current Fil-C install. This is likely superior to the pizfix slice. It's complementary to the Pizlix Distribution.</p>
         </main>
     </div>
     <script>

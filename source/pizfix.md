@@ -1,4 +1,4 @@
-# Pizfix: The Fil-C Staging Area
+# Pizfix: The Original Fil-C Staging Area
 
 Fil-C is fanatically compatible with C/C++ at the source level, but [not compatible at all at the ABI level](runtime.html). This means that:
 
@@ -6,11 +6,13 @@ Fil-C is fanatically compatible with C/C++ at the source level, but [not compati
 
 - Fil-C cannot share libraries with your system. You cannot link to anything in `/usr/lib`, for example.
 
-Fil-C requires its own separate *slice* of headers, libraries, and executables. This document describes the current approach (called the Pizfix) as well as two potential alternative approaches (Pizlix and `/opt/filc`).
+Fil-C requires its own separate *slice* of headers, libraries, and executables. This document describes the simplest approach, called the Pizfix, which makes it easy to have a self-contained installation of Fil-C headers and libraries without requiring root privileges.
+
+Two alternatives to the Pizfix are [`/opt/fil`](optfil.html) and the [Pizlix](pizlix.html) Linux distribution.
 
 ## The Pizfix Slice
 
-When you [install](installation.html) Fil-C, either from source or from binary, you will get relevant libraries, binaries, and headers in two places, assuming you unpacked Fil-C in the `fil-c` directory:
+When you [install](install_pizfix.html) Fil-C, either from source or from binary, you will get relevant libraries, binaries, and headers in two places, assuming you unpacked Fil-C in the `fil-c` directory:
 
 - `fil-c/build/` contains clang and clang's own headers. For example, you can run clang using `fil-c/build/bin/clang` or `fil-c/build/bin/clang++`.
 
@@ -46,26 +48,5 @@ When installing additional libraries and software, it's easiest to tell the buil
 
 Currently, the Fil-C clang will only pull this trick if it locates the pizfix. Otherwise, it will look for headers and libraries the normal Linux way (i.e. `/usr/include`, `/lib`, and `/usr/lib`). In other words, Fil-C is already set up to support being used as the primary slice of a Linux distribution with a Fil-C userland.
 
-## The Pizlix Distribution
-
-Fil-C is so compatible with C and C++ that it's possible to take the software that makes up the GNU/Linux userland and compile it with the Fil-C compiler to get a totally memory safe userland. [I have a prototype of this called Pizlix](pizlix.html). In Pizlix, the only things compiled with Yolo-C are the Fil-C [compiler](compiler.html), the GCC compiler used to compile the Linux kernel, and the Linux kernel.
-
-In Pizlix, all of `/usr/include` and `/usr/lib` (and `/lib`) is Fil-C based. Almost all of `/usr/bin` and `/bin` is Fil-C based (only the compiler isn't).
-
-In Pizlix, there is no staging area, and so the Fil-C compiler and loader just use default Linux directories. This enables Fil-C-compiled software to just be installed with `--prefix=/usr`.
-
-## The `/opt/filc` Slice
-
-An alternative approach to making Fil-C available to users would be to have an `/opt/filc` prefix. In this world, we would:
-
-- Rename clang to `/opt/filc/bin/filcc`.
-
-- Place all of clang's headers in `/opt/filc/lib/clang/20/include`.
-
-- Place Fil-C system headers in `/opt/filc/include`.
-
-- Place Fil-C libraries in `/opt/filc/lib`.
-
-This would be an awesome way to distribute Fil-C, and you could set it up yourself by hacking the current Fil-C install. This is likely superior to the pizfix slice. It's complementary to the Pizlix Distribution.
 
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installing The `/opt/fil` Distribution</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+
+<p><a href="meet_fil.html">Meet Fil</a></p>
+        </aside>
+        <main class="content">
+<h1>Installing The <code>/opt/fil</code> Distribution</h1>
+
+<p>My favorite way to demonstrate is using a <a href="optfil.html"><code>/opt/fil</code></a> binary release.</p>
+
+<p>Fil-C currently only supports Linux/X86_64.</p>
+
+<h2>Binary Release</h2>
+
+<p>You can <a href="https://github.com/pizlonator/fil-c/releases">download binary releases from the Fil-C GitHub</a>. The <code>/opt/fil</code> binary releases are named <code>optfil-0.673-linux-x86_64.tar.xz</code>.</p>
+
+<p>Once you download a release and unpack it, simply run:</p>
+
+<pre><code>sudo ./setup.sh
+</code></pre>
+
+<p>Assuming the script finds no issues, it will prompt you if you really want to unpack the <code>/opt/fil</code>. Type <code>YES</code> (in all caps).</p>
+
+<p>This style of Fil-C installation places all Fil-C headers, libraries, and tools in the <a href="optfil.html"><code>/opt/fil</code> slice</a>. The compiler automatically knows how to find those headers and libraries and will link programs in such a way that they will look for their dependent shared libraries there.</p>
+
+<h1>Try It Out</h1>
+
+<p>First, add <code>/opt/fil/bin</code> to your <code>$PATH</code>:</p>
+
+<pre><code>export PATH=/opt/fil/bin:$PATH
+</code></pre>
+
+<p>Then assuming you have this simple C program called <code>hello.c</code>:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello from Fil-C!\n");
+    return 0;
+}
+</code></pre>
+
+<p>You can compile it using the Fil-C compiler like so:</p>
+
+<pre><code>filcc -O2 -g -o hello hello.c
+</code></pre>
+
+<p>Note that this is also using Fil-C since <code>filcc</code> is invoking a memory-safe build of the GNU linker (<code>/opt/fil/bin/ld</code>).</p>
+
+<p>Similarly C++ just works:</p>
+
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello!" &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+
+<p>This builds with <code>clang++</code> like so:</p>
+
+<pre><code>fil++ -O2 -g -o hello hello.cpp
+</code></pre>
+
+<p>The <code>/opt/fil</code> distribution also includes useful programs, like <code>ssh</code>, <code>mg</code>, and <code>bash</code>. You can even launch a memory-safe OpenSSH server using <code>/opt/fil/sbin/sshd</code>!</p>
+        </main>
+    </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

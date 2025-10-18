@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Installing</title>
+    <title>`/opt/fil`</title>
     <link rel="stylesheet" href="/fil.css">
 </head>
 <body>
@@ -32,15 +32,23 @@
 <p><a href="meet_fil.html">Meet Fil</a></p>
         </aside>
         <main class="content">
-<h1>Installing</h1>
+<h1><code>/opt/fil</code></h1>
 
-<p>Choose your adventure:</p>
+<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/filc</code> prefix. In this world:</p>
 
-<p><a href="install_pizfix.html">Self-contained distribution that doesn't require root</a>.</p>
+<ul>
+<li><p>The compiler is <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>.</p></li>
+<li><p>All of the compiler's headers are in <code>/opt/fil/lib/clang/20/include</code>.</p></li>
+<li><p>Fil-C system headers are in <code>/opt/fil/include</code>.</p></li>
+<li><p>Fil-C libraries are in <code>/opt/fil/lib</code>.</p></li>
+<li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>.</p></li>
+</ul>
 
-<p><a href="install_optfil.html"><code>/opt/fil</code> distribution that includes the compiler and useful programs like OpenSSH client and server</a>.</p>
+<p>Additionally, <code>/opt/fil/bin/pkgconf</code> knows about the packages available in <code>/opt/fil</code>.</p>
 
-<p><a href="install_source.html">Use the source</a>.</p>
+<p>This allows Fil-C libraries and programs to coexist with non-Fil-C libraries and programs on any modern Linux distribution.</p>
+
+<p>The alternatives to <code>/opt/fil</code> are the <a href="pizfix.html">pizfix slice</a> and the <a href="pizlix.html">Pizlix Linux distribution</a>.</p>
         </main>
     </div>
     <script>

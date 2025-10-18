@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installing The Pizfix Distribution</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+
+<p><a href="meet_fil.html">Meet Fil</a></p>
+        </aside>
+        <main class="content">
+<h1>Installing The Pizfix Distribution</h1>
+
+<p>The most unobtrusive way to try out Fil-C is using a <a href="pizfix.html">pizfix slice</a> binary release.</p>
+
+<p>Fil-C currently only supports Linux/X86_64.</p>
+
+<h2>Binary Release</h2>
+
+<p>You can <a href="https://github.com/pizlonator/fil-c/releases">download binary releases from the Fil-C GitHub</a>. The Pizfix slice binary releases are named <code>filc-0.673-linux-x86_64.tar.xz</code>.</p>
+
+<p>Once you download a release and unpack it, simply run:</p>
+
+<pre><code>./setup.sh
+</code></pre>
+
+<p>from the directory that you unpacked it to (for example <code>/home/pizlo/filc-0.673-linux-x86_64</code>). At that point, you can run the compiler using <code>build/bin/clang</code> or <code>build/bin/clang++</code> (or via absolute path, for example <code>/home/pizlo/filc-0.673-linux-x86_64/build/bin/clang</code>).</p>
+
+<p>This kind of Fil-C installation operates using the <a href="pizfix.html">pizfix slice</a>: the Fil-C libraries are in the <code>pizfix/lib</code> directory, and the headers are in <code>pizfix/include</code>. The compiler automatically knows how to find those headers and libraries, and will link programs in such a way that they will look for their dependent shared libraries there.</p>
+
+<p>The pizfix binary releases of Fil-C use musl as the libc.</p>
+
+<h1>Try It Out</h1>
+
+<p>Consider this simple C program; let's call it <code>hello.c</code>:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello from Fil-C!\n");
+    return 0;
+}
+</code></pre>
+
+<p>You can compile it using <code>&lt;path to Fil-C&gt;/build/bin/clang</code> like so:</p>
+
+<pre><code>build/bin/clang -O2 -g -o hello hello.c
+</code></pre>
+
+<p>Similarly C++ just works:</p>
+
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello!" &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+
+<p>This builds with <code>clang++</code> like so:</p>
+
+<pre><code>build/bin/clang++ -O2 -g -o hello hello.cpp
+</code></pre>
+        </main>
+    </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

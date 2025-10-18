@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installing From Source</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+
+<p><a href="meet_fil.html">Meet Fil</a></p>
+        </aside>
+        <main class="content">
+<h1>Installing From Source</h1>
+
+<p>Clone Fil-C from GitHub:</p>
+
+<pre><code>git clone https://github.com/pizlonator/fil-c.git
+</code></pre>
+
+<p>Source releases can be built in four different ways:</p>
+
+<ol>
+<li>Fast build with musl using <code>./build_all_fast.sh</code>.</li>
+<li>Fast build with glibc using <code>./build_all_fast_glibc.sh</code>.</li>
+<li>Full build with musl using <code>./build_all.sh</code>.</li>
+<li>Full build with glibc using <code>./build_all_glibc.sh</code>.</li>
+<li><a href="optfil.html"><code>/opt/fil</code></a> build using <code>cd optfil; sudo ./build.sh</code>. This builds the glibc-based <code>/opt/fil</code> slice and requires root privileges.</li>
+<li><a href="pizlix.html">Pizlix</a> build using <code>cd pizlix; sudo ./build.sh</code>. This builds the glibc-based Pizlix Linux distribution where all of userland is compiled with Fil-C. Requires root privileges and a <a href="pizlix.html">specific set of preparations inspired by LFS</a>.</li>
+</ol>
+
+<p>The fast build (options 1 and 2) just builds the compiler, runtime, libc (either musl or glibc), libc++abi, and libc++. When building with glibc, the fast build also builds libxcrypt.</p>
+
+<p>The full build (options 3 and 4) builds everything that the fast build builds plus the full Fil-C corpus, i.e. <a href="programs_that_work.html">most of the programs that have been ported to Fil-C</a>. Full builds require more prerequisites and take much longer.</p>
+
+<p>The <a href="optfil.html"><code>/opt/fil</code></a> and <a href="pizlix.html">Pizlix</a> builds give you the most complete Fil-C-based environments. The <code>/opt/fil</code> environment is ideal for having a Fil-C slice coexist with non-Fil-C code on a single Linux machine. The Pizlix build gives you a full Linux system where everything is memory safe.</p>
+
+<h1>Try It Out</h1>
+
+<p>Assuming you used either a fast build or a full build (so not <code>/opt/fil</code> or Pizlix`), you will get a <a href="pizfix.html">pizfix slice</a>:</p>
+
+<ul>
+<li>The compiler will be in <code>./build/bin/clang</code>.</li>
+<li>All of the libraries and headers will be in <code>./pizfix</code>.</li>
+</ul>
+
+<p>Once you have this build then you can try out Fil-C by writing a simple program, say <code>hello.c</code>:</p>
+
+<p>You can compile it using <code>&lt;path to Fil-C&gt;/build/bin/clang</code> like so:</p>
+
+<pre><code>build/bin/clang -O2 -g -o hello hello.c
+</code></pre>
+
+<p>Similarly C++ just works:</p>
+
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello!" &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+
+<p>This builds with <code>clang++</code> like so:</p>
+
+<pre><code>build/bin/clang++ -O2 -g -o hello hello.cpp
+</code></pre>
+
+<p>If you did a full build, you will also have a bunch of useful programs in <code>pizfix/bin</code> that are all compiled with Fil-C.</p>
+        </main>
+    </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
