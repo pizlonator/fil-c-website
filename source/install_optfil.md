@@ -3,8 +3,8 @@
 My favorite way to demonstrate Fil-C is using the [`/opt/fil`](optfil.html) binary distribution, since it:
 
 - Installs everything into `/opt/fil` for peaceful coexistence with your usual Linux userland.
-- The Fil-C compiler, named `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
-- A bunch of useful programs compiled with Fil-C, including a memory safe OpenSSH client and server.
+- Puts the Fil-C compiler in `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
+- Includes useful programs compiled with Fil-C, like memory safe OpenSSH client and server.
 
 Fil-C currently only supports Linux/X86_64.
 
