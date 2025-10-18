@@ -1,6 +1,6 @@
 # Installing The `/opt/fil` Distribution
 
-My favorite way to demonstrate is using a [`/opt/fil`](optfil.html) binary release, since it:
+My favorite way to demonstrate Fil-C is with the [`/opt/fil`](optfil.html) binary distribution, since it:
 
 - Installs everything into `/opt/fil` for peaceful coexistence with your usual Linux userland.
 - The Fil-C compiler, named `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
