@@ -181,7 +181,7 @@ typically spends &lt;5% of its time sweeping.</p>
 <p>FUGC allows Fil-C to give the strongest possible guarantees on misuse of <code>free</code>:</p>
 
 <ul>
-<li><p>Freeing an object and then accessing it is guaranteed to result in a trap. Unlike tag-based approaches, which will trap on use after free until until memory reclamation is forced, FUGC means you will trap even after memory is reclaimed (due to <em>lower</em> repointing to the free singleton).</p></li>
+<li><p>Freeing an object and then accessing it is guaranteed to result in a trap. Unlike tag-based approaches, which will trap on use after free until memory reclamation is forced, FUGC means you will trap even after memory is reclaimed (due to <em>lower</em> repointing to the free singleton).</p></li>
 <li><p>Freeing an object twice is guaranteed to result in a trap.</p></li>
 <li><p>Failing to free an object means the object gets reclaimed for you.</p></li>
 </ul>

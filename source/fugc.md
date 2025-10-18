@@ -148,7 +148,7 @@ FUGC supports weak maps using the `zweak_map` API in [`stdfil.h`](stdfil.html). 
 
 FUGC allows Fil-C to give the strongest possible guarantees on misuse of `free`:
 
-- Freeing an object and then accessing it is guaranteed to result in a trap. Unlike tag-based approaches, which will trap on use after free until until memory reclamation is forced, FUGC means you will trap even after memory is reclaimed (due to *lower* repointing to the free singleton).
+- Freeing an object and then accessing it is guaranteed to result in a trap. Unlike tag-based approaches, which will trap on use after free until memory reclamation is forced, FUGC means you will trap even after memory is reclaimed (due to *lower* repointing to the free singleton).
 
 - Freeing an object twice is guaranteed to result in a trap.
 

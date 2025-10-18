@@ -21,7 +21,7 @@ The [`/opt/fil`](optfil.html) and [Pizlix](pizlix.html) builds give you the most
 
 # Try It Out
 
-Assuming you used either a fast build or a full build (so not `/opt/fil` or Pizlix`), you will get a [pizfix slice](pizfix.html):
+Assuming you used either a fast build or a full build (so not `/opt/fil` or Pizlix), you will get a [pizfix slice](pizfix.html):
 
 - The compiler will be in `./build/bin/clang`.
 - All of the libraries and headers will be in `./pizfix`.
