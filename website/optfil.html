@@ -34,14 +34,24 @@
         <main class="content">
 <h1><code>/opt/fil</code></h1>
 
-<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/filc</code> prefix. In this world:</p>
+<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/filc</code> prefix. <strong>This includes a memory-safe OpenSSH client and server</strong> as well as many other useful programs compiled with Fil-C. In this world:</p>
 
 <ul>
 <li><p>The compiler is <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>.</p></li>
 <li><p>All of the compiler's headers are in <code>/opt/fil/lib/clang/20/include</code>.</p></li>
 <li><p>Fil-C system headers are in <code>/opt/fil/include</code>.</p></li>
 <li><p>Fil-C libraries are in <code>/opt/fil/lib</code>.</p></li>
-<li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>.</p></li>
+<li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>. This includes:</p>
+
+<ul>
+<li>GNU bash</li>
+<li>GNU coreutils</li>
+<li>GNU binutils</li>
+<li>Mg text editor</li>
+<li>Compression utilities</li>
+<li>OpenSSL library</li>
+<li>OpenSSH client and server.</li>
+</ul></li>
 </ul>
 
 <p>Additionally, <code>/opt/fil/bin/pkgconf</code> knows about the packages available in <code>/opt/fil</code>.</p>

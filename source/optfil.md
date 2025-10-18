@@ -1,6 +1,6 @@
 # `/opt/fil`
 
-My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html), which places a Fil-C slice into the `/opt/filc` prefix. In this world:
+My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html), which places a Fil-C slice into the `/opt/filc` prefix. **This includes a memory-safe OpenSSH client and server** as well as many other useful programs compiled with Fil-C. In this world:
 
 - The compiler is `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
 
@@ -10,7 +10,14 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 
 - Fil-C libraries are in `/opt/fil/lib`.
 
-- Programs compiled with Fil-C are in `/opt/fil/bin` and `/opt/fil/sbin`.
+- Programs compiled with Fil-C are in `/opt/fil/bin` and `/opt/fil/sbin`. This includes:
+    - GNU bash
+    - GNU coreutils
+    - GNU binutils
+    - Mg text editor
+    - Compression utilities
+    - OpenSSL library
+    - OpenSSH client and server.
 
 Additionally, `/opt/fil/bin/pkgconf` knows about the packages available in `/opt/fil`.
 
