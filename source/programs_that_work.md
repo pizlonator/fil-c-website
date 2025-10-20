@@ -124,3 +124,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [p11-kit 0.25.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/p11-kit-0.25.5). Two line change to build system (version scripts).
 - wget 1.24.5. *No changes, works out of the box*.
 - which 2.21. *No changes, works out of the box*.
+- audit-userspace 4.1.2. *No changes, works out of the box*.
