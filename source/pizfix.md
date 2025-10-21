@@ -12,7 +12,7 @@ Two alternatives to the Pizfix are [`/opt/fil`](optfil.html) and the [Pizlix](pi
 
 ## The Pizfix Slice
 
-When you [install](install_pizfix.html) Fil-C, either from source or from binary, you will get relevant libraries, binaries, and headers in two places, assuming you unpacked Fil-C in the `fil-c` directory:
+When you [install](install_pizfix.html) Fil-C the "pizfix" way, either from source or from binary, you will get relevant libraries, binaries, and headers in two places, assuming you unpacked Fil-C in the `fil-c` directory:
 
 - `fil-c/build/` contains clang and clang's own headers. For example, you can run clang using `fil-c/build/bin/clang` or `fil-c/build/bin/clang++`.
 
