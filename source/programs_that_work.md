@@ -126,3 +126,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - which 2.21. *No changes, works out of the box*.
 - audit-userspace 4.1.2. *No changes, works out of the box*.
 - Linux-PAM 1.6.1 and 1.7.1. Build system changes only (version scripts).
+- keyutils 1.6.3. Small changes to use the Fil-C syscall ABI.
