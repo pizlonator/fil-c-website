@@ -32,7 +32,7 @@ InvisiCaps are a major improvement over MonoCaps:
 
 - InvisiCaps allow for 64-bit pointers on 64-bit systems (and would allow for 32-bit pointers if Fil-C supported 32-bit systems).
 
-- InvisiCaps have this far allowed for a reduction of performance overhead to about 4x in the bad cases. There are still performance optimization opportunities with InvisiCaps that I haven't explored.
+- InvisiCaps have thus far allowed for a reduction of performance overhead to about 4x in the bad cases. There are still performance optimization opportunities with InvisiCaps that I haven't explored so they're likely to get faster still.
 
 - InvisiCaps allow for meaningful union usage. The type of a memory location can change over the lifetime of that location.
 
