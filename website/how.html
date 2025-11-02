@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Fil-C Works</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+
+<p><a href="meet_fil.html">Meet Fil</a></p>
+        </aside>
+        <main class="content">
+<h1>How Fil-C Works</h1>
+
+<p>Fil-C achieves memory safety for C and C++ code by <a href="compiler.html">transforming all unsafe operations in LLVM IR</a> into code that does dynamic checking to catch all violations of Fil-C’s rules. Most of that is about transforming all operations involving <code>ptr</code> type to use <a href="invisicaps.html">InvisiCaps</a>.</p>
+
+<p>I’ve also written about InvisiCaps <a href="invisicaps_by_example.html">using examples of issues that this catches</a> and by doing a <a href="compiler_example.html">deep dive into the disassembly of a simple program</a>. </p>
+
+<p>InvisiCaps could work with a variety of memory management schemes, including sufficiently segregated malloc/free. However, they can produce the best guarantees with a GC. GC allows the <code>free()</code> operation to deterministically and atomically disable all pointers to the memory that was freed, so use after free, invalid free, and double free are all guaranteed to panic. For this reason, <a href="fugc.html">Fil-C uses a concurrent garbage collector</a>.</p>
+
+<p>All C implementations rely on a runtime that provides helper functions for those operations that are just heavy enough to warrant outlining. Fil-C differs in that its <a href="runtime.html">runtime is bigger and involves a different ABI from Yolo-C</a>. The runtime’s job is also to provide a <a href="safepoints.html">safepoint mechanism to support accurate GC and safe signal handling</a>. </p>
+
+<p>Despite the fact that Fil-C’s implementation strategy differs from Yolo-C’s, <a href="programs_that_work.html">it’s possible to compile most C and C++ programs with Fil-C and they will work great with zero or minimal changes</a>. </p>
+
+<p>Because Fil-C is not ABI compatible with Yolo-C, installing Fil-C means installing a new ABI slice. Multiple approaches to this exist. The original approach I developed to get my own development bootstrapped is the <a href="pizfix.html">pizfix</a> (Pizlo’s prefix), which puts all Fil-C libraries into a local directory and the compiler knows to default to that directory for headers and libraries. A much more comprehensive approach is to just <a href="pizlix.html">recompile all of the Linux userland</a>. My favorite way to install Fil-C is the <a href="optfil.html">/opt/fil distribution</a>. I’m currently working on making this include more programs and libraries. You should install this if you want to run a memory safe SSH server. Folks have started to contribute their own Fil-C distributions. Mikael Brockman created a Nix package of the Fil-C compiler, called <a href="https://github.com/mbrock/filnix">Filnix</a>. Daniel J Bernstein has <a href="https://cr.yp.to/2025/fil-c.html">a lot of notes about using Fil-C including scripts to set up Filian - Debian with a Fil-C variant</a>.</p>
+
+<p>Finally, Fil-C exposes a lot of power that you won’t get in Yolo-C, like for introspecting pointer capabilities and using advanced GC features. That api is easy to include and <a href="stdfil.html">well documented</a>. </p>
+
+<p>More reading:</p>
+
+<ul>
+<li><p><a href="installation.html">Installing Fil-C</a></p></li>
+<li><p><a href="documentation.html">Documentation</a></p></li>
+</ul>
+        </main>
+    </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

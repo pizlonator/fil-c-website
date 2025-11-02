@@ -10,7 +10,7 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 
 - Fil-C libraries are in `/opt/fil/lib`.
 
-- Fil-C programs use `/opt/fil/etc` for configuration files.
+- Fil-C programs use `/etc` for configuration files. This means, for example, that the OpenSSH server tin `/opt/fil/sbin/sshd` will use your system's `sshd_config` and host keys. If that configuration calls for PAM or Kerberos V, then that should work: the `/opt/fil` distribution comes with PAM and Kerberos V libraries, and those will also search `/etc` for their configuration files.
 
 - Programs compiled with Fil-C are in `/opt/fil/bin` and `/opt/fil/sbin`. This includes:
     - GNU bash
@@ -20,6 +20,11 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - Compression utilities
     - OpenSSL library
     - OpenSSH client and server.
+    - PAM
+    - keyutils
+    - audit
+    - Kerberos V
+    - PCRE2
 
 Additionally, `/opt/fil/bin/pkgconf` knows about the packages available in `/opt/fil`.
 

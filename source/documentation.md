@@ -2,6 +2,8 @@
 
 [Installation Guide](installation.html)
 
+[How Fil-C Works](how.html)
+
 [InvisiCaps: The Fil-C Capability Model](invisicaps.html)
 
 [Fil's Unbelievable C Compiler](compiler.html)

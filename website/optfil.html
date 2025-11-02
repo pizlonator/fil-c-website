@@ -41,7 +41,7 @@
 <li><p>Fil-C system headers are in <code>/opt/fil/include</code>.</p></li>
 <li><p>All of the compiler's headers are in <code>/opt/fil/lib/clang/20/include</code>.</p></li>
 <li><p>Fil-C libraries are in <code>/opt/fil/lib</code>.</p></li>
-<li><p>Fil-C programs use <code>/opt/fil/etc</code> for configuration files.</p></li>
+<li><p>Fil-C programs use <code>/etc</code> for configuration files. This means, for example, that the OpenSSH server tin <code>/opt/fil/sbin/sshd</code> will use your system's <code>sshd_config</code> and host keys. If that configuration calls for PAM or Kerberos V, then that should work: the <code>/opt/fil</code> distribution comes with PAM and Kerberos V libraries, and those will also search <code>/etc</code> for their configuration files.</p></li>
 <li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>. This includes:</p>
 
 <ul>
@@ -52,6 +52,11 @@
 <li>Compression utilities</li>
 <li>OpenSSL library</li>
 <li>OpenSSH client and server.</li>
+<li>PAM</li>
+<li>keyutils</li>
+<li>audit</li>
+<li>Kerberos V</li>
+<li>PCRE2</li>
 </ul></li>
 </ul>
 
