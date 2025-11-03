@@ -12,7 +12,7 @@ Despite the fact that Fil-C’s implementation strategy differs from Yolo-C’s,
 
 Because Fil-C is not ABI compatible with Yolo-C, installing Fil-C means installing a new ABI slice. Multiple approaches to this exist. The original approach I developed to get my own development bootstrapped is the [pizfix](pizfix.html) (Pizlo’s prefix), which puts all Fil-C libraries into a local directory and the compiler knows to default to that directory for headers and libraries. A much more comprehensive approach is to just [recompile all of the Linux userland](pizlix.html). My favorite way to install Fil-C is the [/opt/fil distribution](optfil.html). I’m currently working on making this include more programs and libraries. You should install this if you want to run a memory safe SSH server. Folks have started to contribute their own Fil-C distributions. Mikael Brockman created a Nix package of the Fil-C compiler, called [Filnix](https://github.com/mbrock/filnix). Daniel J Bernstein has [a lot of notes about using Fil-C including scripts to set up Filian - Debian with a Fil-C variant](https://cr.yp.to/2025/fil-c.html).
 
-Finally, Fil-C exposes a lot of power that you won’t get in Yolo-C, like for introspecting pointer capabilities and using advanced GC features. That api is easy to include and [well documented](stdfil.html). 
+Finally, Fil-C exposes a lot of power that you won’t get in Yolo-C, like for introspecting pointer capabilities and using advanced GC features. That API is easy to include and [well documented](stdfil.html). 
 
 More reading:
 
