@@ -1459,7 +1459,7 @@ The code often talks about "limbs" of a 256-bit value, where a limb is a machine
      /* One converted into the Montgomery domain */
      static const BN_ULONG ONE[P256_LIMBS] = {
 
-This provides a bunch of wrappers for assembly functions relating to various P256 values, like `P256_POINT` (three P256's`), `P256_POINT_AFFINE` (two P256's), and in some cases tables of 16 or 64 points. It took a lot of reading of the assembly code to work out what checks to do here. All of these functions are bounded-time, so we can use `zunsafe_fast_call`.
+This provides a bunch of wrappers for assembly functions relating to various P256 values, like `P256_POINT` (three P256's), `P256_POINT_AFFINE` (two P256's), and in some cases tables of 16 or 64 points. It took a lot of reading of the assembly code to work out what checks to do here. All of these functions are bounded-time, so we can use `zunsafe_fast_call`.
 
     @@ -246,12 +321,29 @@ static BN_ULONG is_one(const BIGNUM *z)
       * ecp_nistz256 module is ECP_NISTZ256_ASM.)

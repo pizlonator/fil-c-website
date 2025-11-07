@@ -1566,7 +1566,7 @@ int Camellia_Ekeygen(int keyBitLength, const u8* rawKey, KEY_TABLE_TYPE k)
  static const BN_ULONG ONE[P256_LIMBS] = {
 </code></pre>
 
-<p>This provides a bunch of wrappers for assembly functions relating to various P256 values, like <code>P256_POINT</code> (three P256's<code>),</code>P256<em>POINT</em>AFFINE<code>(two P256's), and in some cases tables of 16 or 64 points. It took a lot of reading of the assembly code to work out what checks to do here. All of these functions are bounded-time, so we can use</code>zunsafe<em>fast</em>call`.</p>
+<p>This provides a bunch of wrappers for assembly functions relating to various P256 values, like <code>P256_POINT</code> (three P256's), <code>P256_POINT_AFFINE</code> (two P256's), and in some cases tables of 16 or 64 points. It took a lot of reading of the assembly code to work out what checks to do here. All of these functions are bounded-time, so we can use <code>zunsafe_fast_call</code>.</p>
 
 <pre><code>@@ -246,12 +321,29 @@ static BN_ULONG is_one(const BIGNUM *z)
   * ecp_nistz256 module is ECP_NISTZ256_ASM.)
