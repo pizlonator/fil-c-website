@@ -128,3 +128,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - Linux-PAM 1.6.1 and 1.7.1. Build system changes only (version scripts).
 - keyutils 1.6.3. Small changes to use the Fil-C syscall ABI.
 - krb5 1.21.3. One-line change to the build system (version scripts) and 3-line change to use Fil-C API for fences instead of inline assembly.
+- wolfSSL 5.8.2. *No changes, works out of the box*. Inline assembly needs to be disabled with `--disable-asm` and cache resistance needs to be disable when using the SP math backend (`CPPFLAGS=-DWC_NO_CACHE_RESISTANT`)
