@@ -34,7 +34,57 @@
         <main class="content">
 <h1><code>/opt/fil</code></h1>
 
-<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/filc</code> prefix. <strong>This includes a memory-safe OpenSSH client and server</strong> as well as many other useful programs compiled with Fil-C. In this world:</p>
+<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/fil</code> prefix. This distribution comes with many useful programs and libraries that have been ported to Fil-C, so they are totally memory safe:</p>
+
+<ul>
+<li>bash        </li>
+<li>binutils    </li>
+<li>bzip2       </li>
+<li>coreutils   </li>
+<li>curl</li>
+<li>diff        </li>
+<li>find        </li>
+<li>flex        </li>
+<li>gawk        </li>
+<li>git       </li>
+<li>grep        </li>
+<li>gzip        </li>
+<li>icu4c       </li>
+<li>kerberos5 </li>
+<li>keyutils    </li>
+<li>less      </li>
+<li>libaudit    </li>
+<li>libevent    </li>
+<li>libidn2     </li>
+<li>libpsl      </li>
+<li>libselinux  </li>
+<li>libtasn1  </li>
+<li>libuv     </li>
+<li>lz4         </li>
+<li>make        </li>
+<li>mg          </li>
+<li>nghttp2</li>
+<li>openssh   </li>
+<li>openssl     </li>
+<li>p11-kit</li>
+<li>pam         </li>
+<li>patch     </li>
+<li>pcre2       </li>
+<li>pkgconf     </li>
+<li>procps-ng   </li>
+<li>psmisc      </li>
+<li>sed         </li>
+<li>sudo      </li>
+<li>tar         </li>
+<li>tmux        </li>
+<li>unistring   </li>
+<li>wget</li>
+<li>xz        </li>
+<li>zlib        </li>
+<li>zstd        </li>
+</ul>
+
+<p><code>/opt/fil</code> is laid out as follows:</p>
 
 <ul>
 <li><p>The compiler is <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>. These are symlinks to <code>/opt/fil/bin/filcc-clang-20</code>.</p></li>
@@ -42,25 +92,8 @@
 <li><p>All of the compiler's headers are in <code>/opt/fil/lib/clang/20/include</code>.</p></li>
 <li><p>Fil-C libraries are in <code>/opt/fil/lib</code>.</p></li>
 <li><p>Fil-C programs use <code>/etc</code> for configuration files. This means, for example, that the OpenSSH server tin <code>/opt/fil/sbin/sshd</code> will use your system's <code>sshd_config</code> and host keys. If that configuration calls for PAM or Kerberos V, then that should work: the <code>/opt/fil</code> distribution comes with PAM and Kerberos V libraries, and those will also search <code>/etc</code> for their configuration files.</p></li>
-<li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>. This includes:</p>
-
-<ul>
-<li>GNU bash</li>
-<li>GNU coreutils</li>
-<li>GNU binutils</li>
-<li>Mg text editor</li>
-<li>Compression utilities</li>
-<li>OpenSSL library</li>
-<li>OpenSSH client and server.</li>
-<li>PAM</li>
-<li>keyutils</li>
-<li>audit</li>
-<li>Kerberos V</li>
-<li>PCRE2</li>
-</ul></li>
+<li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>.</p></li>
 </ul>
-
-<p>Additionally, <code>/opt/fil/bin/pkgconf</code> knows about the packages available in <code>/opt/fil</code>.</p>
 
 <p>This allows Fil-C libraries and programs to coexist with non-Fil-C libraries and programs on any modern Linux distribution. Segregating Fil-C libraries and binaries into a separate directory structure avoids <a href="runtime.html">ABI compatibility problems</a>. The Fil-C compiler is smart enough to know that if it finds itself installed in <code>/opt/fil/bin</code>, then it should:</p>
 

@@ -4,13 +4,13 @@ My favorite way to demonstrate Fil-C is using the [`/opt/fil`](optfil.html) bina
 
 - Installs everything into `/opt/fil` for peaceful coexistence with your usual Linux userland.
 - Puts the Fil-C compiler in `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
-- Includes useful programs compiled with Fil-C, like memory safe OpenSSH client and server.
+- Includes useful programs compiled with Fil-C, like memory safe OpenSSH, tmux, curl, and git.
 
 Fil-C currently only supports Linux/X86_64.
 
 ## Download And Install
 
-You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.674-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.674/optfil-0.674-linux-x86_64.tar.xz).
+You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.675-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.675/optfil-0.675-linux-x86_64.tar.xz).
 
 Once you download a release and unpack it, simply run:
 
@@ -56,5 +56,5 @@ This builds with `clang++` like so:
 
     fil++ -O2 -g -o hello hello.cpp
 
-The `/opt/fil` distribution also includes useful programs, like `ssh`, `mg`, and `bash`. You can even launch a memory-safe OpenSSH server using `/opt/fil/sbin/sshd`!
+The `/opt/fil` distribution also includes useful programs, like `ssh`, `mg`, `bash`, `tmux`, and `curl`. You can even launch a memory-safe OpenSSH server using `/opt/fil/sbin/sshd`!
 
