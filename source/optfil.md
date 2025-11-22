@@ -1,52 +1,60 @@
 # `/opt/fil`
 
-My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html), which places a Fil-C slice into the `/opt/fil` prefix. This distribution comes with many useful programs and libraries that have been ported to Fil-C, so they are totally memory safe:
+My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html). This distributions benefits are:
 
-- bash        
-- binutils    
-- bzip2       
-- coreutils   
-- curl
-- diff        
-- find        
-- flex        
-- gawk        
-- git       
-- grep        
-- gzip        
-- icu4c       
-- kerberos5 
-- keyutils    
-- less      
-- libaudit    
-- libevent    
-- libidn2     
-- libpsl      
-- libselinux  
-- libtasn1  
-- libuv     
-- lz4         
-- make        
-- mg          
-- nghttp2
-- openssh   
-- openssl     
-- p11-kit
-- pam         
-- patch     
-- pcre2       
-- pkgconf     
-- procps-ng   
-- psmisc      
-- sed         
-- sudo      
-- tar         
-- tmux        
-- unistring   
-- wget
-- xz        
-- zlib        
-- zstd        
+- It places a Fil-C slice into the `/opt/fil` prefix, allowing Fil-C to be used by **everyone on the system**. Just add `/opt/fil/bin` to your `$PATH` if you want to use the Fil-C versions of software.
+
+- **Installs the compiler** as `filcc` (for C) and `fil++` (for C++), so there's no ambiguity between invoking your system compiler (`gcc` or `clang`) and the Fil-C compiler.
+
+- Uses the Fil-C port of **glibc 2.40** as the C library. This gives you the **maximum compatibility** with modern Linux software.
+
+- Comes with **a bunch useful programs and libraries** compiled with Fil-C so they are memory safe:
+    - bash        
+    - binutils    
+    - bzip2       
+    - coreutils   
+    - **curl**
+    - diff        
+    - find        
+    - flex        
+    - gawk        
+    - **git**       
+    - grep        
+    - gzip        
+    - icu4c       
+    - kerberos5 
+    - keyutils    
+    - less      
+    - libaudit    
+    - libevent    
+    - libidn2     
+    - libpsl      
+    - libselinux  
+    - libtasn1  
+    - libuv
+    - libxcrypt
+    - lz4         
+    - make        
+    - mg          
+    - nghttp2
+    - **openssh**   
+    - **openssl**     
+    - p11-kit
+    - **pam**         
+    - patch     
+    - pcre2       
+    - pkgconf     
+    - procps-ng   
+    - psmisc      
+    - sed         
+    - **sudo**      
+    - tar         
+    - tmux        
+    - unistring   
+    - wget
+    - xz        
+    - zlib        
+    - zstd        
 
 `/opt/fil` is laid out as follows:
 
@@ -56,7 +64,7 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 
 - All of the compiler's headers are in `/opt/fil/lib/clang/20/include`.
 
-- Fil-C libraries are in `/opt/fil/lib`.
+- Libraries built with Fil-C, as well as core Fil-C libraries (like `libpizlo.so`), are in `/opt/fil/lib`.
 
 - Fil-C programs use `/etc` for configuration files. This means, for example, that the OpenSSH server tin `/opt/fil/sbin/sshd` will use your system's `sshd_config` and host keys. If that configuration calls for PAM or Kerberos V, then that should work: the `/opt/fil` distribution comes with PAM and Kerberos V libraries, and those will also search `/etc` for their configuration files.
 

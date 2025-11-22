@@ -34,19 +34,25 @@
         <main class="content">
 <h1><code>/opt/fil</code></h1>
 
-<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>, which places a Fil-C slice into the <code>/opt/fil</code> prefix. This distribution comes with many useful programs and libraries that have been ported to Fil-C, so they are totally memory safe:</p>
+<p>My favorite way to <a href="install_optfil.html">install Fil-C is the <code>/opt/fil</code> distribution</a>. This distributions benefits are:</p>
+
+<ul>
+<li><p>It places a Fil-C slice into the <code>/opt/fil</code> prefix, allowing Fil-C to be used by <strong>everyone on the system</strong>. Just add <code>/opt/fil/bin</code> to your <code>$PATH</code> if you want to use the Fil-C versions of software.</p></li>
+<li><p><strong>Installs the compiler</strong> as <code>filcc</code> (for C) and <code>fil++</code> (for C++), so there's no ambiguity between invoking your system compiler (<code>gcc</code> or <code>clang</code>) and the Fil-C compiler.</p></li>
+<li><p>Uses the Fil-C port of <strong>glibc 2.40</strong> as the C library. This gives you the <strong>maximum compatibility</strong> with modern Linux software.</p></li>
+<li><p>Comes with <strong>a bunch useful programs and libraries</strong> compiled with Fil-C so they are memory safe:</p>
 
 <ul>
 <li>bash        </li>
 <li>binutils    </li>
 <li>bzip2       </li>
 <li>coreutils   </li>
-<li>curl</li>
+<li><strong>curl</strong></li>
 <li>diff        </li>
 <li>find        </li>
 <li>flex        </li>
 <li>gawk        </li>
-<li>git       </li>
+<li><strong>git</strong>       </li>
 <li>grep        </li>
 <li>gzip        </li>
 <li>icu4c       </li>
@@ -59,22 +65,23 @@
 <li>libpsl      </li>
 <li>libselinux  </li>
 <li>libtasn1  </li>
-<li>libuv     </li>
+<li>libuv</li>
+<li>libxcrypt</li>
 <li>lz4         </li>
 <li>make        </li>
 <li>mg          </li>
 <li>nghttp2</li>
-<li>openssh   </li>
-<li>openssl     </li>
+<li><strong>openssh</strong>   </li>
+<li><strong>openssl</strong>     </li>
 <li>p11-kit</li>
-<li>pam         </li>
+<li><strong>pam</strong>         </li>
 <li>patch     </li>
 <li>pcre2       </li>
 <li>pkgconf     </li>
 <li>procps-ng   </li>
 <li>psmisc      </li>
 <li>sed         </li>
-<li>sudo      </li>
+<li><strong>sudo</strong>      </li>
 <li>tar         </li>
 <li>tmux        </li>
 <li>unistring   </li>
@@ -82,6 +89,7 @@
 <li>xz        </li>
 <li>zlib        </li>
 <li>zstd        </li>
+</ul></li>
 </ul>
 
 <p><code>/opt/fil</code> is laid out as follows:</p>
@@ -90,7 +98,7 @@
 <li><p>The compiler is <code>/opt/fil/bin/filcc</code> and <code>/opt/fil/bin/fil++</code>. These are symlinks to <code>/opt/fil/bin/filcc-clang-20</code>.</p></li>
 <li><p>Fil-C system headers are in <code>/opt/fil/include</code>.</p></li>
 <li><p>All of the compiler's headers are in <code>/opt/fil/lib/clang/20/include</code>.</p></li>
-<li><p>Fil-C libraries are in <code>/opt/fil/lib</code>.</p></li>
+<li><p>Libraries built with Fil-C, as well as core Fil-C libraries (like <code>libpizlo.so</code>), are in <code>/opt/fil/lib</code>.</p></li>
 <li><p>Fil-C programs use <code>/etc</code> for configuration files. This means, for example, that the OpenSSH server tin <code>/opt/fil/sbin/sshd</code> will use your system's <code>sshd_config</code> and host keys. If that configuration calls for PAM or Kerberos V, then that should work: the <code>/opt/fil</code> distribution comes with PAM and Kerberos V libraries, and those will also search <code>/etc</code> for their configuration files.</p></li>
 <li><p>Programs compiled with Fil-C are in <code>/opt/fil/bin</code> and <code>/opt/fil/sbin</code>.</p></li>
 </ul>
