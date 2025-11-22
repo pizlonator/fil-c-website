@@ -1,8 +1,8 @@
 # `/opt/fil`
 
-My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html). This distributions benefits are:
+My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil.html). This distribution's benefits are that it:
 
-- It places a Fil-C slice into the `/opt/fil` prefix, allowing Fil-C to be used by **everyone on the system**. Just add `/opt/fil/bin` to your `$PATH` if you want to use the Fil-C versions of software.
+- Places a Fil-C slice into the `/opt/fil` prefix, allowing Fil-C to be used by **everyone on the system**. Just add `/opt/fil/bin` to your `$PATH` if you want to use the Fil-C versions of software.
 
 - **Installs the compiler** as `filcc` (for C) and `fil++` (for C++), so there's no ambiguity between invoking your system compiler (`gcc` or `clang`) and the Fil-C compiler.
 
