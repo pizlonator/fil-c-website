@@ -54,7 +54,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libevent-2.1.12">libevent 2.1.12</a>. <em>Changes to test suite only, works out of the box otherwise.</em></li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libffi-3.4.6">libffi 3.4.6</a>. Moderate changes needed because libffi under Fil-C has to use <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h">Fil-C reflection API</a> instead of assembly and JITing.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libuev-2.4.1">libuev 2.4.1</a>. <em>No changes, works out of the box.</em></li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libuv-v1.48.0">libuv 1.48.0</a>. Tiny change required for passing pointers across a <code>write(2)</code> syscall (this can be done using the <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h"><code>zexact_ptrtable</code> API</a>).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libuv-1.51.0">libuv</a> 1.48.0 and <a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libuv-1.51.0">1.51.0</a>. Tiny change required for passing pointers across a <code>write(2)</code> syscall (this can be done using the <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/stdfil.h"><code>zexact_ptrtable</code> API</a>).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/libxml2-2.14.4">libxml2 2.14.4</a>. One line change (missing <code>_Atomic</code> on a pointer field that gets raced).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/lua-5.4.7">lua 5.4.7</a>. <em>Build system changes only (disable libreadline dependency)</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/mg-3.7">mg 3.7</a>. <em>No changes, works out of the box.</em></li>
@@ -160,9 +160,11 @@
 <li>wget 1.24.5. <em>No changes, works out of the box</em>.</li>
 <li>which 2.21. <em>No changes, works out of the box</em>.</li>
 <li>audit-userspace 4.1.2. <em>No changes, works out of the box</em>.</li>
-<li>Linux-PAM 1.6.1 and 1.7.1. Build system changes only (version scripts).</li>
-<li>keyutils 1.6.3. Small changes to use the Fil-C syscall ABI.</li>
-<li>krb5 1.21.3. One-line change to the build system (version scripts) and 3-line change to use Fil-C API for fences instead of inline assembly.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/Linux-PAM-1.7.1">Linux-PAM</a> 1.6.1 and <a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/Linux-PAM-1.7.1">1.7.1</a>. Build system changes only (version scripts).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/keyutils-1.6.3">keyutils 1.6.3</a>. Small changes to use the Fil-C syscall ABI.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/krb5-1.21.3">krb5 1.21.3</a>. One-line change to the build system (version scripts) and 3-line change to use Fil-C API for fences instead of inline assembly.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/yaml-0.2.5">yaml 0.2.5</a>. <em>No changes, works out of the box</em>.</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/ruby-3.3.10">ruby 3.3.10</a>. Requires ~1MB patch because I needed to change the typedef for <code>VALUE</code> to be a pointer type. Also replaces Ruby's GC with calls to the FUGC API.</li>
 </ul>
         </main>
     </div>
