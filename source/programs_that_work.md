@@ -25,7 +25,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [mg 3.7](https://github.com/pizlonator/fil-c/tree/deluge/projects/mg-3.7). *No changes, works out of the box.*
 - [ncurses 6.5-20240720](https://github.com/pizlonator/fil-c/tree/deluge/projects/ncurses-6.5-20240720). *No changes, works out of the box.*
 - [nghttp2 1.62.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1). *No changes, works out of the box.*
-- [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). *No changes, works out of the box.*
+- [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). Requires small adjustments to the seccomp filter (need to allowlist `MAP_NORESERVE` and need to call `zlock_runtime_threads()` before installing the filter).
 - [openssl 3.3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1). *Build system changes only (version script handling)*. Also added an assertion that `mem_sec` isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL). [About 90KB of additional changes are needed to support constant-time crypto](constant_time_crypto.html).
 - [pcre 8.39](https://github.com/pizlonator/fil-c/tree/deluge/projects/pcre-8.39). *No changes, works out of the box.*
 - [pcre2 10.44](https://github.com/pizlonator/fil-c/tree/deluge/projects/pcre2-10.44). *Only test suite changes (needed because of musl locale handling)*. Works out of the box if you don't run the test suite.
