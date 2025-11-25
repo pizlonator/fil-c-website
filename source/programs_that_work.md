@@ -125,6 +125,8 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - wget 1.24.5. *No changes, works out of the box*.
 - which 2.21. *No changes, works out of the box*.
 - audit-userspace 4.1.2. *No changes, works out of the box*.
+- [libsepol 3.9](https://github.com/pizlonator/fil-c/tree/deluge/projects/libsepol-3.9). Only build system changes (version scripts).
+- [libselinux 3.9](https://github.com/pizlonator/fil-c/tree/deluge/projects/libselinux-3.9). Only build system changes (version scripts).
 - [Linux-PAM](https://github.com/pizlonator/fil-c/tree/deluge/projects/Linux-PAM-1.7.1) 1.6.1 and [1.7.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/Linux-PAM-1.7.1). Build system changes only (version scripts).
 - [keyutils 1.6.3](https://github.com/pizlonator/fil-c/tree/deluge/projects/keyutils-1.6.3). Small changes to use the Fil-C syscall ABI.
 - [krb5 1.21.3](https://github.com/pizlonator/fil-c/tree/deluge/projects/krb5-1.21.3). One-line change to the build system (version scripts) and 3-line change to use Fil-C API for fences instead of inline assembly.
