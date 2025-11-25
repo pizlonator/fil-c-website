@@ -130,3 +130,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [krb5 1.21.3](https://github.com/pizlonator/fil-c/tree/deluge/projects/krb5-1.21.3). One-line change to the build system (version scripts) and 3-line change to use Fil-C API for fences instead of inline assembly.
 - [yaml 0.2.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/yaml-0.2.5). *No changes, works out of the box*.
 - [ruby 3.3.10](https://github.com/pizlonator/fil-c/tree/deluge/projects/ruby-3.3.10). Requires ~1MB patch because I needed to change the typedef for `VALUE` to be a pointer type. Also replaces Ruby's GC with calls to the FUGC API.
+- [libjpeg-turbo 3.0.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/libjpeg-turbo-3.0.1). Only a build system change for version scripts.
