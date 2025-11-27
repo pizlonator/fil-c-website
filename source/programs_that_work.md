@@ -137,3 +137,4 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [libwebp 1.4.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/libwebp-1.4.0). Needed to change some inline assembly for `cpuid` with a call to `__get_cpuid`.
 - [openjpeg 2.5.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2). *No changes, works out of the box*.
 - [gobject-introspection 1.80.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/gobject-introspection-1.80.1). Needed a handful of changes because `GType` is a pointer type now.
+- fribidi 1.0.15. *No changes, works out of the box*.
