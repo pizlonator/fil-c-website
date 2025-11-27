@@ -177,3 +177,6 @@ Additional reading:
 - [InvisiCaps by Example](invisicaps_by_example.html)
 
 - [Explanation of Fil-C Disassembly](compiler_example.html)
+
+- [Fil's Unbelievable C Compiler](compiler.html)
+
