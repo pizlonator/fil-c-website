@@ -76,6 +76,8 @@
 
 <p>InvisiCaps can also be thought of as a software implementation of <a href="https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/">CHERI</a>. Unlike CHERI, InvisiCaps are more compatible (pointers are 64-bit, not 128-bit or 256-bit) and InvisiCaps have a more deterministic use-after-free story.</p>
 
+<p><a name="flightptr"></a></p>
+
 <h2>The Intuition Of InvisiCaps</h2>
 
 <p>Let's start with a simple intuition for how InvisiCaps work, without worrying about how a pointer and its capability are stored in memory. Let's just consider:</p>
@@ -113,9 +115,11 @@
 
 <p>If pointers could only ever live in local variables and could not be stored to the heap, then that would be the whole story!</p>
 
+<p><a name="restptr"></a></p>
+
 <h2>InvisiCaps At Rest</h2>
 
-<p>When a pointer is stored to the heap, we call this a <em>pointer at rest</em>. Like a pointer in flight, a pointer at rest must know its <em>lower</em> and <em>intval</em>. InvisiCaps for pointers at rest achieve the following goals:</p>
+<p>When a pointer is stored to the heap, we call this a <em>pointer at rest</em> (or <em>rest pointer</em>). Like a pointer in flight, a pointer at rest must know its <em>lower</em> and <em>intval</em>. InvisiCaps for pointers at rest achieve the following goals:</p>
 
 <ul>
 <li><p>If you store a pointer to the heap and load it back as an integer, you get the intval.</p></li>

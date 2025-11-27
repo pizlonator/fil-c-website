@@ -42,7 +42,7 @@
 
 <ul>
 <li><p>Small changes in clang CodeGen to make the generated LLVM code consistently use the <code>ptr</code> type for pointers as well as other tweaks to make the code obey Fil-C rules. In cases where CodeGen fails to obey these rules, the Fil-C checks end up being overzealous and a perfectly valid C or C++ program might get a Fil-C panic.</p></li>
-<li><p>Changes to the clang Driver, mostly to support the <a href="pizfix.html">pizfix slice</a>.</p></li>
+<li><p>Changes to the clang Driver to support the <a href="pizfix.html">pizfix slice</a>, <a href="optfil.html"><code>/opt/fil</code></a>, <a href="pizlix.html">Pizlix</a>, <a href="https://github.com/mbrock/filnix">filnix</a>, and <a href="https://cr.yp.to/2025/fil-c.html">filian</a>.</p></li>
 <li><p>Changes to <a href="https://github.com/pizlonator/fil-c/blob/deluge/clang/lib/CodeGen/BackendUtil.cpp">BackendUtil.cpp</a> to use a Fil-C pass pipeline that invokes the <code>FilPizlonator</code>.</p></li>
 </ul></li>
 <li><p>Surgical changes to LLVM itself, to remove or slightly tweak optimizations that fail to follow Fil-C rules. These changes only affect passes when they run before <code>FilPizlonator</code> in the pipeline. In particular, <a href="https://github.com/pizlonator/fil-c/blob/deluge/llvm/include/llvm/IR/DataLayout.h"><code>DataLayout</code></a> has a method to detect if the IR must follow Fil-C rules.</p></li>
@@ -53,9 +53,10 @@
 <p>This pass applies memory safety rules <em>to every single construct in LLVM IR</em>, including:</p>
 
 <ul>
-<li><p>All memory access instructions, including SIMD memory access intrinsics.</p></li>
+<li><p>How values of <code>ptr</code> type are represented in SSA data flow. These get lowered to a <a href="invisicaps.html#flightptr"><em>flight pointer</em></a>: a tuple containing the lower bound pointer (which doubles as the capability object pointer) and the pointer's <em>intval</em> (i.e. raw value under the control of the C program).</p></li>
+<li><p>All memory access instructions, including SIMD memory access intrinsics. Loads, stores, atomic CAS, atomic RMW, and memory transfer instructions have bounds checking prepended. Any operation that may operate on pointers (i.e. may store pointers to the heap or load pointers from the heap) is also modified to obey the <a href="invisicaps.html#restptr"><em>rest pointer</em></a> protocol.</p></li>
 <li><p>All control flow instructions, including computed goto (i.e. <code>indirectbr</code>) and function calls. Function calls check that the pointer you're calling is a valid function and the calling convention is totally changed to ensure that type confusion of arguments and return values has safe outcomes.</p></li>
-<li><p>All kinds of allocations (globals and <code>alloca</code>s).</p></li>
+<li><p>All kinds of allocations (globals and <code>alloca</code>s). <code>alloca</code>s are converted to calls to <a href="fugc.html">FUGC</a> allocation APIs.</p></li>
 <li><p>All linker shenanigans (including ifuncs, comdats, etc).</p></li>
 <li><p>All assembly (module level and inline). In practice this means that assembly is effectively disallowed (but blank assembly idioms, which are super common, work as expected).</p></li>
 <li><p>Everything else in LLVM IR.</p></li>
@@ -77,6 +78,56 @@
 <li><p>Bounds checks are scheduled and redundant ones are removed. (However, this is an area that could be massively improved).</p></li>
 <li><p>Local variables are escape-analyzed so that those that are treated as escaping for SROA, but don't actually escape in the classic sense, are stack-allocated rather than heap-allocated.</p></li>
 <li><p>Many other small optimizations.</p></li>
+</ul>
+
+<h2>Clang CodeGen Changes</h2>
+
+<p>Clang's CodeGen module lowers the AST (abstract syntax tree) into LLVM IR. The AST still contains C/C++ types, while LLVM IR uses a lower-level type system. A key insight of Fil-C is that clang CodeGen is mostly well-behaved with respect to pointers. Values that would have been thought of as having pointer type by the C or C++ programmer (so any <code>*</code> pointer or <code>&amp;</code> reference, as well as any struct or class that contains pointers) are lowered to LLVM IR that uses the <code>ptr</code> type.</p>
+
+<p>There are two major exceptions to this property of CodeGen, and to make Fil-C work, surgical changes had to be made to make CodeGen completely preserve pointer intent:</p>
+
+<ul>
+<li><p><code>CGAtomic</code>, the part of CodeGen that deals with atomics, normally bitcasts pointers to integers in many cases. This is mostly to address a limitation in older LLVM IR, where atomic instructions only worked on integer type. This limitation no longer holds, so the Fil-C compiler changes <code>CGAtomic</code> to use <code>ptr</code> type for pointers, just like the rest of CodeGen would.</p></li>
+<li><p>C++-related lowering, for things like vtables and method pointers. This code contained many uses of integer-sized pointers to pass pointers around. This is correct in non-Fil-C LLVM IR because a pointer is nothing more than an integer. But to make C++ work with Fil-C, those uses of integer-sized pointers had to be changed to uses of <code>ptr</code>.</p></li>
+</ul>
+
+<h2>Clang Driver</h2>
+
+<p>GCC and compatible compilers like clang have a <em>driver</em> process that takes command-line arguments from the user and transforms them into internal command-line arguments taken by the actual compiler process. The driver's responsibilities include:</p>
+
+<ul>
+<li><p>Figuring out where system headers are located (like <code>stdio.h</code> and <code>unistd.h</code>).</p></li>
+<li><p>Figuring out where C++ headers are located (like <code>vector</code> and <code>thread</code>).</p></li>
+<li><p>Figuring out where compiler-provided headers are located (like <code>stddef.h</code>, <code>stdatomic.h</code>, and <code>immintrin.h</code>).</p></li>
+<li><p>Figuring out how to invoke the linker.</p></li>
+<li><p>Figuring out where system libraries are located and how to link to them (like knowing to pass <code>-L/usr/lib -lc</code>, knowing to pass <code>-lm</code> by default for C++ builds, and knowing whether to pass <code>-lpthread</code>)</p></li>
+<li><p>Figuring out where the libc-provided crt files are (like <code>crti.o</code>).</p></li>
+<li><p>Figuring out where the compiler-provided crt files and builtin libraries are (like <code>crtbegin.o</code> and <code>libgcc.a</code>).</p></li>
+</ul>
+
+<p>Every operating system has opinions about these things, and the clang driver knows about the opinions of every operating system supported by clang.</p>
+
+<p>Fil-C has its own opinions, which vary a bit depending on how the Fil-C compiler and runtime are distributed. Some things that are common across distributions:</p>
+
+<ul>
+<li><p>Fil-C requires both a yolo libc (a libc compiled with Yolo-C) and a user libc (a libc compiled with Fil-C). The yolo libc is found with <code>-lyoloc</code>.</p></li>
+<li><p>Fil-C always requires the yolo libm, i.e. <code>-lyolom</code>, since the Fil-C runtime calls a few math functions.</p></li>
+<li><p>Fil-C has its own runtime called <code>libpizlo.so</code>, i.e. <code>-lpizlo</code>.</p></li>
+<li><p>Fil-C always uses the LLVM compiler-rt versions of crt and builtins, which ship as <code>crtbegin.o</code>, <code>crtend.o</code>, and <code>libyolort.a</code> (i.e. <code>-lyolort</code>).</p></li>
+<li><p>Fil-C always links a dummy <code>libyolounwind.a</code>, i.e. <code>-lyolounwind</code>, which just contains stubs. These are only used by glibc. Because it's a static library, they only get pulled in if you do a static build and you're linking to glibc.</p></li>
+<li><p>Fil-C has its own additional crt trampilines for executables, <code>filc_crt.o</code> (for normal builds) and <code>filc_mincrt.o</code> (for <code>-nodefaultlibs</code> builds).</p></li>
+<li><p>Fil-C uses its own loader, called <code>ld-yolo-x86_64.so</code>.</p></li>
+</ul>
+
+<p>The clang driver contains changes to link these additional libraries and object files, as necessary.</p>
+
+<p>Finally, depending on what kind of Fil-C distribution you are using, the driver takes different paths for working out the header file and library locations:</p>
+
+<ul>
+<li><p>In a <a href="pizfix.html">pizfix</a> distribution, all system headers and libraries are found in the <code>../../pizfix</code> directory, relative to the location of the driver's executable. All compiler-provided headers are found in <code>../lib/clang</code> relative to the driver's executable. The driver automatically puts itself in pizfix mode if it locates a <code>../../pizfix</code> directory relative to the drivers' executable.</p></li>
+<li><p>In a <a href="optfil.html"><code>/opt/fil</code></a> distribution, all system and compiler headers and libraries are found in <code>/opt/fil</code>. The driver automatically puts itself in <code>/opt/fil</code> mode if it sees that the driver's executable is in <code>/opt/fil/bin</code>.</p></li>
+<li><p>In a <a href="https://github.com/mbrock/filnix">filnix</a> distribution, there is a wrapper for the compiler driver that passes special arguments to specify the locations of headers and libraries.</p></li>
+<li><p>In a <a href="pizlix.html">Pizlix</a> distribution, all system and compiler headers and libraries are found in system-default paths like <code>/usr/include</code> and <code>/lib</code>. The driver knows that it is in Pizlix mode if none of the other conditions hold.</p></li>
 </ul>
 
 <h2>The Fil-C Pass Pipeline</h2>

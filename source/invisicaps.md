@@ -44,6 +44,7 @@ InvisiCaps can be thought of as a practical-to-implement and totally thread-safe
 
 InvisiCaps can also be thought of as a software implementation of [CHERI](https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/). Unlike CHERI, InvisiCaps are more compatible (pointers are 64-bit, not 128-bit or 256-bit) and InvisiCaps have a more deterministic use-after-free story.
 
+<a name="flightptr"></a>
 ## The Intuition Of InvisiCaps
 
 Let's start with a simple intuition for how InvisiCaps work, without worrying about how a pointer and its capability are stored in memory. Let's just consider:
@@ -78,9 +79,10 @@ As a bonus feature, the *lower* can be NULL. Pointers with NULL *lower* cannot b
 
 If pointers could only ever live in local variables and could not be stored to the heap, then that would be the whole story!
 
+<a name="restptr"></a>
 ## InvisiCaps At Rest
 
-When a pointer is stored to the heap, we call this a *pointer at rest*. Like a pointer in flight, a pointer at rest must know its *lower* and *intval*. InvisiCaps for pointers at rest achieve the following goals:
+When a pointer is stored to the heap, we call this a *pointer at rest* (or *rest pointer*). Like a pointer in flight, a pointer at rest must know its *lower* and *intval*. InvisiCaps for pointers at rest achieve the following goals:
 
 - If you store a pointer to the heap and load it back as an integer, you get the intval.
 
