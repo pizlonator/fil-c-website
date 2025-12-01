@@ -1,8 +1,8 @@
 # Pizlix: Memory Safe Linux From Scratch
 
-<a href="cropped10.png">
-   <img src="cropped10.png" style="max-width: 100%; height: auto; display: block;
-        margin: 0 auto;" alt="Weston desktop built with Fil-C">
+<a href="cropped37.png">
+   <img src="cropped37.png" style="max-width: 100%; height: auto; display: block;
+        margin: 0 auto;" alt="Weston desktop and GTK 4 built with Fil-C">
 </a>
 
 Pizlix is [LFS (Linux From Scratch) 12.2](https://www.linuxfromscratch.org/lfs/view/12.2/) with some added components, where userland is compiled with Fil-C. This means you get the most memory safe Linux-like OS currently available.
@@ -136,6 +136,14 @@ If you want to just do this stage of the build and nothing more, do `sudo ./buil
 
 If you want to start the build here, do `sudo ./build_with_recovered_postlc2.sh`.
 
+### Post-LC 4
+
+This builds GTK 4.
+
+If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc4.sh`.
+
+If you want to start the build here, do `sudo ./build_with_recovered_postlc3.sh`.
+
 ### Other Tricks
 
 You can mount the chroot's virtual filesystems with `sudo ./build_mount.sh`. You can unmount the chroot's virtual filesystems with `sudo ./build_unmount.sh`.
@@ -249,5 +257,5 @@ Post-LC is almost exactly the LFS chapters 8-10 except for the glibc step (which
 
 - The Linux kernel needs to be built using two compilers. The "host" compiler is the [Fil-C compiler](compiler.html). So, there are minor changes in the userlevel parts of the Linux kernel and the exact commands used to invoke the build are a bit more verbose.
 
-Pizlix also includes a Post-LC 2 and Post-LC 3 phases that build some parts of [BLFS 12.2](https://www.linuxfromscratch.org/blfs/view/12.2/) plus enough to run Weston.
+Pizlix also includes a Post-LC 2, Post-LC 3, and Post-LC 4 phases that build some parts of [BLFS 12.2](https://www.linuxfromscratch.org/blfs/view/12.2/) plus enough to run Weston and GTK 4.
 
