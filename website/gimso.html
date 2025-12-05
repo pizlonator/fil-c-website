@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garbage In, Memory Safety Out!</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+
+<p><a href="meet_fil.html">Meet Fil</a></p>
+        </aside>
+        <main class="content">
+<h1>Garbage In, Memory Safety Out!</h1>
+
+<p>Fil-C achieves memory safety by introducing a <em>garbage in, memory safety out</em> (GIMSO) pass to LLVM. This pass ascribes a memory safe semantics to the incoming LLVM IR so that given any possible LLVM module (including one created adversarially), the resulting module will obey Fil-C pointer capability rules.</p>
+
+<p>But what are those rules, and what are the semantics that Fil-C's pass ascribes to LLVM IR? This document describes these GIMSO semantics.</p>
+
+<p><a href="https://github.com/pizlonator/fil-c/blob/deluge/invisicaps_by_example.md">This document shows examples of these semantics in action.</a></p>
+
+<h1>Pointers In Flight</h1>
+
+<p>We say that a value is "in flight" when it is carried in LLVM data flow rather than when it is stored in memory. For example, if a <code>call</code> instruction's first argument operand uses a <code>load</code> instruction of <code>ptr</code> type, then this data flow edge has a "pointer in flight".</p>
+
+<p>Under GIMSO, pointers in flight carry two separate pieces of information:</p>
+
+<ul>
+<li><p>The pointer's integer value (intval). Under normal LLVM semantics, this is <em>all</em> that the a pointer in flight would carry. This could be any integer value whose bit width matches the module data layout's pointer size. <em>We do not trust this value and it may be garbage or adversarial.</em></p></li>
+<li><p>The pointer's capability. This is a pointer as well, but it is not forgeable by the the LLVM IR that uses pointers. The capability pointer points to a garbage collected object. Three kinds of capabilities are possible: the null capability is for pointers that cannot be dereferenced at all, plain capabilities have a lower and upper bounds that tell the range of addresses that can be accessed using that capability, and special capabilities are for things like function pointers (though other special types are also recognized, and more may be added in the future). Plain capabilities may monotonically transition from having their original bounds to having lower = upper; this happens when objects get freed. Other than the free operation, there's no operation that can change the lower or upper bounds. Capabilities must be pointers to objects, as opposed to being carried around "in place" to enable aliasing of the capability between all pointers that use that capability. If two pointers have the same capability and one of them is passed to the <code>free()</code> function, then both pointers will now see a freed capability (lower and upper bounds will be equal). The capability objects are not visible to LLVM IR. One way that capabilities might be implementated is if there was a totally separate address space in which the capability objects are allocated. But a simpler option exists (and what Fil-C actually does): the capability objects are at addresses that are outside of any capability's lower/upper bounds. So, it's never possible for LLVM IR to load or store to the capability objects.</p></li>
+</ul>
+
+<p>It's possible to change the pointer's integer value using a variety of LLVM IR operations. On the other hand, capabilities may be created at allocation time, or they may be freed, but otherwise they just travel with pointers.</p>
+
+<p>It's legal to access N bytes (with a load, store, or atomic operation) in a flight pointer P if:</p>
+
+<ul>
+<li><p><code>P.intval &gt;= P.capability-&gt;lower</code></p></li>
+<li><p><code>P.intval &lt; P.capabiltiy-&gt;upper</code></p></li>
+<li><p><code>P.intval + N &lt;= P.capability-&gt;upper</code></p></li>
+</ul>
+
+<p>Illegal accesses are guaranteed to cause a Fil-C safety error. Legal accesses are guaranteed to succeed.</p>
+
+<p>Accesses that LLVM claims to be aligned are either checked for alignment, or have their alignment
+annotation dropped. On X86-64, it's common for C programs to perform integer and float accesses that
+are not aligned, so Fil-C drops the alignment annotation for those. But vector and pointer accesses have their alignment preserved. For those accesses where alignment is preserved, Fil-C checks that the alignment holds: the access is only legal if <code>P mod A = 0</code>.</p>
+
+<h1>Capability Allocation</h1>
+
+<p>Capabilities can only be created by allocation. Allocations happen via libc, such as by calling <code>malloc</code>, via the LLVM IR <code>alloca</code> instruction, and LLVM global variables.</p>
+
+<p>Creating a capability allocates both the capability object itself and the <em>payload</em> object. The payload is the memory that the user code gets to see with loads and stores. The capability's lower/upper bounds tell where the payload object is and how large it is.</p>
+
+<p>New capabilities will choose a range of memory for the capability itself and for the payload that is free according to the garbage collector. So, a newly created capability never overlaps with any reachable capability.</p>
+
+<p>New capabilities have their payload initialized to zero.</p>
+
+<h1>Pointers At Rest</h1>
+
+<p>We say that a value is "at rest" when it is stored in memory.</p>
+
+<p>Under GIMSO, pointers at rest use an <em>invisible capability</em> (InvisiCap). The pointer's intval is stored within the object's payload, while the capability pointer is stored at an invisible location.</p>
+
+<p>It's easiest to understand the semantics by thinking of the capability pointers of pointers at rest living in a shadow address space. That's not how Fil-C implements it because Fil-C's OS interface does not rely on large memory reservations and the implementation does not require support for overcommit. However, the semantics are "as if" there is a shadow address space. So for the purpose of this document, the abstract machine has a primary address space and a shadow address space. All non-pointer-type accesses operate only on the primary address space. Pointer-type accesses (i.e. memory accesses whose access type is <code>ptr</code>) operate on both address spaces at once.</p>
+
+<p>New capabilities initialize the corresponding shadow addresses to the null capability.</p>
+
+<p>Non-pointer accesses operate only on the primary address space.</p>
+
+<p>Pointer-type accesses are required to have pointer alignment (so 8 on 64-bit platforms, 4 on 32-bit platforms, and so forth).</p>
+
+<h2>Simplified Rules, Ignoring Atomics</h2>
+
+<p>If we ignore the need for pointer atomics, pointers at rest are quite simple. Pointers at rest have their intval stored in the primary address space and their capability pointer stored in the secondary address space. We do not allow any other user-defined or hardware-defined address spaces (the address space number on all pointers must be 0; note that we could devise a Fil-C semantics for safe pointers to other address spaces, but I haven't done that, because I haven't found a need for it yet).</p>
+
+<p>This permits pointer-integer aliasing as follows. Storing a pointer to a location and then loading it as an integer is like a <code>ptrtoint</code> cast. Storing a pointer to a location and then storing an integer to that same location, and then loading a pointer, yields a pointer with the capability of the pointer store and an intval from the integer store. Loading a pointer from a location that never had a pointer stored to it yields a pointer with a null capability.</p>
+
+<p>This arrangement also prevents races from ever corrupting the capability. The capability pointer stores and loads always happen using LLVM <code>monotonic</code> atomic ordering. Hence, although the intval and capability may tear in a race (you may get an intval from one pointer and a capability from another), the result is a pointer that is illegal to access and always traps. No memory-unsafe outcome is possible from racing on non-atomic pointers.</p>
+
+<h2>Complete Rules, Including Atomics</h2>
+
+<p>Fil-C allows atomic pointer accesses, where the intval and capability do not tear. This is achieved by giving the secondary address space an extra power: locations in the shadow address space may be in <em>non-atomic</em> or <em>atomic</em> mode. The <em>non-atomic</em> mode is the default. Upon allocation, the entire payload's shadow memory is put in <em>non-atomic</em> mode. Performing an atomic store of pointer type switches the shadow location to <em>atomic</em> mode.</p>
+
+<p>If the shadow location is in <em>non-atomic</em> mode, then the pointer stored at that address has its intval stored in the primary address space and its capability stored in the shadow address space (as described in the previous section). This means that it's possible to alias pointers and integers, and it's possible to have intval-capability tearing.</p>
+
+<p>If the shadow location is in <em>atomic</em> mode, then the pointer stored at that address has its intval and capability stored atomically in the shadow address space and the intval is replicated to the primary address space. In other words, the shadow address space behaves as if it has twice as many bits as the primary one, so that for any pointer address, it's possible to store both the intval and the capability at that location in the shadow space.</p>
+
+<p>The behavior of the <em>atomic</em> mode is strange, but preserves pointer atomicity for atomic pointer accesses, preserves memory safety for non-atomic pointer accesses, allows aliasing between pointers and integers so long as the accesses are not atomic, and guarantees lock-freedom of atomic pointer accesses. An example of how a program might observe the strangeness is the following sequence:</p>
+
+<ol>
+<li><p>Atomically store pointer V to the address P.</p></li>
+<li><p>Store integer W to the address P.</p></li>
+<li><p>Load a pointer from P.</p></li>
+<li><p>Load an integer from P.</p></li>
+</ol>
+
+<p>In this case, the load in (3) will see the value V and the load in (4) will see the value W. Note that if the store in (1) had not been atomic, then the load in (3) would see a pointer with V's capability but W as the intval.</p>
+
+<h1>Basic Operations</h1>
+
+<p>Let's first consider these basic operations: load, store, gep (aka getelementptr), ptrtoint, inttoptr, and alloca.</p>
+
+<h2>Load</h2>
+
+<p>The LLVM <code>load</code> operation has the following two syntaxes:</p>
+
+<pre><code>&lt;result&gt; = load [volatile] &lt;ty&gt;, ptr &lt;pointer&gt;[, align &lt;alignment&gt;]
+&lt;result&gt; = load atomic [volatile] &lt;ty&gt;, ptr &lt;pointer&gt; [syncscope("&lt;target-scope&gt;")] &lt;ordering&gt;, align &lt;alignment&gt;
+</code></pre>
+
+<p>Note that the <code>&lt;ty&gt;</code> can be a compound type, like a struct that has both pointers and non-pointers. Compound types are only possible for non-atomic loads. The first step to understanding GIMSO <code>load</code> semantics is to decompose compound type loads <em>where the compound type has pointers</em> into loads of each individual element of the compound value, and then reconstruct the compount value after doing all of the loads. For example, this:</p>
+
+<pre><code>%val = load {i32, ptr}, ptr %ptr
+</code></pre>
+
+<p>becomes:</p>
+
+<pre><code>%elem1 = load i32, ptr %ptr
+%ptr2 = getelementptr {i32, ptr}, %ptr, i32 0, i32 1
+%elem2 = load ptr, ptr %ptr2
+%agg1 = insertvalue {i32, ptr} zeroinitializer, %elem1, 0
+%val = insertvalue {i32, ptr} %agg1, %elem2, 1
+</code></pre>
+
+<p>On the other hand, we don't do this decomposition for compound types that don't have pointers. For example:</p>
+
+<pre><code>%val = load {i32, i32}, ptr %ptr
+</code></pre>
+
+<p>is kept as-is.</p>
+
+<p>Once all loads are decomposed (possibly recursively, if the compound type is deep), then each load is implemented as follows. In this description, we use P to refer to the pointer being loaded from and N is the size of the type being loaded. All loads start with mandatory checks. Check failure leads to a Fil-C safety error.</p>
+
+<ol>
+<li><p>If the access type requires alignment according to Fil-C's rules for that target, then we check that <code>P.intval mod A = 0</code>, where A is the alignment requirement of the load. Pointers and vectors require an alignment check. Integers and floats don't on X86, but may require alignment on other platforms. A compound type requires alignment if any member requires alignment.</p></li>
+<li><p><code>P.capability</code> must be a plain capability (cannot be a null or special capability).</p></li>
+<li><p><code>P.intval &gt;= P.capability-&gt;lower</code></p></li>
+<li><p><code>P.intval &lt; P.capabiltiy-&gt;upper</code></p></li>
+<li><p><code>P.intval + N &lt;= P.capability-&gt;upper</code></p></li>
+</ol>
+
+<p>Then the load is executed; this is a bit different depending on the type.</p>
+
+<h3>Int Loads</h3>
+
+<p><em>For simplicity, we refer to all non-pointer types as "ints". This includes floats, vectors and arrays of ints and floats, structs of ints and floats, etc.</em></p>
+
+<p>Int loads simpliy load using <code>P.intval</code> as the address to load from, while keeping the original LLVM flags on the load (atomic/volatile/ordering/etc). If the load was checked for alignment, then the alignment annotation is preserved; otherwise the alignment annotation is set to 1. </p>
+
+<h3>Non-Atomic Ptr Loads</h3>
+
+<p>Non-atomic ptr loads access the capability from the shadow space or the atomic box and the intval from the primary space.</p>
+
+<p>Pseudocode:</p>
+
+<pre><code>CapabilityOrAtomicBox = LoadFromShadowSpace(P.intval)
+Intval = LoadFromPrimarySpace(P.intval)
+if (CapabilityOrAtomicBox is AtomicBox)
+    return MakePointer(capability = LoadCapabilityFromAtomicBox(CapabilityOrAtomicBox),
+                       intval = Intval)
+return MakePointer(capability = CapabilityOrAtomicBox, intval = Intval)
+</code></pre>
+
+<p>Note that <code>LoadFromShadowSpace</code> uses the LLVM <code>monotonic</code> atomic ordering.</p>
+
+<h3>Atomic Ptr Loads</h3>
+
+<p>If an atomic ptr load encounters a capability in the shadow space, then the loaded pointer uses the capability from shadow space and the intval from the primary space.</p>
+
+<p>If an atomic ptr load encounters an atomic box in the shadow space, then the loaded pointer uses the capability and intval from the atomic box.</p>
+
+<p>Pseudocode:</p>
+
+<pre><code>CapabilityOrAtomicBox = LoadFromShadowSpace(P.intval)
+if (CapabilityOrAtomicBox is AtomicBox)
+    return LoadPointerFromAtomixBox(CapabilityOrAtomicBox)
+return MakePointer(capability = CapabilityOrAtomicBox,
+                   intval = LoadFromPrimarySpace(P.intval))
+</code></pre>
+
+<p>Note that the atomic versus non-atomic behavior of shadow space depends on whether the location in shadow space contains a capability or an atomic box.</p>
+
+<h2>Store</h2>
+
+<p>The LLVM <code>store</code> operation has the following two syntaxes:</p>
+
+<pre><code>store [volatile] &lt;ty&gt; &lt;value&gt;, ptr &lt;pointer&gt;[, align &lt;alignment&gt;]
+store atomic [volatile] &lt;ty&gt; &lt;value&gt;, ptr &lt;pointer&gt; [syncscope("&lt;target-scope&gt;")] &lt;ordering&gt;, align &lt;alignment&gt;
+</code></pre>
+
+<p>Note that the <code>&lt;ty&gt;</code> can be a compound type, like a struct that has both pointers and non-pointers. Compound types are only possible for non-atomic stores. The first step to understanding GIMSO <code>store</code> semantics is to decompose compound type stores <em>where the compound type has pointers</em> into stores of each individual element of the compound value. For example, this:</p>
+
+<pre><code>store {i32, ptr} %val, ptr %ptr
+</code></pre>
+
+<p>becomes:</p>
+
+<pre><code>%elem1 = extractvalue {i32, ptr} %val, 0
+store i32 %elem1, ptr %ptr
+%elem2 = extractvalue {i32, ptr} %val, 1
+%ptr2 = getelementptr {i32, ptr}, %ptr, i32 0, i32 1
+store ptr %elem2, ptr %ptr2
+</code></pre>
+
+<p>On the other hand, we don'd do this decomposition for compound types that don't have pointers. For example:</p>
+
+<pre><code>store {i32, i32} %val, ptr %ptr
+</code></pre>
+
+<p>is kept as-is.</p>
+
+<p>Once all stores are decomposed (possibly recursively, if the compound type is deep), then each store is implemented as follows. In this description, we use P to refer to the pointer being stored to, V to refer to the value being stored, and N is the size of the type being stored. All stores start with mandatory checks. Check failure leads to a Fil-C safety error.</p>
+
+<ol>
+<li><p>If the access type requires alignment according to Fil-C's rules for that target, then we check that <code>P.intval mod A = 0</code>, where A is the alignment requirement of the store. Pointers and vectors require an alignment check. Integers and floats don't on X86, but may require alignment on other platforms. A compound type requires alignment if any member requires alignment.</p></li>
+<li><p><code>P.capability</code> must be a plain capability (cannot be a null or special capability).</p></li>
+<li><p><code>P.intval &gt;= P.capability-&gt;lower</code></p></li>
+<li><p><code>P.intval &lt; P.capabiltiy-&gt;upper</code></p></li>
+<li><p><code>P.intval + N &lt;= P.capability-&gt;upper</code></p></li>
+</ol>
+
+<p>Then the store is executed; this is a bit different depending on the type.</p>
+
+<h3>Int Stores</h3>
+
+<p>Int stores simply store using <code>P.intval</code> as the address to store to, while keeping the original LLVM flags on the store (atomic/volatile/ordering/etc). If the store was checked for alignment, then the alignment annotation is preserved; otherwise the alignment annotation is set to 1.</p>
+
+<h3>Non-Atomic Ptr Stores</h3>
+
+<p>Non-atomic ptr stores put the intval into the primary space and the capability in the shadow space.</p>
+
+<p>Pseudocode:</p>
+
+<pre><code>StoreToPrimarySpace(P.intval, V.intval)
+StoreToShadowSpace(P.intval, V.capability)
+</code></pre>
+
+<p>Note that this makes the shadow space location have non-atomic mode, since future loads will see a capability at that location rather than an atomic box.</p>
+
+<p>Note that <code>StoreToShadowSpace</code> uses the LLVM <code>monotonic</code> atomic ordering.</p>
+
+<h3>Atomic Ptr Stores</h3>
+
+<p>Atomic ptr stores use an atomic box to store both intval and capability atomically. Semantically, this is as if a new atomic box was created on each atomic ptr store; however, it's possible to optimize this to reuse atomic boxes on repeated accesses to the same location.</p>
+
+<p>Additionally, the intval is replicated to the primary space for the benefit of non-atomic loads.</p>
+
+<p>Pseudocode:</p>
+
+<pre><code>StoreToShadowSpace(P.intval, MakeAtomicBox(capability = V.capability, intval = V.intval))
+StoreToPrimarySpace(P.intval, V.intval)
+</code></pre>
+
+<p>Note that this makes the shadow space location have atomic mode, since future laods will see an atomic box at that location rather than a capability.</p>
+
+<h2>Gep</h2>
+
+<p>The LLVM <code>getelementptr</code> instruction, or <em>gep</em> for short, has the following syntax:</p>
+
+<pre><code>&lt;result&gt; = getelementptr [UB flags] &lt;ty&gt;, ptr &lt;ptrval&gt;{, &lt;ty&gt; &lt;idx&gt;}*
+</code></pre>
+
+<p>GIMSO means dropping any UB flags from the gep (so inbounds, nusw, nuw, and inrange are all deleted).</p>
+
+<p>The gep is really just pointer arithmetic; the effect of all of the indices passed to the gep is that a DataLayout-dependent integer value is computed, which we will call the <code>addend</code>. Then the <code>addend</code> is added to the incoming <code>ptrval</code>. The pseudocode for GIMSO semantics are:</p>
+
+<pre><code>result = MakePointer(capability = ptrval.capability,
+                     intval = ptrval.intval + addend)
+</code></pre>
+
+<p>Hence, the <code>result</code> retains exactly the same capability as <code>ptrval</code>, but the intval is is changed.</p>
+
+<h2>Ptrtoint</h2>
+
+<p>The LLVM <code>ptrtoint</code> instruction returns a pointer's integer value. The syntax is:</p>
+
+<pre><code>&lt;result&gt; = ptrtoint &lt;ty&gt; &lt;value&gt; to &lt;ty2&gt;
+</code></pre>
+
+<p>Where <code>ty</code> has to be <code>ptr</code> and <code>ty2</code> has to be some integer type (we'll ignore vectors of pointers for now, but without loss of generality). Note that <code>ty2</code> may have more or less bits than the pointer (so the bits are either truncated or extended). Let's define <code>IntCast&lt;t&gt;(X)</code> to mean either zero extending or truncating X depending on whether <code>t</code> is larger or smaller (respectively) than X. Then the semantics in pseudocode are just:</p>
+
+<pre><code>result = IntCast&lt;ty2&gt;(value.intval)
+</code></pre>
+
+<h2>Inttoptr</h2>
+
+<p>The LLVM <code>inttoptr</code> instruction creates a pointer from an integer value. This is super unsafe! Fil-C has to do special things for this instruction. The syntax is:</p>
+
+<pre><code>&lt;result&gt; = inttoptr &lt;ty&gt; &lt;value&gt; to &lt;ty2&gt;
+</code></pre>
+
+<p>Where <code>ty</code> has to be an integer type and <code>ty2</code> has to be <code>ptr</code>. Then <em>an approximation of</em> the semantics in pseudocode are just:</p>
+
+<pre><code>result = MakePointer(capability = null,
+                     intval = IntCast&lt;intptr&gt;(value))
+</code></pre>
+
+<p>This means that you get a pointer, but it lacks a capability, and so cannot be accessed. The only valid operations on it are comparisons and casting back to int. But, these aren't the complete semantics. Fil-C goes to great length to make code like this work:</p>
+
+<pre><code>int* p = ...;
+p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
+</code></pre>
+
+<p>Here, a pointer is cast to integer (<code>ptrtoint</code>), that integer goes through some math (which includes both control flow and effects), and then the resulting integer gets cast back to a pointer. The Fil-C compiler includes an abstract interpreter (with very simple rules) that checks if the integer being cast to a pointer came from exactly one pointer via <code>ptrtoint</code>. I'll describe it here.</p>
+
+<p>The abstract domain is a mapping from SSA instructions that produce integers to inferred capabilities.</p>
+
+<p>An inferred capability is either BOTTOM, Definite(C), or TOP. The Definite(C) case points to an SSA value of <code>ptr</code> type and indicates that we've inferred that to be the capability we should use for an integer.</p>
+
+<p>The start state of the interpreter has:</p>
+
+<ul>
+<li><p>all <code>ptrtoint</code> instructions initialize their inferred capability to Definite(X), where X is their input operand.</p></li>
+<li><p>all calls, loads, atomics, comparisons, vaargs, extracts, landing pads, and FP casts that return int have their inferred capapability set to BOTTOM.</p></li>
+<li><p>all other integer instructions are handed off to the interpreter. The interpreter only interprets these instructions.</p></li>
+</ul>
+
+<p>Then the interpreter executes all of the instructions it knows about using the following rule:</p>
+
+<ul>
+<li><p>for each input operand that is an instruction:</p>
+
+<ul>
+<li><p>If the current instruction is a <code>phi</code> or <code>select</code>:</p>
+
+<ul>
+<li><p>if the input's inferred capability is not bottom, and the current instruction's inferred capability is bottom, then create a <code>phi</code> or <code>select</code> right next to the current instruction that picks the capability. the current instruction's inferred capability is set to Definite(P), where P is the new <code>phi</code> or <code>select</code> that we created. Note that this means that <code>phi</code> and <code>select</code> never go to TOP.</p></li>
+<li><p>else, <em>merge</em> the input's inferred capability into the current instruction's inferred capability.</p></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>The interpreter stops when none of these rules changes any inferred capabilities.</p>
+
+<p>The merge rule (merge X into Y) is:</p>
+
+<ol>
+<li><p>if X is BOTTOM, do nothing.</p></li>
+<li><p>if X == Y, do nothing.</p></li>
+<li><p>if Y is BOTTOM, set Y to X.</p></li>
+<li><p>if Y is Definite(C), set it to TOP. (Note that this rule rules after the <em>if X == &amp;, do nothing</em> rule, hence merging Definite(C) into Definite(C) results in Definite(C).)</p></li>
+<li><p>if Y is TOP, do nothing.</p></li>
+</ol>
+
+<p>After running this interpreter, any <code>inttoptr</code>'s whose input <code>value</code> has an inferred capability Definite(<code>cap</code>) get executed with the following pseudocode</p>
+
+<pre><code>result = MakePointer(capability = cap.capability,
+                     intval = IntCast&lt;intptr&gt;(value))
+</code></pre>
+
+<p>Note that BOTTOM or TOP inferred capabilities still get the original treatment (i.e. a pointer with a null capability).</p>
+
+<h2>Alloca</h2>
+
+<p>The LLVM <code>alloca</code> instruction has this syntax:</p>
+
+<pre><code>&lt;result&gt; = alloca [inalloca] &lt;type&gt; [, &lt;ty&gt; &lt;NumElements&gt;] [, align &lt;alignment&gt;] [, addrspace(&lt;num&gt;)]
+</code></pre>
+
+<p>We disallow <code>inalloca</code> for now, since this is only necessary for Windows, and Fil-C does not target Windows yet.</p>
+
+<p>This instruction allocates a <code>&lt;NumElements&gt;</code> array of type <code>&lt;type&gt;</code>, or just a single <code>&lt;type&gt;</code> if <code>&lt;NumElements&gt;</code> is not specifies. For the purpose of Fil-C, all that matters is the total size of the allocation and its alignment (which is derived from the maximum of the <code>&lt;alignment&gt;</code> argument and the type's alignment).</p>
+
+<p>Fil-C allocates enough memory for the payload, the capability object, and the shadow storage. The payload and shadow storage are zero-initialized. There is no such thing as uninitialized memory in Fil-C. The capability object's lower/upper bounds are initialized according to the size allocated.</p>
+
+<p>Fil-C allocations and lower/upper bounds are always at least 8-byte aligned. For example, a one byte object will always have at least 8 bytes. The current Fil-C implementation will use 16-byte alignment for any allocation that ends up in the heap.</p>
+
+<p><code>alloca</code> returns a flight pointer with the newly allocated capability and the intval initialized to the lower bounds.</p>
+
+<h1>Calls</h1>
+        </main>
+    </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
