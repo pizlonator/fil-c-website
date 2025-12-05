@@ -337,3 +337,23 @@ Fil-C allocations and lower/upper bounds are always at least 8-byte aligned. For
 
 # Calls
 
+In LLVM IR, calling a function means calling a pointer to a function. If the function call is direct, then semantically we are still calling a pointer to a function; it's just that the pointer is a link-time constant. This section discusses the semantics of calling a pointer to a function. The next section is about linking.
+
+Function pointers in Fil-C have a capability that specifies that the pointer is callable, and indicates what pointer value can be used for calling (the callable pointer value). The pointer's intval is untrusted (like with any other Fil-C pointer). For the call to succeed, the called capability must be a function capabilirty, and the intval must match the capability's callable pointer value.
+
+Function pointer capabilities have null bounds for the purpose of loads and stores. So, it is not possible to perform loads and stores on function pointer capabilities.
+
+Function calls in Fil-C have arguments and return values that contain both intvals and capabilities.
+
+- Each function requires some number of bytes of arguments. The argument byte count must be a multiple of 8. For each 8-byte word, the caller passes both an intval and a capability; the capability may be null (as with any flight pointer). If the caller produces at least that many bytes of arguments, then the call succeeds. If the caller produces fewer bytes of arguments, then the call panics. Using Fil-C builtins, functions are allowed to introspect the full arguments array (that includes all of the arguments passed, not just the ones that the function declared as parameters; this works even if the function is not variadic).
+
+- Each function produces some number of bytes of returns. The return byte count must be a multiple of 8 and each 8-byte word contains both an intval and a capability. Each callsite has a required number of bytes that it expects from the callee. Returning from a function succeeds if the function returns at least as many return bytes as the callsite expects. Using Fil-C builtins, functions may return variadically (may return a dynamically allocated return buffer).
+
+Fil-C also provides a fully variadic call builtin, which takes a variable-sized argument buffer, and returns a variable-sized return buffer.
+
+Fil-C functions may also throw exceptions. Fil-C supports C++ two-phase exception unwinding semantics and the `libunwind` core functionality is provided by the Fil-C runtime. As such, Fil-C functions may have an associated *personality function* that is invoked by the unwinder. The personality function is itself a Fil-C function and so it's completely memory safe (errors in the personality function may lead to unusual behavior, but that behavior stays within the bounds of GIMSO at the LLVM IR level).
+
+
+
+
+
