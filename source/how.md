@@ -1,6 +1,6 @@
 # How Fil-C Works
 
-Fil-C achieves memory safety for C and C++ code by [transforming all unsafe operations in LLVM IR](compiler.html) into code that does dynamic checking to catch all violations of Fil-C’s rules. Most of that is about transforming all operations involving `ptr` type to use [InvisiCaps](invisicaps.html).
+Fil-C achieves memory safety for C and C++ code by [transforming](compiler.html) [all unsafe operations in LLVM IR](gimso.html) into code that does dynamic checking to catch all violations of Fil-C’s rules. Most of that is about transforming all operations involving `ptr` type to use [InvisiCaps](invisicaps.html).
 
 I’ve also written about InvisiCaps [using examples of issues that this catches](invisicaps_by_example.html) and by doing a [deep dive into the disassembly of a simple program](compiler_example.html). 
 

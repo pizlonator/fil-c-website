@@ -1,6 +1,6 @@
 # InvisiCaps: The Fil-C Capability Model
 
-Fil-C ensures memory safety of all operations in the C and C++ language. The hardest part of C memory safety is pointer safety. Fil-C achieves pointer safety using a *capability system* for pointers. Specifically, each pointer dynamically tracks what object in memory it should be allowed to access, and using that pointer to access any memory that is not that object is dynamically prohibited.
+[Fil-C ensures memory safety of all operations in the C and C++ language.](gimso.html) The hardest part of C memory safety is pointer safety. Fil-C achieves pointer safety using a *capability system* for pointers. Specifically, each pointer dynamically tracks what object in memory it should be allowed to access, and using that pointer to access any memory that is not that object is dynamically prohibited.
 
 Achieving memory safety using a pointer capability model means:
 
@@ -180,3 +180,4 @@ Additional reading:
 
 - [Fil's Unbelievable C Compiler](compiler.html)
 
+- [Garbage In, Memory Safety Out!](gimso.html)

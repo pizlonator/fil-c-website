@@ -1,6 +1,6 @@
 # InvisiCaps By Example
 
-This document describes how [Fil-C](index.html)'s pointers work using examples. Fil-C is totally memory safe even though it gives you almost all of the power you'd expect from C, including sophisticated uses of pointers. Fil-C pointers achieve memory safety using a capability model called [*invisicaps*](invisicaps.html), which have these properties:
+This document describes how [Fil-C](index.html)'s pointers work using examples. Fil-C is [totally memory safe](gimso.html) even though it gives you almost all of the power you'd expect from C, including sophisticated uses of pointers. Fil-C pointers achieve memory safety using a capability model called [*invisicaps*](invisicaps.html), which have these properties:
 
 - Pointers appear to have their native size. Fil-C currently only works on 64-bit systems, so pointers appear to be 64-bit.
 

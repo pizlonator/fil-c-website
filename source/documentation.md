@@ -10,6 +10,8 @@
 
 [Fil's Unbelievable Garbage Collector](fugc.html)
 
+[Garbage In, Memory Safety Out!](gimso.html)
+
 [`stdfil.h` Reference](stdfil.html)
 
 [Fil-C Runtime](runtime.html)

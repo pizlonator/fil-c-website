@@ -34,11 +34,11 @@
         <main class="content">
 <h1>Garbage In, Memory Safety Out!</h1>
 
-<p>Fil-C achieves memory safety by introducing a <em>garbage in, memory safety out</em> (GIMSO) pass to LLVM. This pass ascribes a memory safe semantics to the incoming LLVM IR so that given any possible LLVM module (including one created adversarially), the resulting module will obey Fil-C pointer capability rules.</p>
+<p>Fil-C achieves memory safety by introducing a <em>garbage in, memory safety out</em> (GIMSO) <a href="compiler.html">pass to LLVM</a>. This pass ascribes a memory safe semantics to the incoming LLVM IR so that given any possible LLVM module (including one created adversarially), the resulting module will obey Fil-C pointer capability rules.</p>
 
 <p>But what are those rules, and what are the semantics that Fil-C's pass ascribes to LLVM IR? This document describes these GIMSO semantics.</p>
 
-<p><a href="https://github.com/pizlonator/fil-c/blob/deluge/invisicaps_by_example.md">This document shows examples of these semantics in action.</a></p>
+<p><a href="invisicaps.html">I've also written about how these semantics are implemented</a>, <a href="invisicaps_by_example.html">shown examples of how the semantics catch issues</a>, and <a href="compiler_example.html">described the disassembly of a program compiled under these rules</a>.</p>
 
 <h1>Pointers In Flight</h1>
 
@@ -202,6 +202,8 @@ return MakePointer(capability = CapabilityOrAtomicBox,
 
 <p>Note that the atomic versus non-atomic behavior of shadow space depends on whether the location in shadow space contains a capability or an atomic box.</p>
 
+<p><a name="store"></a></p>
+
 <h2>Store</h2>
 
 <p>The LLVM <code>store</code> operation has the following two syntaxes:</p>
@@ -292,6 +294,8 @@ StoreToPrimarySpace(P.intval, V.intval)
 
 <p>Hence, the <code>result</code> retains exactly the same capability as <code>ptrval</code>, but the intval is is changed.</p>
 
+<p><a name="ptrtoint"></a></p>
+
 <h2>Ptrtoint</h2>
 
 <p>The LLVM <code>ptrtoint</code> instruction returns a pointer's integer value. The syntax is:</p>
@@ -303,6 +307,8 @@ StoreToPrimarySpace(P.intval, V.intval)
 
 <pre><code>result = IntCast&lt;ty2&gt;(value.intval)
 </code></pre>
+
+<p><a name="inttoptr"></a></p>
 
 <h2>Inttoptr</h2>
 
@@ -389,6 +395,8 @@ p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
 
 <p><code>alloca</code> returns a flight pointer with the newly allocated capability and the intval initialized to the lower bounds.</p>
 
+<p>Note that in practice, <code>alloca</code>s may be allocated on the stack, if the compiler can prove that they do not escape.</p>
+
 <h1>Calls</h1>
 
 <p>In LLVM IR, calling a function means calling a pointer to a function. If the function call is direct, then semantically we are still calling a pointer to a function; it's just that the pointer is a link-time constant. This section discusses the semantics of calling a pointer to a function. The next section is about linking.</p>
@@ -406,7 +414,235 @@ p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
 
 <p>Fil-C also provides a fully variadic call builtin, which takes a variable-sized argument buffer, and returns a variable-sized return buffer.</p>
 
-<p>Fil-C functions may also throw exceptions. Fil-C supports C++ two-phase exception unwinding semantics and the <code>libunwind</code> core functionality is provided by the Fil-C runtime. As such, Fil-C functions may have an associated <em>personality function</em> that is invoked by the unwinder. The personality function is itself a Fil-C function and so it's completely memory safe (errors in the personality function may lead to unusual behavior, but that behavior stays within the bounds of GIMSO at the LLVM IR level).</p>
+<p>This approach to calls allows Fil-C to provide well-defined, memory-safe outcomes even when function pointer casts are taking place. Function pointer casts are common in C and C++</p>
+
+<p>Fil-C functions may also throw exceptions. Fil-C supports C++ two-phase exception unwinding semantics and the <code>libunwind</code> core functionality is provided by the Fil-C runtime. As such, Fil-C functions may have an associated <em>personality function</em> that is invoked by the unwinder. The personality function is itself a Fil-C function and so it's completely memory safe (errors in the personality function may lead to unusual behavior, but that behavior stays within the bounds of GIMSO at the LLVM IR level). Additionally, function calls exhibit the following two properties:</p>
+
+<ul>
+<li><p>It's always possible to walk the call stack. With debugging disabled, call frames that were inlined may disappear from the trace. But, enough information is always preserved to allow invoking personality functions and for identifying frames that have no personality function.</p></li>
+<li><p>As an alternative to returning a value, functions may return an exception. From Fil-C's standpoint, "returning an exception" just means that the caller should proceed with phase 2 unwinding rather than continuing normally.</p></li>
+</ul>
+
+<p>Now let's discuss the semantics of all call-related opcodes in LLVM IR under GIMSO.</p>
+
+<p><a name="call"></a></p>
+
+<h2>Call</h2>
+
+<p>The LLVM IR call instructions has the following syntax:</p>
+
+<pre><code>&lt;result&gt; = [tail | musttail | notail ] call [fast-math flags] [cconv] [ret attrs] [addrspace(&lt;num&gt;)]
+       &lt;ty&gt;|&lt;fnty&gt; &lt;fnptrval&gt;(&lt;function args&gt;) [fn attrs] [ operand bundles ]
+</code></pre>
+
+<p>Under GIMSO, we drop the <code>tail</code> flags, the fast-math flags, and we only ignore the <code>cconv</code> (only the Fil-C calling convention is allows). Most <code>fn attrs</code> are ignored.</p>
+
+<p>The <code>call</code> instruction may be used to invoke a LLVM intrinsic, a Fil-C builtin, or inline assembly. Intrinsics, builtins, and inline assembly are destribed in another section. This section just describes the semantics of a call to a normal function pointer that is not an intrinsic, builtin, or inline asm.</p>
+
+<p>Calls proceed as follows.</p>
+
+<ol>
+<li>The <code>&lt;fnptrval&gt;</code> is checked. The following requirements must be met, or else a panic occurs:
+<ul>
+<li>Capability must not be null.</li>
+<li>Capability must be a function capability.</li>
+<li>The pointer's intval must match the capability's callable pointer value.</li>
+</ul></li>
+<li>The size of the argument buffer is computed by rounding up each argument's size to 8. Additionally, argument type alignment is obeyed, which may mean adding padding. Note that <code>byref</code> arguments have their value copied into the argument buffer, so the argument's type for the purpose of the computation is the reference'd type, not <code>ptr</code>. Two thread-local CC (calling convention) buffers are allocated of that size. This buffers live only long enough for the callee to retrieve the arguments. One buffer is for the payload, and the other is for capabilities.</li>
+<li>Each argument is copied into the CC buffers. For <code>byref</code> arguments, the pointed-at value is copied into the buffers.</li>
+<li>Control is transferred to the callee's prologue and the callsite address is saved to a private callstack. The stack where the callsite address is stored is outside of Fil-C memory and cannot be accessed with any capability. The callee is told about the size of the arguments as well as the function capability. Passing the function capability is useful for <code>libffi</code> implementing closures, but is otherwise unused.</li>
+<li>The callee's prologue heap-allocates (as if with <code>alloca</code>) any <code>byref</code> parameters.</li>
+<li>All arguments are copied out of the CC buffers. For non-<code>byref</code> parameters, the arguments are copied into local data flow. For <code>byref</code> parameters, the arguments are copied into the allocations from step 5.</li>
+<li>If the callee uses any argument introspection (like <code>va_arg</code> or <code>zargs</code>), then the CC buffers are copied into a newly created readonly heap object. At this point, the CC buffer is dead. In practice, the implementation may reuse the same CC buffer repeatedly.</li>
+<li><strong>The callee executes.</strong> If an exception throw happens, then we return to the callsite with a flag indicating that an exception is in flight.</li>
+<li>When the callee returns normally, an almost identical process to argument passing happens, except for the return value. First the size of the return buffer is computed by rounding up the return type's size to 8. The CC buffer is allocated of that size. It will live until the callsite </li>
+<li>The return value is copied into the CC buffers.</li>
+<li>Control is transferred back to the callsite with a flag indicating that an exception is NOT in flight, as well as the size of the return value.</li>
+<li>The callsite loads the return value from the CC buffers and produces it in local data flow (i.e. the <code>&lt;result&gt;</code>).</li>
+</ol>
+
+<p>If the callsite observes the exception flag being set, then the caller returns with the exception flag set.</p>
+
+<h2>Invoke</h2>
+
+<p>In LLVM IR, <code>invoke</code> is exactly like <code>call</code> except that it allows for exception handling. This is accomplished by making <code>invoke</code> a block terminator, so it can have a normal return destination block, and an unwind destination block.</p>
+
+<pre><code>&lt;result&gt; = invoke [cconv] [ret attrs] [addrspace(&lt;num&gt;)] &lt;ty&gt;|&lt;fnty&gt; &lt;fnptrval&gt;(&lt;function args&gt;) [fn attrs]
+          [operand bundles] to label &lt;normal label&gt; unwind label &lt;exception label&gt;
+</code></pre>
+
+<p><code>invoke</code> works exactly like <code>call</code> in Fil-C, except that:</p>
+
+<ul>
+<li><p>If the exception flag is not set when the callee returns, then control proceeds to the <code>&lt;normal label&gt;</code>.</p></li>
+<li><p>If the exception flag is set when the callee returns, then control proceeds to the <code>&lt;exception label&gt;</code>.</p></li>
+</ul>
+
+<p>Fil-C currently only supports Itanium C++ exception handling ABI. In fact, because Fil-C's ABI for exceptions is implemented on top of Fil-C's own call ABI, it is the plan to use Itanium C++ exception handling <em>even on ARM and Windows</em>, which normally have their own ABIs. As such, the GIMSO semantics of LLVM IR only have a story for <code>invoke,</code>landingpad<code>, and</code>resume<code>. Instructions like</code>catchswitch` are statically rejected by the compiler.</p>
+
+<h2>Landing Pad</h2>
+
+<p>The LLVM IR <code>landingpad</code> is a special instruction for describing what a callsite may catch. The <code>landingpad</code> instruction must appear at the top of any block that is used as the exceptional destination of an <code>invoke</code>. Its syntax is as follows:</p>
+
+<pre><code>&lt;resultval&gt; = landingpad &lt;resultty&gt; &lt;clause&gt;+
+&lt;resultval&gt; = landingpad &lt;resultty&gt; cleanup &lt;clause&gt;*
+
+&lt;clause&gt; := catch &lt;type&gt; &lt;value&gt;
+&lt;clause&gt; := filter &lt;array constant type&gt; &lt;array constant&gt;
+</code></pre>
+
+<p>The <code>&lt;resultty&gt;</code> type is constrained under GIMSO to be a struct with two elements. Each element must either be an integer type no bigger than <code>i64</code> or the <code>ptr</code> type.</p>
+
+<p>These two values may be set using the <code>_Unwind_SetGR</code> function in <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/unwind.h"><code>unwind.h</code></a>. The personality function will use this to pass data back to the <code>landingpad</code>. This works as follows:</p>
+
+<ul>
+<li>The <code>_Unwind_Context</code> stores enough room for two pointer-sized <em>unwind registers</em>, which may be set with <code>_Unwind_SetGR</code> and <code>_Unwind_GetGR</code>. In Fil-C, the type of these registers is <code>void*</code>.</li>
+<li>During phase 2 unwinding, the <code>_Unwind_Context</code> is remembered by the Fil-C runtime as a thread-local value.</li>
+<li>When a <code>landingpad</code> executes, the values of the unwind registers are loaded from the current <code>_Unwind_Context</code> and returned from the <code>landingpad</code> as a struct. If the struct elements are integers, then the <code>void*</code> is cast to an integer according to <code>ptrtoint</code> rules. If the integer is smaller than <code>i64</code>, then the value is truncated (as if with <code>trunc</code>).</li>
+</ul>
+
+<p>The <code>landingpad</code>'s clauses are saved by the compiler using a Fil-C format for exception handling data. That format is opaque, but an API is proved for retrieving it. The unwinder can vend it with <code>_Unwind_GetLanguageSpecificData</code>. It can be parsed with the <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_eh_landing_pad.h"><code>pizlonated_eh_landing_pad</code></a> API.</p>
+
+<h2>Resume</h2>
+
+<p>Some landing pads are used for catching an exception (as in a C++ <code>catch</code> block), while others are used for executing deferred work during the phase 2 unwind (as in a C++ local variable destructor, or a C <code>__attribute__((cleanup))</code>). If the purpose of the landing pad was the latter, then it will want to resume exception handling. This is what the <code>resume</code> instruction is for. The syntax is:</p>
+
+<pre><code>resume &lt;type&gt; &lt;value&gt;
+</code></pre>
+
+<p>In conventional LLVM IR, the <code>resume</code> instruction must take the value returned by the corresponding <code>landingpad</code>. In Fil-C, the value (and type) passed to <code>resume</code> is ignored, and the function simply returns with the exception flag set.</p>
+
+<h2>Other Call-Related Instructions</h2>
+
+<p>The following call-related instructions in LLVM IR cause a compilatin failure in Fil-C: <code>callbr</code>, <code>catchswitch</code>, <code>cleanuppad</code>, <code>catchpad</code>, <code>catchreturn</code>, and <code>cleanupreturn</code>.</p>
+
+<p><code>callbr</code> is not supported because it's only used for inline assembly that can branch. Fil-C has very restricted inline assembly support, and doesn't support the branching kind at all.</p>
+
+<p>The other instructions are for exception handling ABIs that are different from the Itanium C++ one.</p>
+
+<h1>Constants And Linking</h1>
+
+<p>GIMSO extends to linking, loading, and all constants.</p>
+
+<p>Special UB-related constants like <code>undef</code> are converted to the zero value for the given type. Together with the rule that <code>alloca</code> zero-initializes memory, this means that there is no uninitialized data in GIMSO.</p>
+
+<p>Global values - i.e. pointer values whose value is resolved by linking and loading - are resolved according to the following rules:</p>
+
+<ul>
+<li><p>All ODR (one definition rule) flags are dropped (so for example <code>linkonce_odr</code> becomes <code>linkonce_any</code>), so the compiler cannot assume that an ODR value will be replaced with a compatible value.</p></li>
+<li><p>Available linkage is replaced with normal extern linkage. This prevents the compiler from making assumptions about what the linked-against value ends up being.</p></li>
+<li><p>Global values produce a flight pointer and all uses of that pointer are checked under the GIMSO rules we've already described.</p></li>
+</ul>
+
+<p>This means, for example, that if one module defines <code>x</code> to be a function and another module declares an <code>extern char x[]</code>, then any uses of <code>x</code> as a readable/writable value will result in panics at time of use.</p>
+
+<h1>Other Instructions</h1>
+
+<p>Now let's consider the rest of the LLVM IR instruction set. Most of these instructions have either totally uninteresting semantics in GIMSO (i.e. they just do the same thing they would have done in LLVM IR) or they have semantics that are easy to understand if you understand the discussion in previous sections. Hence, this section will proceed through the remaining instructions quickly.</p>
+
+<h2>Control Flow</h2>
+
+<p>The <code>ret</code> instruction returns a value to the caller. See <a href="#call"><code>call</code></a> for more information.</p>
+
+<p>The <code>br</code> instruction branches either conditionally (with two destinations) or unconditionally. GIMSO has no effect on this instruction.</p>
+
+<p>The <code>switch</code> instruction branches based on matching an integer value against some possibilities, and has a mandatory default destination. GIMSO has no effect on this instruction.</p>
+
+<p>The <code>indirectbr</code> instruction is for implementing the computed goto extension supported by GCC and clang. GIMSO converts all block labels to integers and treats the <code>indirectbr</code> as a switch on those labels.</p>
+
+<h2>Math</h2>
+
+<p>The <code>fneg</code>, <code>add</code>, <code>fadd</code>, <code>sub</code>, <code>fsub</code>, <code>mul</code>, <code>fmul</code>, <code>udiv</code>, <code>sdiv</code>, <code>fdiv</code>, <code>urem</code>, <code>srem</code>, <code>frem</code>, <code>shl</code>, <code>lshr</code>, <code>ashr</code>, <code>and</code>, <code>or</code>, and <code>xor</code> instructions have UB-free semantics under GIMSO. I.e. all LLVM IR UB flags and metadata are dropped.</p>
+
+<h2>Aggregates</h2>
+
+<p>The <code>extractelement</code>, <code>insertelement</code>, <code>shufflevector</code>, <code>extractvalue</code>, and <code>insertvalue</code> instructions have the usual semantics under GIMSO. Note that structs, arrays, and vectors that contain <code>ptr</code> type are really containing both the intval and capability of each of those pointers.</p>
+
+<h2>Conversions</h2>
+
+<p>The <a href="#inttoptr"><code>inttoptr</code></a> and <a href="#ptrtoint"><code>ptrtoint</code></a> conversion instructions were discussed already.</p>
+
+<p>GIMSO has no opinion on the behavior of <code>trunc</code>, <code>zext</code>, <code>sext</code>, <code>fptrunc</code>, <code>fpext</code>, <code>fptoui</code>, <code>fptosi</code>, <code>uitofp</code>, and <code>sitofp</code> other than dropping UB flags.</p>
+
+<p><code>addrspacecast</code> is accepted, though GIMSO rejects LLVM IR that uses any pointers not in addrspace 0.</p>
+
+<p><code>bitcast</code> between pointer types is accepted, is treated as an identity, and it is meaningless ever since LLVM moved to opaque pointer types. Note that <code>bitcast</code> cannot be used for <code>inttoptr</code> or <code>ptrtoint</code> (hence why those are separate instructions).</p>
+
+<h2>Comparisons</h2>
+
+<p>GIMSO has no opinion on <code>icmp</code>, <code>fcmp</code>, or <code>select</code> instructions.</p>
+
+<h2>Atomics</h2>
+
+<p>The <code>cmpxchg</code> and <code>atomicrmw</code> instructions with non-<code>ptr</code> type are implemented by doing all of the checks that a <a href="#store"><code>store</code></a> would have done, and then executing the atomic.</p>
+
+<p>For <code>ptr</code> type atomics, the memory location is placed in atomic mode so that the pointer can be atomically operated on in the shadow address space.</p>
+
+<h2>Data Movement</h2>
+
+<p>GIMSO has no opinion on the <code>phi</code> instruction.</p>
+
+<p>GIMSO turns <code>freeze</code> into an identity, since GIMSO replaces all <code>undef</code>/<code>poison</code> with zero.</p>
+
+<h1>Intrinsics</h1>
+
+<p><em>FIXME: This needs to be expanded upon.</em></p>
+
+<p>GIMSO supports almost all LLVM intrinsics, which means that Fil-C supports almost all clang and GCC builtins.</p>
+
+<p>The rules are simple:</p>
+
+<ul>
+<li><p>If the intrinsic does not access memory, then it is allowed.</p></li>
+<li><p>If the intrinsic does access memory, then either the intrinsic is disallowed entirely, or is allowlisted in Fil-C because the GIMSO rules are applied to that intrinsic (i.e. all of the safety checks necessary are inserted before the intrinsic executes).</p></li>
+</ul>
+
+<p>Additionally, <code>memcpy</code>, <code>memmove</code>, and <code>memset</code> are supported with special Fil-C rules.</p>
+
+<h2>Memcpy</h2>
+
+<p>GIMSO says that every <code>memcpy</code> is a <code>memmove</code> to avoid any undefined behavior in case of overlapping copies.</p>
+
+<h2>Memmove</h2>
+
+<p>Before any data is moved, both the source and destination are bounds-checked.</p>
+
+<p>Moving data from one allocation to another using <code>memmove</code> means that:</p>
+
+<ul>
+<li>If the two pointers are in phase (i.e. <code>dst % 8 == src % 8</code>) then:
+<ul>
+<li>All pointer-sized words that fit within the copied range are copied along with their capabilities.</li>
+<li>If there is a pointer at the beginning or end of the range that is partially copied over, then the capability is reset to null.</li>
+</ul></li>
+<li>Otherwise, the capabilities for the entire range in the destination are reset to null.</li>
+</ul>
+
+<h2>Memset</h2>
+
+<p>Before any data is set, the destination is bounds-checked.</p>
+
+<p>All capabilities that overlap the destination range are reset to null.</p>
+
+<h1>Builtins</h1>
+
+<p><em>FIXME: This needs to be expanded upon.</em></p>
+
+<p>Fil-C supports a large set of builtins, many of which are <a href="stdfil.html">documented in <code>stdfil.h</code></a>.</p>
+
+<h1>Inline Assembly</h1>
+
+<p>GIMSO recognizes all safe inline assembly.</p>
+
+<p>Currently, that means only accepting blank inline assembly, like:</p>
+
+<pre><code>asm volatile ("" : : : "memory");
+</code></pre>
+
+<p>And:</p>
+
+<pre><code>asm ("" : "+r"(value));
+</code></pre>
         </main>
     </div>
     <script>
