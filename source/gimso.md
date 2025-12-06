@@ -54,7 +54,7 @@ New capabilities initialize the corresponding shadow addresses to the null capab
 
 Non-pointer accesses operate only on the primary address space.
 
-Pointer-type accesses are required to have pointer alignment (so 8 on 64-bit platforms, 4 on 32-bit platforms, and so forth).
+Pointer-type accesses are required to have pointer alignment, so 8 on 64-bit platforms, 4 on 32-bit platforms, and so forth. **For the rest of this document, we'll assume 64-bit systems, without loss of generality.** For example, rather than explaining that something is 8 bytes on 64-bit systems but 4 bytes on 32-bit systems, we'll just assume consider the 8 byte case.
 
 ## Simplified Rules, Ignoring Atomics
 
