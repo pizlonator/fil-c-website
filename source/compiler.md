@@ -2,7 +2,7 @@
 
 Fil-C is a fork of clang 20.1.8 that includes:
 
-- A new LLVM pass called [`llvm::FilPizlonator`](https://github.com/pizlonator/fil-c/blob/deluge/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp) that enforces [*garbage in, memory safety out*](gimso.md) semantics: either the pass will fail to generate any output (the compiler will crash), or the generated IR follows the [memory safety doctrine of Fil-C](invisicaps.html). So, the resulting code will get a [Fil-C panic](invisicaps_by_example.html) if it does something that violates the rules but otherwise has identical semantics to normal C/C++.
+- A new LLVM pass called [`llvm::FilPizlonator`](https://github.com/pizlonator/fil-c/blob/deluge/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp) that enforces [*garbage in, memory safety out*](gimso.html) semantics: either the pass will fail to generate any output (the compiler will crash), or the generated IR follows the [memory safety doctrine of Fil-C](invisicaps.html). So, the resulting code will get a [Fil-C panic](invisicaps_by_example.html) if it does something that violates the rules but otherwise has identical semantics to normal C/C++.
 
 - Surgical changes to the clang frontend, including:
 

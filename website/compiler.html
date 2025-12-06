@@ -37,7 +37,7 @@
 <p>Fil-C is a fork of clang 20.1.8 that includes:</p>
 
 <ul>
-<li><p>A new LLVM pass called <a href="https://github.com/pizlonator/fil-c/blob/deluge/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp"><code>llvm::FilPizlonator</code></a> that enforces <a href="gimso.md"><em>garbage in, memory safety out</em></a> semantics: either the pass will fail to generate any output (the compiler will crash), or the generated IR follows the <a href="invisicaps.html">memory safety doctrine of Fil-C</a>. So, the resulting code will get a <a href="invisicaps_by_example.html">Fil-C panic</a> if it does something that violates the rules but otherwise has identical semantics to normal C/C++.</p></li>
+<li><p>A new LLVM pass called <a href="https://github.com/pizlonator/fil-c/blob/deluge/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp"><code>llvm::FilPizlonator</code></a> that enforces <a href="gimso.html"><em>garbage in, memory safety out</em></a> semantics: either the pass will fail to generate any output (the compiler will crash), or the generated IR follows the <a href="invisicaps.html">memory safety doctrine of Fil-C</a>. So, the resulting code will get a <a href="invisicaps_by_example.html">Fil-C panic</a> if it does something that violates the rules but otherwise has identical semantics to normal C/C++.</p></li>
 <li><p>Surgical changes to the clang frontend, including:</p>
 
 <ul>
