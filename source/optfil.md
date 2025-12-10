@@ -33,7 +33,8 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - libtasn1  
     - libuv
     - libxcrypt
-    - lz4         
+    - lz4
+    - m4
     - make        
     - mg          
     - nghttp2
