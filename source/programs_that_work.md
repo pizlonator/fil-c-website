@@ -8,6 +8,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - audit-userspace 4.1.2. *No changes, works out of the box*.
 - bc 6.7.6. *No changes, works out of the box*.
 - [bison 3.8.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/bison-3.8.2). Requires fixes to `obstack.h`.
+- [blink](https://github.com/jart/blink). Required a [27KB patch](https://github.com/jart/blink/commit/52933c60b30a171f8a13d4282e5212e57c11dfe1).
 - [brotli 1.1.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/brotli-1.1.0). *No changes, works out of the box*.
 - [bzip2](https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip2). *No changes, works out of the box.* Version 1.0.8 also works out of the box.
 - [bzip3](https://github.com/pizlonator/fil-c/tree/deluge/projects/bzip3). *No changes, works out of the box.*
