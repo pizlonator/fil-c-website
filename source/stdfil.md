@@ -198,6 +198,14 @@ Return the lower bound of the capability associated with `ptr`. This will be NUL
 
 Return the upper bound of the capability associated with `ptr`. This will be NULL if the pointer has no capability. The returned upper bound has the capability of `ptr`.
 
+## `zis_readonly`
+
+    filc_bool zis_readonly(void* ptr);
+
+Returns true if this is a readonly object. This will return false for special objects or NULL.
+
+The `filc_bool` type is `_Bool` in C and `bool` in C++.
+
 ## `zlength`
 
     #define zlength(ptr) ({ \
@@ -688,6 +696,30 @@ Checks that you can read and write `size` bytes at `ptr` using a similar kind of
 
 Checks that you can *read* `size` bytes at `ptr` using a similar kind of safety check that Fil-C would use if you read a `size` byte struct at `ptr`.
 
+## `zchecked_add`
+
+    static inline __SIZE_TYPE__ zchecked_add(__SIZE_TYPE__ a, __SIZE_TYPE__ b)
+    {
+        __SIZE_TYPE__ result;
+        if (__builtin_add_overflow(a, b, &result))
+            zsafety_errorf("%zu + %zu overflowed.", a, b);
+        return result;
+    }
+
+Overflow-checked addition of `size_t` integers. If the overflow check fails, the process panics like it would from a Fil-C safety check.
+
+## `zchecked_mul`
+
+    static inline __SIZE_TYPE__ zchecked_mul(__SIZE_TYPE__ a, __SIZE_TYPE__ b)
+    {
+        __SIZE_TYPE__ result;
+        if (__builtin_mul_overflow(a, b, &result))
+            zsafety_errorf("%zu * %zu overflowed.", a, b);
+        return result;
+    }
+
+Overflow-checked multiplication of `size_t` integers. If the overflow check fails, the process panics like it would from a Fil-C safety check.
+
 ## `zcan_va_arg`
 
     static inline filc_bool
@@ -836,6 +868,32 @@ suspended, this will scavenge synchronously. If the scavenger is not suspended, 
 contend on some locks with the scavenger thread (and at best cause the scavenge to happen faster due to
 parallelism).
 
+## `zscavenger_suspend`
+
+    void zscavenger_suspend(void);
+
+Suspend the scavenger. The scavenger is a thread that returns memory to the OS.
+
+Suspending the scavenger might be a small speed-up but at the cost of never returning memory to the OS.
+
+Suspending the scavenger does not suspend the GC.
+
+You can call this function multiple times. Then, to resume the scavenger, you'd have to call `zscavenger_resume()` the same number of times.
+
+## `zscavenger_resume`
+
+    void zscavenger_resume(void);
+
+Resume the scavenger, if it was suspended by a prior `zscavenger_suspend()`.
+
+## `zlock_runtime_threads`
+
+    void zlock_runtime_threads(void);
+
+Forces the runtime to immediately create whatever threads it needs, and to disable shutting them down on demand.
+
+This is useful if you're about to install a seccomp filter that prevents thread creation.
+
 ## `zdump_stack`
 
     void zdump_stack(void);
@@ -924,7 +982,14 @@ Returns if the signal is unsafe for handlers according to Fil-C rules. You will 
 
 Signals like SIGILL, SIGSEGV, SIGTRAP, and SIGBUS are flagged as being unsafe for handlers in Fil-C.
 
+## `zset_quiet_panic`
 
+    void zset_quiet_panic(filc_bool value);
 
+If you pass true, this enables quiet panics, where the Fil-C runtime does not print any output in case of a Fil-C panic.
 
+## `zget_quiet_panic`
 
+    filc_bool zget_quiet_panic(void);
+
+Tells if quiet panic mode is enabled.

@@ -12,7 +12,7 @@ Fil-C is a fanatically compatible [memory-safe](gimso.html) implementation of C 
 
 ## Quick Links
 
-- [Download Fil-C 0.675](https://github.com/pizlonator/fil-c/releases/tag/v0.675)
+- [Download Fil-C 0.676](https://github.com/pizlonator/fil-c/releases/tag/v0.676)
 - [Installation Guide](installation.html)
 - [How Fil-C Works](how.html)
 - [InvisiCaps: The Fil-C Capability Model](invisicaps.html)

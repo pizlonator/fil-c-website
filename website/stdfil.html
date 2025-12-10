@@ -255,6 +255,15 @@ zgc_finq_alloc(zgc_finq_new(), 666);
 
 <p>Return the upper bound of the capability associated with <code>ptr</code>. This will be NULL if the pointer has no capability. The returned upper bound has the capability of <code>ptr</code>.</p>
 
+<h2><code>zis_readonly</code></h2>
+
+<pre><code>filc_bool zis_readonly(void* ptr);
+</code></pre>
+
+<p>Returns true if this is a readonly object. This will return false for special objects or NULL.</p>
+
+<p>The <code>filc_bool</code> type is <code>_Bool</code> in C and <code>bool</code> in C++.</p>
+
 <h2><code>zlength</code></h2>
 
 <pre><code>#define zlength(ptr) ({ \
@@ -799,6 +808,32 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.<
 
 <p>Checks that you can <em>read</em> <code>size</code> bytes at <code>ptr</code> using a similar kind of safety check that Fil-C would use if you read a <code>size</code> byte struct at <code>ptr</code>.</p>
 
+<h2><code>zchecked_add</code></h2>
+
+<pre><code>static inline __SIZE_TYPE__ zchecked_add(__SIZE_TYPE__ a, __SIZE_TYPE__ b)
+{
+    __SIZE_TYPE__ result;
+    if (__builtin_add_overflow(a, b, &amp;result))
+        zsafety_errorf("%zu + %zu overflowed.", a, b);
+    return result;
+}
+</code></pre>
+
+<p>Overflow-checked addition of <code>size_t</code> integers. If the overflow check fails, the process panics like it would from a Fil-C safety check.</p>
+
+<h2><code>zchecked_mul</code></h2>
+
+<pre><code>static inline __SIZE_TYPE__ zchecked_mul(__SIZE_TYPE__ a, __SIZE_TYPE__ b)
+{
+    __SIZE_TYPE__ result;
+    if (__builtin_mul_overflow(a, b, &amp;result))
+        zsafety_errorf("%zu * %zu overflowed.", a, b);
+    return result;
+}
+</code></pre>
+
+<p>Overflow-checked multiplication of <code>size_t</code> integers. If the overflow check fails, the process panics like it would from a Fil-C safety check.</p>
+
 <h2><code>zcan_va_arg</code></h2>
 
 <pre><code>static inline filc_bool
@@ -962,6 +997,35 @@ suspended, this will scavenge synchronously. If the scavenger is not suspended, 
 contend on some locks with the scavenger thread (and at best cause the scavenge to happen faster due to
 parallelism).</p>
 
+<h2><code>zscavenger_suspend</code></h2>
+
+<pre><code>void zscavenger_suspend(void);
+</code></pre>
+
+<p>Suspend the scavenger. The scavenger is a thread that returns memory to the OS.</p>
+
+<p>Suspending the scavenger might be a small speed-up but at the cost of never returning memory to the OS.</p>
+
+<p>Suspending the scavenger does not suspend the GC.</p>
+
+<p>You can call this function multiple times. Then, to resume the scavenger, you'd have to call <code>zscavenger_resume()</code> the same number of times.</p>
+
+<h2><code>zscavenger_resume</code></h2>
+
+<pre><code>void zscavenger_resume(void);
+</code></pre>
+
+<p>Resume the scavenger, if it was suspended by a prior <code>zscavenger_suspend()</code>.</p>
+
+<h2><code>zlock_runtime_threads</code></h2>
+
+<pre><code>void zlock_runtime_threads(void);
+</code></pre>
+
+<p>Forces the runtime to immediately create whatever threads it needs, and to disable shutting them down on demand.</p>
+
+<p>This is useful if you're about to install a seccomp filter that prevents thread creation.</p>
+
 <h2><code>zdump_stack</code></h2>
 
 <pre><code>void zdump_stack(void);
@@ -1055,6 +1119,20 @@ void zstack_scan(filc_bool (*callback)(
 <p>Returns if the signal is unsafe for handlers according to Fil-C rules. You will get <code>ENOSYS</code> if you try to register a handler for one of these signals.</p>
 
 <p>Signals like SIGILL, SIGSEGV, SIGTRAP, and SIGBUS are flagged as being unsafe for handlers in Fil-C.</p>
+
+<h2><code>zset_quiet_panic</code></h2>
+
+<pre><code>void zset_quiet_panic(filc_bool value);
+</code></pre>
+
+<p>If you pass true, this enables quiet panics, where the Fil-C runtime does not print any output in case of a Fil-C panic.</p>
+
+<h2><code>zget_quiet_panic</code></h2>
+
+<pre><code>filc_bool zget_quiet_panic(void);
+</code></pre>
+
+<p>Tells if quiet panic mode is enabled.</p>
         </main>
     </div>
     <script>
