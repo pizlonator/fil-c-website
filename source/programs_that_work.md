@@ -104,7 +104,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [nghttp2 1.62.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1). *No changes, works out of the box.*
 - ninja 1.12.1. *No changes, works out of the box*.
 - [openjpeg 2.5.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2). *No changes, works out of the box*.
-- [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). Requires small adjustments to the seccomp filter (need to allowlist `MAP_NORESERVE` and need to call `zlock_runtime_threads()` before installing the filter).
+- [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). [Requires small adjustments to the seccomp filter](seccomp.html) (need to allowlist `MAP_NORESERVE` and need to call `zlock_runtime_threads()` before installing the filter).
 - [openssl 3.3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1). *Build system changes only (version script handling)*. Also added an assertion that `mem_sec` isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL). [About 90KB of additional changes are needed to support constant-time crypto](constant_time_crypto.html).
 - [p11-kit 0.25.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/p11-kit-0.25.5). Two line change to build system (version scripts).
 - [pango 1.54.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/pango-1.54.0). Adopt glib API for pointers in three places that lazily create `GType`s.
