@@ -32,5 +32,7 @@
 
 [Constant-Time Crypto](constant_time_crypto.html)
 
+[Linux Sandboxes and Fil-C](seccomp.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 
