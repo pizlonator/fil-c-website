@@ -4,7 +4,7 @@ My favorite way to install Fil-C is using the [`/opt/fil`](optfil.html) binary d
 
 - Installs everything into `/opt/fil` for peaceful coexistence with your usual Linux userland.
 - Puts the Fil-C compiler in `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
-- Includes useful programs compiled with Fil-C, like memory safe OpenSSH, tmux, curl, and git.
+- Includes useful programs compiled with Fil-C, like memory safe sudo, OpenSSH, tmux, curl, and git.
 
 Fil-C currently only supports Linux/X86_64.
 
