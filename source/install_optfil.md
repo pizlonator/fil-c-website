@@ -1,6 +1,6 @@
 # Installing The `/opt/fil` Distribution
 
-My favorite way to install Fil-C is with the [`/opt/fil`](optfil.html) binary distribution, since it:
+My favorite way to install Fil-C is using the [`/opt/fil`](optfil.html) binary distribution, since it:
 
 - Installs everything into `/opt/fil` for peaceful coexistence with your usual Linux userland.
 - Puts the Fil-C compiler in `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
