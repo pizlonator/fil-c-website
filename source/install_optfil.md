@@ -56,5 +56,5 @@ This builds with `clang++` like so:
 
     fil++ -O2 -g -o hello hello.cpp
 
-The `/opt/fil` distribution also includes useful programs, like `ssh`, `mg`, `bash`, `tmux`, and `curl`. You can even launch a memory-safe OpenSSH server using `/opt/fil/sbin/sshd`!
+The `/opt/fil` distribution also includes useful programs, like `ssh`, `mg`, `bash`, `tmux`, `sudo`, `git`, and `curl`. You can even launch a memory-safe OpenSSH server using `/opt/fil/sbin/sshd`!
 
