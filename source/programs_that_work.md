@@ -128,7 +128,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - shared-mime-info 2.4. *No changes, works out of the box*.
 - [simdutf 5.5.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/simdutf-5.5.0). Tiny change only (use Fil-C API for `cpuid` and `xgetbv` instead of assembly).
 - [simdjson](https://github.com/pizlonator/pizlonated-simdjson/commits/master/). Tiny change only (use Fil-C API for `cpuid` and `xgetbv` instead of assembly).
-- [sqlite](https://github.com/pizlonator/fil-c/tree/deluge/projects/sqlite). Moderate changes needed (roughly 16KB patch).
+- [sqlite 3.46.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/sqlite). *No changes required, works out of the box* - unless you want to run the test suite. The sqlite test suite uses pointer-integer cast idioms that require moderate changes (roughly 16KB patch).
 - [sudo 1.9.15p5](https://github.com/pizlonator/fil-c/tree/deluge/projects/sudo-1.9.15p5). *Build system changes only (version script handling)*.
 - sysklogd 2.6.1. *No changes, works out of the box*.
 - sysvinit 3.10. *No changes, works out of the box*.
