@@ -45,9 +45,9 @@ Then go into the [`pizlix` directory](https://github.com/pizlonator/fil-c/tree/d
 
 Pizlix requires you to set up your machine thusly:
 
-- You must have a `/mnt/lfs` partition mounted at /dev/sda4. If you have it mounted somewhere else, then make sure you edit the various scripts in this directory (and its subdirectories).
+- You must have a `/dev/sda4` ext partition mounted at `/mnt/lfs`. If you have it mounted somewhere else, then make sure you edit the various scripts in this directory (and its subdirectories).
 
-- You must have a swap partition at `/dev/sda3`. If you have one somewhere else (or don't have one), then make sure you edit the various scripts in this directory (and its subdirectories).
+- You must have a swap partition in `/dev/sda3`. If you have one somewhere else (or don't have one), then make sure you edit the various scripts in this directory (and its subdirectories).
 
 - You must have an `lfs` user as described in sections 4.3 and 4.4 of the [LFS book](https://www.linuxfromscratch.org/lfs/view/12.2/).
 
@@ -143,6 +143,14 @@ This builds GTK 4.
 If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc4.sh`.
 
 If you want to start the build here, do `sudo ./build_with_recovered_postlc3.sh`.
+
+### Post-LC 5
+
+This is a work-in-progress stage to build WebKitGTK.
+
+If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc5.sh`.
+
+If you want to start the build here, do `sudo ./build_with_recovered_postlc4.sh`.
 
 ### Other Tricks
 
@@ -257,5 +265,5 @@ Post-LC is almost exactly the LFS chapters 8-10 except for the glibc step (which
 
 - The Linux kernel needs to be built using two compilers. The "host" compiler is the [Fil-C compiler](compiler.html). So, there are minor changes in the userlevel parts of the Linux kernel and the exact commands used to invoke the build are a bit more verbose.
 
-Pizlix also includes a Post-LC 2, Post-LC 3, and Post-LC 4 phases that build some parts of [BLFS 12.2](https://www.linuxfromscratch.org/blfs/view/12.2/) plus enough to run Weston and GTK 4.
+Pizlix also includes Post-LC 2, Post-LC 3, Post-LC 4, and Post-LC 5 phases that build some parts of [BLFS 12.2](https://www.linuxfromscratch.org/blfs/view/12.2/) plus enough to run Weston and GTK 4.
 
