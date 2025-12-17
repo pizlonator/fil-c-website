@@ -136,6 +136,7 @@
 <li>mpfr 4.2.1. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/usermusl">musl</a>. Used as Fil-C's original libc, and the one you'll get if you download a <a href="pizfix.html">pizfix</a> binary release. Significant changes required (replacing musl's inline assembly for calling syscalls with usage of Fil-C's <a href="https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h">syscall API</a>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/ncurses-6.5-20240720">ncurses 6.5-20240720</a>. <em>No changes, works out of the box.</em></li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/nettle-3.10">nettle 3.10</a>. Needed a two-line change to the <code>configure</code> script due to version script issues. Also, disabling assembly for now (will have to <a href="constant_time_crypto.html">apply changes similar to those in OpenSSL for constant-time crypto</a>).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1">nghttp2 1.62.1</a>. <em>No changes, works out of the box.</em></li>
 <li>ninja 1.12.1. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2">openjpeg 2.5.2</a>. <em>No changes, works out of the box</em>.</li>

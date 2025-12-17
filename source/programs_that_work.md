@@ -101,6 +101,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - mpfr 4.2.1. *No changes, works out of the box*.
 - [musl](https://github.com/pizlonator/fil-c/tree/deluge/projects/usermusl). Used as Fil-C's original libc, and the one you'll get if you download a [pizfix](pizfix.html) binary release. Significant changes required (replacing musl's inline assembly for calling syscalls with usage of Fil-C's [syscall API](https://github.com/pizlonator/fil-c/blob/deluge/filc/include/pizlonated_syscalls.h).
 - [ncurses 6.5-20240720](https://github.com/pizlonator/fil-c/tree/deluge/projects/ncurses-6.5-20240720). *No changes, works out of the box.*
+- [nettle 3.10](https://github.com/pizlonator/fil-c/tree/deluge/projects/nettle-3.10). Needed a two-line change to the `configure` script due to version script issues. Also, disabling assembly for now (will have to [apply changes similar to those in OpenSSL for constant-time crypto](constant_time_crypto.html)).
 - [nghttp2 1.62.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1). *No changes, works out of the box.*
 - ninja 1.12.1. *No changes, works out of the box*.
 - [openjpeg 2.5.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2). *No changes, works out of the box*.
