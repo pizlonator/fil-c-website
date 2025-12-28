@@ -49,7 +49,12 @@ Then, go to the [`pizlix` directory](https://github.com/pizlonator/fil-c/tree/de
 
     sudo ../enter_container.sh -p
 
-This will launch a container suitable for building Pizlix. Then, from this container, do:
+This will launch a container suitable for building Pizlix. Note that this is a rootful privileged container. The purpose of using the container is to:
+
+- prevent bad things from happening to the host if the build script has a bug (since the build script must run as root), and
+- obviate the need to install all of the Pizlix build dependencies on your host.
+
+The container should pop a shell in the `pizlix` directory. From inside this container, do:
 
     ./build.sh >& log.txt
 
@@ -100,6 +105,55 @@ To see what this thing is really capable of, log in as a non-root user (like `pi
 
 And enjoy a totally memory safe GUI!
 
+## Hacking Pizlix
+
+If you want to do development on Pizlix itself, you have two options: you can work on it from within Pizlix itself, or from the container in a chroot environment.
+
+### Self-Hosted Pizlix Hacking
+
+Pizlix comes with emacs, vim, git, and other useful things for doing software development. Therefore, it's feasible to git clone the Fil-C repository from within Pizlix. Many of my Pizlix commits were done from within Pizlix.
+
+The main thing you cannot currently do is work on the Fil-C compiler and runtime from within Pizlix. The kind of Pizlix development that makes sense when self-hosted is porting new software. For example, my GTK port was done from within Pizlix.
+
+### Container-Hosted Pizlix Hacking
+
+This section describes a setup for hacking that enables you to:
+
+- See the Fil-C git checkout on the host and in the container, so that you can edit it using your favorite code editor or IDE.
+- See the Pizlix root directory on the host and in the container, so that you can use a code editor on the host to view files that are part of Pizlix. Also, this way you can use whatever your favorite code search tools and clankers to inspect the Pizlix filesystem.
+- Execute the Pizlix build from within a container.
+- Be able to execute QEMU on the current state of the Pizlix filesystem at any time.
+
+**All of the commands in this section should be run from the `pizlix` directory.** Most commands *in this section* should be run *outside* the container.
+
+The first thing you'll want to do is mount the disk.img. Run this outside the container:
+
+    sudo ./mount_disk_image.sh
+
+This will mount `disk.img`'s Pizlix root partition in `pizlix/lfs`, which the container will see as `/mnt/lfs`. This command works even if you do not already have a `disk.img`. In that case, it will create one for you.
+
+Then you can start the container:
+
+    sudo ../enter_container.sh -p
+
+Note that the `enter_container.sh` and `mount_disk_image.sh` scripts can actually be run in any order. It's fine to first start the container, and then mount the disk image.
+
+Now you can use your host to inspect the Pizlix partition by looking in `pizlix/lfs`. Or you can use the container to inspect the Pizlix partition by loooking in `/mnt/lfs`. And you can issue build commands from within the container, including [commands that build specific stages of Pizlix](#stages).
+
+If you want to launch QEMU, do this from outside the container:
+
+    sudo ./unmount_and_launch_qemu.sh
+
+This unmounts the `disk.img` and then launches QEMU. When QEMU exits, it remounts `disk.img`. Unmounting `disk.img` is crucial, since we cannot have both the host and the QEMU guest both reading and writing to the same ext4 filesystem.
+
+When you're done, you can:
+
+    sudo ./unmount_disk_image.sh
+
+Note that a similar workflow works without using `mount_disk_image.sh`. In that case, the container's `/mnt/lfs` maps to the host's `pizlix/lfs`, but they are not live copies of the `disk.img`. If you're using that workflow, then to test the Pizlix build, you have to `./make_disk_image.sh` - and that command *does not use `pizlix/lfs`*; instead it uses a build tarball. So, if you make manual changes to the `lfs` directory, then it's up to you to create a tarball of the `lfs` directory's contents and then do:
+
+    sudo ./make_disk_image.sh <your tarball>
+
 <a name="stages"></a>
 ## Build Stages
 
@@ -107,21 +161,23 @@ The Pizlix build proceeds in the following stages.
 
 The Pizlix build snapshots after each successful stage so that it's possible to restart the build at that stage later. This is great for troubleshooting!
 
+**All of the commands in this section should be run from within the container.**
+
 ### Pre-LC
 
 This is the bootstrapping phase that uses a Yolo-C GCC to build a Yolo-C toolchain within the `/mnt/lfs` chroot environment.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_prelc.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_prelc.sh`.
 
-If you want to start the build here, do `sudo ./build.sh`.
+If you want to start the build here, do `./build.sh`.
 
 ### LC
 
 This is the phase where the chroot environment is pizlonated with a Fil-C compiler. This builds the Fil-C compiler and slams it into `/mnt/lfs`.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_lc.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_lc.sh`.
 
-If you want to start the build here, do `sudo ./build_with_recovered_prelc.sh`.
+If you want to start the build here, do `./build_with_recovered_prelc.sh`.
 
 The [Injecting Fil-C Into LFS](#details) section describes the LC phase, and its relationship to Pre-LC and Post-LC.
 
@@ -129,51 +185,51 @@ The [Injecting Fil-C Into LFS](#details) section describes the LC phase, and its
 
 This is the actual Linux From Scratch build (Chapters 8, 9, 10 of the LFS book) using the Fil-C toolchain. After this completes, the Yolo-C stuff produced in Pre-LC is mostly eliminated, except for what is necessary to run the Fil-C compiler and the GCC used for building the kernel.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_postlc.sh`.
 
-If you want to start the build here, do `sudo ./build_with_recovered_lc.sh`.
+If you want to start the build here, do `./build_with_recovered_lc.sh`.
 
 ### Post-LC 2
 
 This builds BLFS (Beyond Linux From Scratch) components that I like to have, such as openssh, emacs, dhcpcd, and cmake.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc2.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_postlc2.sh`.
 
-If you want to start the build here, do `sudo ./build_with_recovered_postlc.sh`.
+If you want to start the build here, do `./build_with_recovered_postlc.sh`.
 
 ### Post-LC 3
 
 This builds the Wayland environment and Weston so that you can have a GUI.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc3.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_postlc3.sh`.
 
-If you want to start the build here, do `sudo ./build_with_recovered_postlc2.sh`.
+If you want to start the build here, do `./build_with_recovered_postlc2.sh`.
 
 ### Post-LC 4
 
 This builds GTK 4.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc4.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_postlc4.sh`.
 
-If you want to start the build here, do `sudo ./build_with_recovered_postlc3.sh`.
+If you want to start the build here, do `./build_with_recovered_postlc3.sh`.
 
 ### Post-LC 5
 
 This is a work-in-progress stage to build WebKitGTK.
 
-If you want to just do this stage of the build and nothing more, do `sudo ./build_postlc5.sh`.
+If you want to just do this stage of the build and nothing more, do `./build_postlc5.sh`.
 
-If you want to start the build here, do `sudo ./build_with_recovered_postlc4.sh`.
+If you want to start the build here, do `./build_with_recovered_postlc4.sh`.
 
 ### Other Tricks
 
-You can mount the chroot's virtual filesystems with `sudo ./build_mount.sh`. You can unmount the chroot's virtual filesystems with `sudo ./build_unmount.sh`.
+You can mount the chroot's virtual filesystems with `./build_mount.sh`. You can unmount the chroot's virtual filesystems with `./build_unmount.sh`.
 
-You can hop into the chroot with `sudo ./enter_chroot.sh`. However, if you're past Post-LC, then you'll need to do `sudo ./enter_chroot_late.sh` instead.
+You can hop into the chroot with `./enter_chroot.sh`. However, if you're past Post-LC, then you'll need to do `./enter_chroot_late.sh` instead.
 
-If you want to just rebuild `libpizlo.so` runtime and slam it into the chroot, do `sudo ./rebuild_pas.sh`.
+If you want to just rebuild `libpizlo.so` runtime and slam it into the chroot, do `./rebuild_pas.sh`.
 
-If you want to just rebuild the compiler, `libpizlo.so`, and user glibc, do `sudo ./rebuild_lc.sh`.
+If you want to just rebuild the compiler, `libpizlo.so`, and user glibc, do `./rebuild_lc.sh`.
 
 <a name="details"></a>
 ## Injecting Fil-C Into LFS
