@@ -43,7 +43,7 @@ First, clone the [Fil-C GH repo](https://github.com/pizlonator/fil-c/):
 
 Assuming you're on Ubuntu, install the following:
 
-    apt install podman parted udevadm grub-pc
+    apt install podman parted udevadm grub-pc qemu-system-x86
 
 Then, go to the [`pizlix` directory](https://github.com/pizlonator/fil-c/tree/deluge/pizlix) under `fil-c` and do:
 
