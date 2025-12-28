@@ -50,7 +50,7 @@
 <ul>
 <li><p>It's likely that a production memory safe OS would still let you run unsafe programs in cases where the security/performance trade-off was warranted. The compiler might be a good example of that.</p></li>
 <li><p>I haven't yet ported LLVM to Fil-C++, and so long as I haven't, the compiler will have to be Yolo-C++.</p></li>
-<li><p>The compiler is called <code>/usr/bin/clang-20</code> but there are many symlinks to it (<code>gcc</code>, <code>g++</code>, <code>cc</code>, <code>c++</code>, <code>clang</code>, and <code>clang++</code> all point at <code>clang-20</code>).</p></li>
+<li><p>The compiler is called <code>/usr/bin/clang-20</code> but there are many symlinks to it (<code>gcc</code>, <code>g++</code>, <code>cc</code>, <code>c++</code>, <code>clang</code>, <code>clang++</code>, <code>filcc</code>, and <code>fil++</code> all point at <code>clang-20</code>).</p></li>
 <li><p>All of the other building-related tools (like <code>ld</code>, <code>make</code>, <code>ninja</code>, etc) are compiled with Fil-C (or Fil-C++).</p></li>
 </ul></li>
 </ul>
@@ -66,9 +66,9 @@
 
 <h2>Supported Systems</h2>
 
-<p>Pizlix has been tested inside VMware and Hyper-V on X86_64.</p>
+<p>Pizlix has been tested inside VMware, Hyper-V, and QEMU on X86_64. QEMU works best.</p>
 
-<p>I have confirmed that it's possible to build Pizlix on Ubuntu 24.</p>
+<p>I have confirmed that it's possible to build Pizlix on Ubuntu 22 and Ubuntu 24. The best way to build it is using an Ubuntu 22 container.</p>
 
 <h2>Installing Pizlix</h2>
 
@@ -77,24 +77,43 @@
 <pre><code>git clone https://github.com/pizlonator/fil-c.git
 </code></pre>
 
-<p>Then go into the <a href="https://github.com/pizlonator/fil-c/tree/deluge/pizlix"><code>pizlix</code> directory</a> under <code>fil-c</code>.</p>
+<p>Assuming you're on Ubuntu, install the following:</p>
 
-<p>Pizlix requires you to set up your machine thusly:</p>
-
-<ul>
-<li><p>You must have a <code>/dev/sda4</code> ext partition mounted at <code>/mnt/lfs</code>. If you have it mounted somewhere else, then make sure you edit the various scripts in this directory (and its subdirectories).</p></li>
-<li><p>You must have a swap partition in <code>/dev/sda3</code>. If you have one somewhere else (or don't have one), then make sure you edit the various scripts in this directory (and its subdirectories).</p></li>
-<li><p>You must have an <code>lfs</code> user as described in sections 4.3 and 4.4 of the <a href="https://www.linuxfromscratch.org/lfs/view/12.2/">LFS book</a>.</p></li>
-</ul>
-
-<p>Once you have satisfied those requirements, <strong>and you're happy with the contents of <code>/mnt/lfs</code> being annihilated</strong>, just do:</p>
-
-<pre><code>sudo ./build.sh
+<pre><code>apt install podman parted udevadm grub-pc
 </code></pre>
 
-<p>From <code>fil-c/pizlix</code>. Then, edit your grub config to include the <code>menuentry</code> in <code>etc/grub_custom</code> and reboot into Pizlix!</p>
+<p>Then, go to the <a href="https://github.com/pizlonator/fil-c/tree/deluge/pizlix"><code>pizlix</code> directory</a> under <code>fil-c</code> and do:</p>
 
-<p>If you run into trouble, see the <a href="#stages">Build Stages</a>.</p>
+<pre><code>sudo ../enter_container.sh -p
+</code></pre>
+
+<p>This will launch a container suitable for building Pizlix. Then, from this container, do:</p>
+
+<pre><code>./build.sh &gt;&amp; log.txt
+</code></pre>
+
+<p>You can <code>tail -f log.txt</code> from outside the container. The <code>build.sh</code> script takes a long time - several hours on my fastest box. Note that it's highly recommended that you redirect the script's output to a log file because the log spew can cause podman's tty to get stuck.</p>
+
+<p>This build script produces the following artifacts:</p>
+
+<ul>
+<li>In the <code>fil-c/pizlix/lfs</code> directory, you'll find a whole root filesystem of Pizlix.</li>
+<li>Several <code>lfs-*.tar.gz</code> files, which are snapshots of the Pizlix filesystem after each <a href="#stages">build stage</a>. The <code>lfs-postlc5.tar.gz</code> file is the final snapshot.</li>
+</ul>
+
+<p>Once this completes, you can run the following outside the container, in the <code>pizlix</code> directory:</p>
+
+<pre><code>sudo ./make_disk_image.sh
+</code></pre>
+
+<p>This creates a <code>disk.img</code> based on <code>lfs-postlc5.tar.gz</code>. The <code>disk.img</code> is suitable for use in QEMU. Additionally, this script creates a <code>disk.vmdk</code> file suitable for use in VMware.</p>
+
+<p>Finally, you can:</p>
+
+<pre><code>./launch_qemu.sh
+</code></pre>
+
+<p>This launches QEMU with <code>disk.img</code> as the root drive with 32 CPUs and 32 GB of memory. If you want a different number of CPUs or a different amount of memory, please edit the script, or launch QEMU manually.</p>
 
 <h2>Using Pizlix</h2>
 
@@ -110,7 +129,7 @@
 
 <p>Please change the passwords, or better yet, replace the <code>pizlo</code> user with some other user, if your Pizlix install will face the network!</p>
 
-<p>Once you get your internet to work (it will "just work" if <code>eth0</code> is DHCP capable), you'll need to run:</p>
+<p>Once you get your internet to work (it will "just work" if you use the QEMU invocation from <code>./launch_qemu.sh</code>), you'll need to run:</p>
 
 <pre><code>make-ca -g
 </code></pre>

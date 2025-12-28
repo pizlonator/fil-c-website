@@ -17,7 +17,7 @@ Caveats:
 
     - I haven't yet ported LLVM to Fil-C++, and so long as I haven't, the compiler will have to be Yolo-C++.
 
-    - The compiler is called `/usr/bin/clang-20` but there are many symlinks to it (`gcc`, `g++`, `cc`, `c++`, `clang`, and `clang++` all point at `clang-20`).
+    - The compiler is called `/usr/bin/clang-20` but there are many symlinks to it (`gcc`, `g++`, `cc`, `c++`, `clang`, `clang++`, `filcc`, and `fil++` all point at `clang-20`).
 
     - All of the other building-related tools (like `ld`, `make`, `ninja`, etc) are compiled with Fil-C (or Fil-C++).
 
@@ -31,9 +31,9 @@ This document starts with a description of how to install and build Pizlix. [At 
 
 ## Supported Systems
 
-Pizlix has been tested inside VMware and Hyper-V on X86_64.
+Pizlix has been tested inside VMware, Hyper-V, and QEMU on X86_64. QEMU works best.
 
-I have confirmed that it's possible to build Pizlix on Ubuntu 24.
+I have confirmed that it's possible to build Pizlix on Ubuntu 22 and Ubuntu 24. The best way to build it is using an Ubuntu 22 container.
 
 ## Installing Pizlix
 
@@ -41,23 +41,36 @@ First, clone the [Fil-C GH repo](https://github.com/pizlonator/fil-c/):
 
     git clone https://github.com/pizlonator/fil-c.git
 
-Then go into the [`pizlix` directory](https://github.com/pizlonator/fil-c/tree/deluge/pizlix) under `fil-c`.
+Assuming you're on Ubuntu, install the following:
 
-Pizlix requires you to set up your machine thusly:
+    apt install podman parted udevadm grub-pc
 
-- You must have a `/dev/sda4` ext partition mounted at `/mnt/lfs`. If you have it mounted somewhere else, then make sure you edit the various scripts in this directory (and its subdirectories).
+Then, go to the [`pizlix` directory](https://github.com/pizlonator/fil-c/tree/deluge/pizlix) under `fil-c` and do:
 
-- You must have a swap partition in `/dev/sda3`. If you have one somewhere else (or don't have one), then make sure you edit the various scripts in this directory (and its subdirectories).
+    sudo ../enter_container.sh -p
 
-- You must have an `lfs` user as described in sections 4.3 and 4.4 of the [LFS book](https://www.linuxfromscratch.org/lfs/view/12.2/).
+This will launch a container suitable for building Pizlix. Then, from this container, do:
 
-Once you have satisfied those requirements, **and you're happy with the contents of `/mnt/lfs` being annihilated**, just do:
+    ./build.sh >& log.txt
 
-    sudo ./build.sh
+You can `tail -f log.txt` from outside the container. The `build.sh` script takes a long time - several hours on my fastest box. Note that it's highly recommended that you redirect the script's output to a log file because the log spew can cause podman's tty to get stuck.
 
-From `fil-c/pizlix`. Then, edit your grub config to include the `menuentry` in `etc/grub_custom` and reboot into Pizlix!
+This build script produces the following artifacts:
 
-If you run into trouble, see the [Build Stages](#stages).
+- In the `fil-c/pizlix/lfs` directory, you'll find a whole root filesystem of Pizlix.
+- Several `lfs-*.tar.gz` files, which are snapshots of the Pizlix filesystem after each [build stage](#stages). The `lfs-postlc5.tar.gz` file is the final snapshot.
+
+Once this completes, you can run the following outside the container, in the `pizlix` directory:
+
+    sudo ./make_disk_image.sh
+
+This creates a `disk.img` based on `lfs-postlc5.tar.gz`. The `disk.img` is suitable for use in QEMU. Additionally, this script creates a `disk.vmdk` file suitable for use in VMware.
+
+Finally, you can:
+
+    ./launch_qemu.sh
+
+This launches QEMU with `disk.img` as the root drive with 32 CPUs and 32 GB of memory. If you want a different number of CPUs or a different amount of memory, please edit the script, or launch QEMU manually.
 
 ## Using Pizlix
 
@@ -75,7 +88,7 @@ Pizlix by default has the following configuration:
 
 Please change the passwords, or better yet, replace the `pizlo` user with some other user, if your Pizlix install will face the network!
 
-Once you get your internet to work (it will "just work" if `eth0` is DHCP capable), you'll need to run:
+Once you get your internet to work (it will "just work" if you use the QEMU invocation from `./launch_qemu.sh`), you'll need to run:
 
     make-ca -g
 
