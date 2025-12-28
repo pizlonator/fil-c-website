@@ -14,9 +14,9 @@ What does this look like in practice? This document shows the current status.
 
 Fil-C has a runtime (`libpizlo.so` and `filc_crt.o`) that is written in Yolo-C and that links to a libc compiled with Yolo-C. Another libc, compiled with Fil-C, lives on top of the runtime. The rest of your software stack then lives on top of that libc.
 
-Fil-C supports both musl and glibc. Because of the coupling between the loader, libc, and runtime, Fil-C always uses the same libc in Yolo Land as in User Land. So, when running with musl, we use two versions of musl (one compiled with Yolo-C and another compiled with Fil-C). And when running with glibc, we use two versions of glibc (one compiled with Yolo-C and another compiled with Fil-C). The rest of this page documents how the runtime looks with musl. If you build with glibc, you'll see minor differences.
+Fil-C supports both musl and glibc. Because of the coupling between the loader, libc, and runtime, Fil-C always uses the same libc in Yolo Land as in User Land. So, when running with musl, we use two versions of musl (one compiled with Yolo-C and another compiled with Fil-C). And when running with glibc, we use two versions of glibc (one compiled with Yolo-C and another compiled with Fil-C). Let's first consider how the runtime works in musl, and then we'll look at the differences in glibc.
 
-<img src="sandwich.svg" class="centered-svg-60" alt="Fil-C Sandwich Runtime">
+<img src="sandwich.svg" class="centered-svg-60" alt="Fil-C Sandwich Runtime With Musl">
 
 Let's review the components:
 
@@ -24,7 +24,11 @@ Let's review the components:
 
 - `libyoloc.so`. This is a mostly unmodified musl libc, compiled with Yolo-C. The only changes are to expose some libc internal functionality that is useful for implementing `libpizlo.so`. Note that `libpizlo.so` only relies on this library for system calls and a few low level functions. In the future, it's possible that the Fil-C runtime would not have a libc in Yolo Land, but instead `libpizlo.so` would make syscalls directly.
 
-- `crt*.o`. These are the Yolo-C program startup trampolines that call musl's libc start function.
+- `libyolort.a`. This is the LLVM `compiler-rt` project compiled with Yolo-C. It provides builtin functions that the compiler expects to always be present, such as helpers for complex math.
+
+- `libyolounwind.a`. This is a dummy version of `libunwind`, with all functions stubbed out. Fil-C supports unwinding for user land (code compiled with Fil-C), but never uses unwinding in yolo land. The stubs in this library always trap when called. They are provided only to prevent link errors if libc has dead code that uses unwinding. Note that musl happens to not use unwinding, so these stubs are dead code (because they are in a static library, they are pruned by the linker).
+
+- `crt*.o`. These are the Yolo-C program startup trampolines that call musl's libc start function and manage global constructors and destructors.
 
 - `libpizlo.so`. The Fil-C runtime lives in this library. It is based on the libpas memory management toolkit, the [FUGC](fugc.html) and [safepoints](safepoints.html), and everything needed to support memory safe threading, system calls, signal handling, capability slow paths, and other things not provided by the compiler. Programs compiled with the Fil-C compiler strongly depend on `libpizlo.so` (you will see symbols with the `filc_` prefix imported by any module compiled with the Fil-C compiler; this symbols are defined in `libpizlo.so`). `libpizlo.so` contains some code written in Fil-C, like the C personality function (for supporting C exceptions), and some of the logic to make `epoll(2)` work in Fil-C.
 
@@ -66,6 +70,22 @@ Let's examine these frames starting from the bottom:
 - `stack.c:5:5: main`. This is our actual `main` function, compiled with Fil-C.
 
 - `<runtime>: zdump_stack`. This is `libpizlo.so`'s implementation of `zdump_stack`.
+
+### The Glibc Sandwich
+
+Fil-C's support for glibc is even more mature than its support for musl. [Pizlix](pizlix.html), [`/opt/fil`](optfil.html), [Filian](https://gitlab.cr.yp.to/djb/filian), and [Filnix](https://github.com/mbrock/filnix) all use glibc.
+
+<img src="sandwich-glibc.svg" class="centered-svg-60" alt="Fil-C Sandwich Runtime With Musl">
+
+Here are the differences from musl:
+
+- Glibc uses versioning for its shared libraries. Fil-C uses glibc 2.40, which is version 6 normally. To avoid conflicts, Fil-C's version of glibc uses version 6666. Hence, the libc shared object is called `libc.so.6666`.
+
+- Glibc has a separate math library, `libm.so.6666`.
+
+- In Yolo Land, we call glibc `libyolocimpl.so` and its math library `libyolomimpl.so`.
+
+- Yolo glibc has some dead code that uses unwinding, which necessitates `libyolounwind.a`.
 
 ## Memory Safe Linking And Loading
 
