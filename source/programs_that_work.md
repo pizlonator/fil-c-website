@@ -151,6 +151,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [XML Parser 2.47](https://github.com/pizlonator/fil-c/tree/deluge/projects/XML-Parser-2.47). Needs a one line change to Perl bindings due to pointer-as-integer usage.
 - [xz 5.6.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/xz-5.6.2). Tiny changes (build system linker script changes, change one pointer arithmetic expression, align a union, and disable one assembly snippet).
 - [yaml 0.2.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/yaml-0.2.5). *No changes, works out of the box*.
+- [yosh 0.1.1](https://yoshell.ai/). An LLM-enabled memorty safe version of bash. *Build with Fil-C*.
 - [zlib 1.3](https://github.com/pizlonator/fil-c/tree/deluge/projects/zlib-1.3) and 1.3.1. *No changes, works out of the box*.
 - [zsh 5.8.0.1-dev](https://github.com/pizlonator/fil-c/tree/deluge/projects/zsh-5.8.0.1-dev). Tiny changes only (add a field to a struct to properly align some fields, disable custom malloc).
 - [zstd 1.5.6](https://github.com/pizlonator/fil-c/tree/deluge/projects/zstd-1.5.6). Tiny changes only (use Fil-C cpuid API instead of assembly and disable some assembly snippets).
