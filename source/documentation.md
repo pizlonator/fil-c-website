@@ -34,5 +34,7 @@
 
 [Linux Sandboxes and Fil-C](seccomp.html)
 
+[The Fil-C Optimized Calling Convention](calling_convention.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 

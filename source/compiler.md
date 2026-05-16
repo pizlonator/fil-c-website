@@ -22,7 +22,7 @@ This pass applies memory safety rules *to every single construct in LLVM IR*, in
 
 - All memory access instructions, including SIMD memory access intrinsics. Loads, stores, atomic CAS, atomic RMW, and memory transfer instructions have bounds checking prepended. Any operation that may operate on pointers (i.e. may store pointers to the heap or load pointers from the heap) is also modified to obey the [*rest pointer*](invisicaps.html#restptr) protocol.
 
-- All control flow instructions, including computed goto (i.e. `indirectbr`) and function calls. Function calls check that the pointer you're calling is a valid function and the calling convention is totally changed to ensure that type confusion of arguments and return values has safe outcomes.
+- All control flow instructions, including computed goto (i.e. `indirectbr`) and function calls. Function calls check that the pointer you're calling is a valid function and the [calling convention is totally changed](calling_convention.html) to ensure that type confusion of arguments and return values has safe outcomes.
 
 - All kinds of allocations (globals and `alloca`s). `alloca`s are converted to calls to [FUGC](fugc.html) allocation APIs.
 

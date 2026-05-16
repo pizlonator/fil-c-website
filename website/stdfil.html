@@ -771,6 +771,8 @@ object does not have to be readonly, but can be.</p>
 <p>Beware that C/C++ functions declared to return structs really return void, and they have some
 special parameter that is a pointer to the buffer where the return value is stored. Also beware of other calling convention requirements for padding.</p>
 
+<p><a name="zreturn"></a></p>
+
 <h2><code>zreturn</code></h2>
 
 <pre><code>void zreturn(void* rets);
@@ -859,6 +861,8 @@ zcan_va_arg(__builtin_va_list list)
 
 <p>Gets the function pointer of the currently called function. Note that if the function is doing closure tricks, then this function pointer will have a the closure as part of its capability.</p>
 
+<p><a name="zclosure_new"></a></p>
+
 <h2><code>zclosure_new</code></h2>
 
 <pre><code>void* zclosure_new(void* function, void* data);
@@ -882,8 +886,7 @@ static void bar(void)
 
 <p>This API can be used directly, but is mostly here to support libffi's closure API.</p>
 
-<p>Note that the Fil-C implementation of closures does not rely on JIT permissions. Also, somewhat
-awkwardly, <code>foo_closure == foo</code>.</p>
+<p>Note that the Fil-C implementation of closures does not rely on JIT permissions.</p>
 
 <h2><code>zclosure_get_data</code></h2>
 

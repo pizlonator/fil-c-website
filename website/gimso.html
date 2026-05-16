@@ -435,11 +435,11 @@ p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
        &lt;ty&gt;|&lt;fnty&gt; &lt;fnptrval&gt;(&lt;function args&gt;) [fn attrs] [ operand bundles ]
 </code></pre>
 
-<p>Under GIMSO, we drop the <code>tail</code> flags, the fast-math flags, and we only ignore the <code>cconv</code> (only the Fil-C calling convention is allows). Most <code>fn attrs</code> are ignored.</p>
+<p>Under GIMSO, we drop the <code>tail</code> flags, the fast-math flags, and we only ignore the <code>cconv</code> (only the <a href="calling_convention.html">Fil-C calling convention</a> is allowed). Most <code>fn attrs</code> are ignored.</p>
 
 <p>The <code>call</code> instruction may be used to invoke a LLVM intrinsic, a Fil-C builtin, or inline assembly. Intrinsics, builtins, and inline assembly are destribed in another section. This section just describes the semantics of a call to a normal function pointer that is not an intrinsic, builtin, or inline asm.</p>
 
-<p>Calls proceed as follows.</p>
+<p>In the unoptimized case, calls proceed as follows.</p>
 
 <ol>
 <li>The <code>&lt;fnptrval&gt;</code> is checked. The following requirements must be met, or else a panic occurs:
@@ -448,20 +448,22 @@ p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
 <li>Capability must be a function capability.</li>
 <li>The pointer's intval must match the capability's callable pointer value.</li>
 </ul></li>
-<li>The size of the argument buffer is computed by rounding up each argument's size to 8. Additionally, argument type alignment is obeyed, which may mean adding padding. Note that <code>byref</code> arguments have their value copied into the argument buffer, so the argument's type for the purpose of the computation is the reference'd type, not <code>ptr</code>. Two thread-local CC (calling convention) buffers are allocated of that size. This buffers live only long enough for the callee to retrieve the arguments. One buffer is for the payload, and the other is for capabilities.</li>
+<li>The size of the argument buffer is computed by rounding up each argument's size to 8. Additionally, argument type alignment is obeyed, which may mean adding padding. Note that <code>byref</code> arguments have their value copied into the argument buffer, so the argument's type for the purpose of the computation is the reference'd type, not <code>ptr</code>. Two thread-local CC (calling convention) buffers are allocated of that size. These buffers live only long enough for the callee to retrieve the arguments. One buffer is for the payload, and the other is for capabilities.</li>
 <li>Each argument is copied into the CC buffers. For <code>byref</code> arguments, the pointed-at value is copied into the buffers.</li>
 <li>Control is transferred to the callee's prologue and the callsite address is saved to a private callstack. The stack where the callsite address is stored is outside of Fil-C memory and cannot be accessed with any capability. The callee is told about the size of the arguments as well as the function capability. Passing the function capability is useful for <code>libffi</code> implementing closures, but is otherwise unused.</li>
 <li>The callee's prologue heap-allocates (as if with <code>alloca</code>) any <code>byref</code> parameters.</li>
 <li>All arguments are copied out of the CC buffers. For non-<code>byref</code> parameters, the arguments are copied into local data flow. For <code>byref</code> parameters, the arguments are copied into the allocations from step 5.</li>
 <li>If the callee uses any argument introspection (like <code>va_arg</code> or <code>zargs</code>), then the CC buffers are copied into a newly created readonly heap object. At this point, the CC buffer is dead. In practice, the implementation may reuse the same CC buffer repeatedly.</li>
 <li><strong>The callee executes.</strong> If an exception throw happens, then we return to the callsite with a flag indicating that an exception is in flight.</li>
-<li>When the callee returns normally, an almost identical process to argument passing happens, except for the return value. First the size of the return buffer is computed by rounding up the return type's size to 8. The CC buffer is allocated of that size. It will live until the callsite </li>
+<li>When the callee returns normally, an almost identical process to argument passing happens, except for the return value. First the size of the return buffer is computed by rounding up the return type's size to 8. The CC buffer is allocated of that size. It will live until the callsite finishes retrieving the result.</li>
 <li>The return value is copied into the CC buffers.</li>
 <li>Control is transferred back to the callsite with a flag indicating that an exception is NOT in flight, as well as the size of the return value.</li>
 <li>The callsite loads the return value from the CC buffers and produces it in local data flow (i.e. the <code>&lt;result&gt;</code>).</li>
 </ol>
 
 <p>If the callsite observes the exception flag being set, then the caller returns with the exception flag set.</p>
+
+<p>The Fil-C compiler uses <a href="calling_convention.html">ELF weak symbol tricks and other low-level optimizations to make the calling convention much more efficient</a> in the common case. But those optimizations still obey exactly the same semantics as the above even if the programmer is being adversarial.</p>
 
 <h2>Invoke</h2>
 

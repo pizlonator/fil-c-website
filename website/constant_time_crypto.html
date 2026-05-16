@@ -204,7 +204,7 @@ asm(".filc_unsafe_export global");
 
 <h3>New File: <code>crypto/aes/aes_asm_forward.c</code></h3>
 
-<p>This new file provides forwarding functions from Fil-C to assembly for the basic AES (Advanced Encryption Standard) implementation. Normally, if OpenSSL called <code>AES_set_encrypt_key</code> (for example), then the call would directly go to the assembly implementation of that function. But in Fil-C, such a call goes to the Fil-C ABI variant of that function, which has a different mangling and different calling convention.</p>
+<p>This new file provides forwarding functions from Fil-C to assembly for the basic AES (Advanced Encryption Standard) implementation. Normally, if OpenSSL called <code>AES_set_encrypt_key</code> (for example), then the call would directly go to the assembly implementation of that function. But in Fil-C, such a call goes to the Fil-C ABI variant of that function, which has a different mangling and <a href="calling_convention.html">different calling convention</a>.</p>
 
 <p>So, for every function implemented in assembly, we introduce a C function of the same name that wraps a call to <code>zunsafe_call</code> or one of its variants.</p>
 

@@ -146,7 +146,7 @@ Function pointers have an intval that points at the actual function entrypoint, 
 
 - The remainder of the aux word is used to indicate the true function entrypoint, so that function calls can check if the function pointer really points at the entrypoint.
 
-Function pointer casts are handled dynamically (the Fil-C calling convention dynamically resolves mismatches in types passed by the caller and types expected by the callee).
+Function pointer casts are handled dynamically (the [Fil-C calling convention](calling_convention.html) dynamically resolves mismatches in types passed by the caller and types expected by the callee).
 
 ### Threads
 

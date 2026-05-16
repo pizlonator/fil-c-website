@@ -87,6 +87,7 @@ Here are the differences from musl:
 
 - Yolo glibc has some dead code that uses unwinding, which necessitates `libyolounwind.a`.
 
+<a name="linking"></a>
 ## Memory Safe Linking And Loading
 
 Fil-C relies on ELF. I have also previously demonstrated it working on Mach-O. Fil-C does not require changes to the linker. The only changes to the musl loader are to teach it that from its standpoint, the libc that it cares about is called `libyoloc.so` not `libc.so`. Fil-C even supports advanced ELF features like weak symbols, weak or strong aliases, comdats, and even ifuncs. Fil-C ifuncs are just Fil-C functions and they are totally memory safe. That said, Fil-C has its own ABI (Application Binary Interface) and that ABI is not compatible with Yolo-C.

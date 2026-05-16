@@ -160,7 +160,7 @@ Note that the follow-on fixes are thanks to me writing this document, which forc
 
 ### New File: `crypto/aes/aes_asm_forward.c`
 
-This new file provides forwarding functions from Fil-C to assembly for the basic AES (Advanced Encryption Standard) implementation. Normally, if OpenSSL called `AES_set_encrypt_key` (for example), then the call would directly go to the assembly implementation of that function. But in Fil-C, such a call goes to the Fil-C ABI variant of that function, which has a different mangling and different calling convention.
+This new file provides forwarding functions from Fil-C to assembly for the basic AES (Advanced Encryption Standard) implementation. Normally, if OpenSSL called `AES_set_encrypt_key` (for example), then the call would directly go to the assembly implementation of that function. But in Fil-C, such a call goes to the Fil-C ABI variant of that function, which has a different mangling and [different calling convention](calling_convention.html).
 
 So, for every function implemented in assembly, we introduce a C function of the same name that wraps a call to `zunsafe_call` or one of its variants.
 

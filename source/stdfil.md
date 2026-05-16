@@ -663,6 +663,7 @@ Returns a readonly object containing the return value.
 Beware that C/C++ functions declared to return structs really return void, and they have some
 special parameter that is a pointer to the buffer where the return value is stored. Also beware of other calling convention requirements for padding.
 
+<a name="zreturn"></a>
 ## `zreturn`
 
     void zreturn(void* rets);
@@ -742,6 +743,7 @@ Call this with a `jmp_buf`. Returns the frame that you would have gotten from `_
 
 Gets the function pointer of the currently called function. Note that if the function is doing closure tricks, then this function pointer will have a the closure as part of its capability.
 
+<a name="zclosure_new"></a>
 ## `zclosure_new`
 
     void* zclosure_new(void* function, void* data);
@@ -763,8 +765,7 @@ Example:
 
 This API can be used directly, but is mostly here to support libffi's closure API.
 
-Note that the Fil-C implementation of closures does not rely on JIT permissions. Also, somewhat
-awkwardly, `foo_closure == foo`.
+Note that the Fil-C implementation of closures does not rely on JIT permissions.
 
 ## `zclosure_get_data`
 
