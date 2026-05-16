@@ -62,7 +62,7 @@ int z = foo(x, y);
 
 <p>This document explains how Fil-C manages to <strong>avoid doing any safety checks for the common case of calls</strong> while either <em>panicking</em> or strictly following well-defined <a href="gimso.html">GIMSO semantics</a> in case calls are misused in some type-violating way.</p>
 
-<p>First, the generic calling convention is explained. All optimizations obey identical semantics to the generic calling convention and the generic calling convention is the fallback when the optimizations would not be legal under those semantics. Second, the native signature optimization is described. This is what allows arguments and return values to be passed in registers in the common case. Finally, the ELF hidden weak symbol optimizations are described. These optimizations make it possible for the caller to avoid doing any checks about whether the callee agrees on the function signature.</p>
+<p>First, the generic calling convention is explained. All optimizations obey identical semantics to the generic calling convention and the generic calling convention is the fallback when the optimizations would not be legal under those semantics. Second, the register calling convention optimization is described. This is what allows arguments and return values to be passed in registers in the common case. Finally, the direct call optimizations are described. These optimizations make it possible for the caller to avoid doing any checks about whether the callee agrees on the function signature.</p>
 
 <h2>Generic Calling Convention</h2>
 
@@ -401,7 +401,7 @@ result = rv.result;
 
 <p>So the signature is 1 + 8 + 133 * 452 = 60125.</p>
 
-<p><strong>The fast calling convention optimization results in a >1% speed-up on PizBench9019.</strong></p>
+<p><strong>The register calling convention optimization results in a >1% speed-up on PizBench9019.</strong></p>
 
 <h2>Avoiding Direct Caller Resolution</h2>
 

@@ -25,7 +25,7 @@ And yet, if we changed `foo` to take extra arguments, we would get a panic. And 
 
 This document explains how Fil-C manages to **avoid doing any safety checks for the common case of calls** while either *panicking* or strictly following well-defined [GIMSO semantics](gimso.html) in case calls are misused in some type-violating way.
 
-First, the generic calling convention is explained. All optimizations obey identical semantics to the generic calling convention and the generic calling convention is the fallback when the optimizations would not be legal under those semantics. Second, the native signature optimization is described. This is what allows arguments and return values to be passed in registers in the common case. Finally, the ELF hidden weak symbol optimizations are described. These optimizations make it possible for the caller to avoid doing any checks about whether the callee agrees on the function signature.
+First, the generic calling convention is explained. All optimizations obey identical semantics to the generic calling convention and the generic calling convention is the fallback when the optimizations would not be legal under those semantics. Second, the register calling convention optimization is described. This is what allows arguments and return values to be passed in registers in the common case. Finally, the direct call optimizations are described. These optimizations make it possible for the caller to avoid doing any checks about whether the callee agrees on the function signature.
 
 ## Generic Calling Convention
 
@@ -326,7 +326,7 @@ And Arg is 1 + 11 + 121 + 0 + 7 * 11 + 2 * 121 = 452.
 
 So the signature is 1 + 8 + 133 * 452 = 60125.
 
-**The fast calling convention optimization results in a >1% speed-up on PizBench9019.**
+**The register calling convention optimization results in a >1% speed-up on PizBench9019.**
 
 ## Avoiding Direct Caller Resolution
 
