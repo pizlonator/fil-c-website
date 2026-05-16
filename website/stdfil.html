@@ -854,6 +854,8 @@ zcan_va_arg(__builtin_va_list list)
 
 <p>Call this with a <code>jmp_buf</code>. Returns the frame that you would have gotten from <code>__builtin_frame_address</code> of the frame that this <code>jmp_buf</code> jumps to.</p>
 
+<p><a name="zcallee"></a></p>
+
 <h2><code>zcallee</code></h2>
 
 <pre><code>void* zcallee(void);
@@ -903,6 +905,8 @@ panics.</p>
 
 <p>Set the data for the given closure. If the passed-in pointer is not a closure pointer, then this
 panics.</p>
+
+<p><a name="zcallee_closure_data"></a></p>
 
 <h2><code>zcallee_closure_data</code></h2>
 

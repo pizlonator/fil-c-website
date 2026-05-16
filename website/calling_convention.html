@@ -428,17 +428,17 @@ char* result = foo(arg1, arg2, arg3);
     flight_ptr result;
 };
 struct typed_return_value rv = pizlonatedFI60125_foo(
-    my_thread, function_object, arg1, arg2, arg3);
+    my_thread, undef, arg1, arg2, arg3);
 if (rv.has_exception)
     goto unwind;
 result = rv.result;
 </code></pre>
 
-<p>Where <code>pizlonatedFI60125_foo</code> is the signature-mangled implementation function name. <strong>That's a huge improvement!</strong> We have successfully eliminated the getter call for linker resolution, the function capability check, the signature check, the thread-local CC buffer accesses, and the argument/return value size checks!</p>
+<p>Where <code>pizlonatedFI60125_foo</code> is the signature-mangled implementation function name. Note that <code>undef</code> here is the LLVM <code>undef</code> value, which when used as a function argument means that the corresponding argument register is simply not set. <strong>That's a huge improvement!</strong> We have successfully eliminated the getter call for linker resolution, the function capability check, the signature check, the thread-local CC buffer accesses, and the argument/return value size checks!</p>
 
 <p>The simplest case of this is if <code>foo</code> is defined in the same module and <code>foo</code>'s definition has a matching signature. In that case, the code above just works and we don't have to do anything else.</p>
 
-<p>If <code>foo</code> is extern or if it is defined locally with a different signature, the module with this callsite will emit a weak <code>pizlonatedFI60125_foo</code> that performs the getter call. We call this the known target callsite thunk. It also inlines the caller entrypoint thunk to avoid having triple indirection in the slowest case. Let's take a look at the weak callsite thunk:</p>
+<p>If <code>foo</code> is extern, or if it is defined locally with a different signature, or if the definition uses closure features like <a href="stdfil.html#zcallee"><code>zcallee</code></a> or <a href="stdfil.html#zcallee_closure_data"><code>zcallee_closure_data</code></a> (meaning that the second argument - the function capability - must really be passed), the module with this callsite will emit a weak <code>pizlonatedFI60125_foo</code> that performs the getter call. We call this the known target callsite thunk. It also inlines the caller entrypoint thunk to avoid having triple indirection in the slowest case. Let's take a look at the weak callsite thunk:</p>
 
 <pre><code>00000000000011d0 &lt;pizlonatedFI60125_foo&gt;:
     11d0:   push   %r15
@@ -511,6 +511,14 @@ result = rv.result;
     12dc:   call   1040 &lt;filc_cc_rets_check_failure@plt&gt;
 </code></pre>
 
+<p>This thunk performs the following work:</p>
+
+<ol>
+<li>Calls the getter for <code>foo</code>.</li>
+<li>Checks that the pointer returned by the getter is really a function.</li>
+<li>Checks if the signature matches; if it does, then does the fast call. This includes passing the function object. If the signature does not match, this calls the generic entrypoint.</li>
+</ol>
+
 <p>As gross as that is, this weak symbol only gets invoked in those cases where there was a signature mismatch. If there is no mismatch, the actual implementation of <code>foo</code> wins and the callsite calls that directly!</p>
 
 <p><strong>This almost works!</strong> The problems with this approach come down to ELF details, which I will try to share with you as best as I can:</p>
@@ -525,7 +533,7 @@ result = rv.result;
 
 <p>The first problem is easy to solve: we always define the known target callsite thunk with hidden visibility. This ensures that the loader never sees them. The downside is that calls across dynamic library boundaries always have to go through the thunk, but we're counting on two things: (1) that's not much worse than what would have happened without this optimization and (2) calls within dynamic libraries are much more common than calls across the boundary.</p>
 
-<p>The second is solved by emitting the implementation under the symbol <code>pizlonatedFIP60125_foo</code> instead of <code>pizlonatedFI60125_foo</code>. Then, only if the function is strongly defined, we define a strong alias from <code>pizlonatedFI60125_foo</code> to <code>pizlonatedFIP60125_foo</code>. The function object always asks for <code>pizlonatedFIP60125_foo</code>. This ensures that calls to weak definitions don't get stuck in infinite loops. It also means that calls to weak definitions always go through the thunk. That's fine, since calls to weak definitions are rare.</p>
+<p>The second is solved by emitting the implementation under the symbol <code>pizlonatedFIP60125_foo</code> instead of <code>pizlonatedFI60125_foo</code>. Then, only if the function is strongly defined, we define a strong alias from <code>pizlonatedFI60125_foo</code> to <code>pizlonatedFIP60125_foo</code>. The function object always asks for <code>pizlonatedFIP60125_foo</code>. This ensures that calls to weak definitions don't get stuck in infinite loops. It also means that calls to weak definitions always go through the thunk. That's fine, since calls to weak definitions are rare. Note that this same trick is used to handle closure features - even if the function is strongly defined, we do not create the strong alias if the function uses <a href="stdfil.html#zcallee"><code>zcallee</code></a> or <a href="stdfil.html#zcallee_closure_data"><code>zcallee_closure_data</code></a>. We need to protect functions that use closure features in this way because the direct call optimization passes <code>undef</code> as the function object. On the other hand, the known target callsite thunk looks up the function object and always passes it to the function's entrypoint.</p>
 
 <p>But this reveals the third problem: say we have a C++ header file called <code>header.h</code> like:</p>
 

@@ -737,6 +737,7 @@ Tells you if a `va_list` has another argument available.
 
 Call this with a `jmp_buf`. Returns the frame that you would have gotten from `__builtin_frame_address` of the frame that this `jmp_buf` jumps to.
 
+<a name="zcallee"></a>
 ## `zcallee`
 
     void* zcallee(void);
@@ -781,6 +782,7 @@ panics.
 Set the data for the given closure. If the passed-in pointer is not a closure pointer, then this
 panics.
 
+<a name="zcallee_closure_data"></a>
 ## `zcallee_closure_data`
 
     void* zcallee_closure_data(void);
