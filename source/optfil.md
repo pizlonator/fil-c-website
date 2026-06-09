@@ -9,6 +9,8 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 - Uses the Fil-C port of **glibc 2.40** as the C library. This gives you the **maximum compatibility** with modern Linux software.
 
 - Comes with **a bunch useful programs and libraries** compiled with Fil-C so they are memory safe:
+    - acl
+    - attr
     - bash        
     - binutils    
     - bzip2       
@@ -46,14 +48,16 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - pcre2       
     - pkgconf     
     - procps-ng   
-    - psmisc      
+    - psmisc
+    - **rsync**
     - sed         
     - **sudo**      
     - tar         
     - tmux        
     - unistring   
     - wget
-    - xz        
+    - xxhash
+    - xz
     - zlib        
     - zstd        
 

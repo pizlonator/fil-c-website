@@ -34,9 +34,12 @@
         <main class="content">
 <h1>Programs That Work</h1>
 
-<p>Lots of programs work in <a href="index.html">Fil-C</a> with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.</p>
+<p>Lots of programs work in <a href="index.html">Fil-C</a> with zero or minimal changes. This page enumerates <em>some of the</em> programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.</p>
+
+<p>This list is incomplete. It doesn't include ports done by folks who haven't reached out. It doesn't include all of the programs that Fil-C devs have ported.</p>
 
 <ul>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/abseil-cpp-20260107.1">abseil 20260107.1</a>. Small patch to change pointer tagging code.</li>
 <li>acl 2.3.2. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/pizlonated-ada">ada url</a>. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/attr-2.5.2">attr 2.5.2</a>. Requires a tiny change to build system (version scripts), and a tiny change to a symbol versioning macro.</li>
@@ -140,7 +143,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1">nghttp2 1.62.1</a>. <em>No changes, works out of the box.</em></li>
 <li>ninja 1.12.1. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2">openjpeg 2.5.2</a>. <em>No changes, works out of the box</em>.</li>
-<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1">openssh 9.8p1</a>. <a href="seccomp.html">Requires small adjustments to the seccomp filter</a> (need to allowlist <code>MAP_NORESERVE</code> and need to call <code>zlock_runtime_threads()</code> before installing the filter).</li>
+<li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-10.3p1">openssh 10.3p1</a>. <a href="seccomp.html">Requires small adjustments to the seccomp filter</a> (need to allowlist <code>MAP_NORESERVE</code> and need to call <code>zlock_runtime_threads()</code> before installing the filter, and a one-line change to crypto code).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1">openssl 3.3.1</a>. <em>Build system changes only (version script handling)</em>. Also added an assertion that <code>mem_sec</code> isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL). <a href="constant_time_crypto.html">About 90KB of additional changes are needed to support constant-time crypto</a>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/p11-kit-0.25.5">p11-kit 0.25.5</a>. Two line change to build system (version scripts).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/pango-1.54.0">pango 1.54.0</a>. Adopt glib API for pointers in three places that lazily create <code>GType</code>s.</li>
@@ -158,6 +161,7 @@
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/quickjs">quickjs</a>. Tiny changes only (change a <code>uintptr_t</code> to a <code>void*</code> and use the stdlib's <code>qsort_r</code>).</li>
 <li>readline 8.2.13. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/ruby-3.3.10">ruby 3.3.10</a>. Requires ~1MB patch because I needed to change the typedef for <code>VALUE</code> to be a pointer type. Also replaces Ruby's GC with calls to the FUGC API.</li>
+<li>rsync 3.4.3. <em>No changes, works out of the box</em>.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/seatd-0.9.1">seatd 0.9.1</a>. Requires &lt;1KB patch (version scripts).</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/sed-4.9">sed 4.9</a>. Requires fixes to <code>obstack.h</code> and some bizarre gnulib tests.</li>
 <li><a href="https://github.com/pizlonator/fil-c/tree/deluge/projects/shadow-4.16.0">shadow 4.16.0</a>. Requires changes to build system (version scripts).</li>

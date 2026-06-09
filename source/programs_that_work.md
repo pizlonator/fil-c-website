@@ -1,7 +1,10 @@
 # Programs That Work
 
-Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This page enumerates programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.
+Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This page enumerates *some of the* programs and libraries that are known to have been ported to Fil-C along with notes about how many changes were required.
 
+This list is incomplete. It doesn't include ports done by folks who haven't reached out. It doesn't include all of the programs that Fil-C devs have ported.
+
+- [abseil 20260107.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/abseil-cpp-20260107.1). Small patch to change pointer tagging code.
 - acl 2.3.2. *No changes, works out of the box*.
 - [ada url](https://github.com/pizlonator/pizlonated-ada). *No changes, works out of the box*.
 - [attr 2.5.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/attr-2.5.2). Requires a tiny change to build system (version scripts), and a tiny change to a symbol versioning macro.
@@ -105,7 +108,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [nghttp2 1.62.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/nghttp2-1.62.1). *No changes, works out of the box.*
 - ninja 1.12.1. *No changes, works out of the box*.
 - [openjpeg 2.5.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2). *No changes, works out of the box*.
-- [openssh 9.8p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-9.8p1). [Requires small adjustments to the seccomp filter](seccomp.html) (need to allowlist `MAP_NORESERVE` and need to call `zlock_runtime_threads()` before installing the filter).
+- [openssh 10.3p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-10.3p1). [Requires small adjustments to the seccomp filter](seccomp.html) (need to allowlist `MAP_NORESERVE` and need to call `zlock_runtime_threads()` before installing the filter, and a one-line change to crypto code).
 - [openssl 3.3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1). *Build system changes only (version script handling)*. Also added an assertion that `mem_sec` isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL). [About 90KB of additional changes are needed to support constant-time crypto](constant_time_crypto.html).
 - [p11-kit 0.25.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/p11-kit-0.25.5). Two line change to build system (version scripts).
 - [pango 1.54.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/pango-1.54.0). Adopt glib API for pointers in three places that lazily create `GType`s.
@@ -123,6 +126,7 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 - [quickjs](https://github.com/pizlonator/fil-c/tree/deluge/projects/quickjs). Tiny changes only (change a `uintptr_t` to a `void*` and use the stdlib's `qsort_r`).
 - readline 8.2.13. *No changes, works out of the box*.
 - [ruby 3.3.10](https://github.com/pizlonator/fil-c/tree/deluge/projects/ruby-3.3.10). Requires ~1MB patch because I needed to change the typedef for `VALUE` to be a pointer type. Also replaces Ruby's GC with calls to the FUGC API.
+- rsync 3.4.3. *No changes, works out of the box*.
 - [seatd 0.9.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/seatd-0.9.1). Requires <1KB patch (version scripts).
 - [sed 4.9](https://github.com/pizlonator/fil-c/tree/deluge/projects/sed-4.9). Requires fixes to `obstack.h` and some bizarre gnulib tests.
 - [shadow 4.16.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/shadow-4.16.0). Requires changes to build system (version scripts).
