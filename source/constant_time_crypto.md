@@ -1,5 +1,7 @@
 # Constant-Time Crypto
 
+**NOTE: This document was written based on the OpenSSL 3.3.1 port. The patch described here has since been rebased to OpenSSL 3.5.7, which involved minor changes. Those changes are not described here.**
+
 Cryptographic libraries like OpenSSL are engineered to ensure that timing side channels cannot be used to extract secrets. For example, it should not be possible to guess the key used to encrypt data based on how long the encryption took. It's hard to guarantee the lack of timing side channels! The tradecraft used to maintain this guarantee is called *constant-time crypto*. Note that this does not mean that the crypto has running time that is constant in input size (encrypting a larger data set is expected to take longer and that's not a problem). It just means that time does not vary based on secrets.
 
 Writing crypto that has the constant time property is hard because:

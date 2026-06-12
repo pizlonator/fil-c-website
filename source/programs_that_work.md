@@ -109,7 +109,7 @@ This list is incomplete. It doesn't include ports done by folks who haven't reac
 - ninja 1.12.1. *No changes, works out of the box*.
 - [openjpeg 2.5.2](https://github.com/pizlonator/fil-c/tree/deluge/projects/openjpeg-2.5.2). *No changes, works out of the box*.
 - [openssh 10.3p1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssh-10.3p1). [Requires small adjustments to the seccomp filter](seccomp.html) (need to allowlist `MAP_NORESERVE` and need to call `zlock_runtime_threads()` before installing the filter, and a one-line change to crypto code).
-- [openssl 3.3.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.3.1). *Build system changes only (version script handling)*. Also added an assertion that `mem_sec` isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL). [About 90KB of additional changes are needed to support constant-time crypto](constant_time_crypto.html).
+- [openssl 3.5.7](https://github.com/pizlonator/fil-c/tree/deluge/projects/openssl-3.5.7). *Build system changes only (version script handling)*. Also added an assertion that `mem_sec` isn't used (nobody seems to use it anyway, so adding that assertion isn't necessary to have a working OpenSSL). [About 90KB of additional changes are needed to support constant-time crypto](constant_time_crypto.html).
 - [p11-kit 0.25.5](https://github.com/pizlonator/fil-c/tree/deluge/projects/p11-kit-0.25.5). Two line change to build system (version scripts).
 - [pango 1.54.0](https://github.com/pizlonator/fil-c/tree/deluge/projects/pango-1.54.0). Adopt glib API for pointers in three places that lazily create `GType`s.
 - patch 2.7.6. *No changes, works out of the box*.
