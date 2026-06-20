@@ -28,7 +28,7 @@ This pass applies memory safety rules *to every single construct in LLVM IR*, in
 
 - All linker shenanigans (including ifuncs, comdats, etc).
 
-- All assembly (module level and inline). In practice this means that assembly is effectively disallowed (but blank assembly idioms, which are super common, work as expected).
+- All assembly (module level and inline). Fil-C supports [memory-safe inline assembly](inlineasm.html) for hundreds of safe instructions. Module-level assembly is supported for creating symbol aliases, symbol versioning, and modifying symbol visibility.
 
 - Everything else in LLVM IR.
 

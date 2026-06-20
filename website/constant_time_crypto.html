@@ -868,7 +868,7 @@ int vpaes_set_encrypt_key(const unsigned char *userKey, const int bits,
 
 <p>This disables an X86-specific optimization using inline assembly that relies on the fact that the X86 <code>div</code> instruction returns both the quotient and remainder.</p>
 
-<p>Fil-C only supports trivial inline assembly where the instruction sequence is blank. This kind of "assembly" is used to inhibit compiler optimizations. In the future, Fil-C will support inline assembly with simple instructions (like <code>div</code>), but today that does not work. Based on reading this code, I believe that the inline assembly is only there as an optimization rather than the ensure constant time execution, so it's safe to just disable it.</p>
+<p>Fil-C supports <a href="inlineasm.html">memory-safe inline assembly</a>, including arithmetic instructions for constant-time crypto. The blank inline assembly mentioned above is supported, but Fil-C now also supports non-blank inline assembly with safe instructions like <code>div</code>, <code>cpuid</code>, <code>xgetbv</code>, and many more. This change was made before FIl-C supported nontrivial inline assembly. Based on reading this code, I believe that the inline assembly is only there as an optimization rather than to ensure constant time execution, so it's safe to just disable it. However, I may revert this change in the future now that Fil-C likely supports this code.</p>
 
 <h3>Changes To <code>crypto/bn/build.info</code></h3>
 

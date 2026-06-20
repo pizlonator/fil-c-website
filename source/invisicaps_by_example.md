@@ -712,7 +712,7 @@ Hence, it's possible that:
 
 Both outcomes are safe in Fil-C, because a bogus pointer value, or a pointer value that doesn't match the capability, results in a pointer that traps on access.
 
-This program does one more thing that's a little strange, but familiar to the Real C Programmers (TM): we emit a compiler fence using a dummy `asm` block that emits no code but clobbers memory. Fil-C disallows almost all inline assembly, but it does allow this idiom, because it's Awesome. We use it here to ensure that when the `printf` call at the end loads from `ptr`, it really loads from it rather than getting the value of the last `malloc` call as a result of load elimination.
+This program does one more thing that's a little strange, but familiar to the Real C Programmers (TM): we emit a compiler fence using a dummy `asm` block that emits no code but clobbers memory. Fil-C supports [memory-safe inline assembly](inlineasm.html), and allows this blank assembly idiom because it's Awesome. We use it here to ensure that when the `printf` call at the end loads from `ptr`, it really loads from it rather than getting the value of the last `malloc` call as a result of load elimination.
 
 In my tests, this program runs just fine about 99% of the time, and fails with a Fil-C panic about 1% of the time:
 

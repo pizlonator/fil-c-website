@@ -36,5 +36,7 @@
 
 [The Fil-C Optimized Calling Convention](calling_convention.html)
 
+[Memory Safe Inline Assembly](inlineasm.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 

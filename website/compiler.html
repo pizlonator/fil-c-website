@@ -58,7 +58,7 @@
 <li><p>All control flow instructions, including computed goto (i.e. <code>indirectbr</code>) and function calls. Function calls check that the pointer you're calling is a valid function and the <a href="calling_convention.html">calling convention is totally changed</a> to ensure that type confusion of arguments and return values has safe outcomes.</p></li>
 <li><p>All kinds of allocations (globals and <code>alloca</code>s). <code>alloca</code>s are converted to calls to <a href="fugc.html">FUGC</a> allocation APIs.</p></li>
 <li><p>All linker shenanigans (including ifuncs, comdats, etc).</p></li>
-<li><p>All assembly (module level and inline). In practice this means that assembly is effectively disallowed (but blank assembly idioms, which are super common, work as expected).</p></li>
+<li><p>All assembly (module level and inline). Fil-C supports <a href="inlineasm.html">memory-safe inline assembly</a> for hundreds of safe instructions. Module-level assembly is supported for creating symbol aliases, symbol versioning, and modifying symbol visibility.</p></li>
 <li><p>Everything else in LLVM IR.</p></li>
 </ul>
 

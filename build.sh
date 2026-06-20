@@ -7,14 +7,14 @@ echo "Building Fil-C website..."
 HEADER_HTML=""
 if [ -f "extra/header.md" ]; then
     echo "Processing header..."
-    HEADER_HTML=$(Markdown.pl "extra/header.md")
+    HEADER_HTML=$(./Markdown.pl "extra/header.md")
 fi
 
 # Process the sidebar
 SIDEBAR_HTML=""
 if [ -f "extra/sidebar.md" ]; then
     echo "Processing sidebar..."
-    SIDEBAR_HTML=$(Markdown.pl "extra/sidebar.md")
+    SIDEBAR_HTML=$(./Markdown.pl "extra/sidebar.md")
 fi
 
 # Process all markdown files in source directory
@@ -64,7 +64,7 @@ $SIDEBAR_HTML
 EOF
     
     # Process markdown and add to HTML
-    Markdown.pl "$md_file" >> "$html_path"
+    ./Markdown.pl "$md_file" >> "$html_path"
     
     # Close HTML tags
     cat <<EOF >> "$html_path"

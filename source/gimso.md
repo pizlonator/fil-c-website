@@ -447,7 +447,7 @@ In conventional LLVM IR, the `resume` instruction must take the value returned b
 
 The following call-related instructions in LLVM IR cause a compilatin failure in Fil-C: `callbr`, `catchswitch`, `cleanuppad`, `catchpad`, `catchreturn`, and `cleanupreturn`.
 
-`callbr` is not supported because it's only used for inline assembly that can branch. Fil-C has very restricted inline assembly support, and doesn't support the branching kind at all.
+`callbr` is not supported because it's only used for inline assembly that can branch. Fil-C does not support branching inline assembly; see [inline assembly](inlineasm.html) for details about Fil-C's memory-safe inline assembly support.
 
 The other instructions are for exception handling ABIs that are different from the Itanium C++ one.
 
@@ -560,7 +560,7 @@ Fil-C supports a large set of builtins, many of which are [documented in `stdfil
 
 GIMSO recognizes all safe inline assembly.
 
-Currently, that means only accepting blank inline assembly, like:
+Fil-C supports [memory-safe inline assembly](inlineasm.html), including instructions like `cpuid`, `xgetbv`, arithmetic operations for constant-time crypto, x87 FPU operations, fences, and many more. This includes blank inline assembly idioms like:
 
     asm volatile ("" : : : "memory");
 

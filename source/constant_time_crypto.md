@@ -786,7 +786,7 @@ One of the toughest parts of big numbers is *montgomery multiplication*, and as 
 
 This disables an X86-specific optimization using inline assembly that relies on the fact that the X86 `div` instruction returns both the quotient and remainder.
 
-Fil-C only supports trivial inline assembly where the instruction sequence is blank. This kind of "assembly" is used to inhibit compiler optimizations. In the future, Fil-C will support inline assembly with simple instructions (like `div`), but today that does not work. Based on reading this code, I believe that the inline assembly is only there as an optimization rather than the ensure constant time execution, so it's safe to just disable it.
+Fil-C supports [memory-safe inline assembly](inlineasm.html), including arithmetic instructions for constant-time crypto. The blank inline assembly mentioned above is supported, but Fil-C now also supports non-blank inline assembly with safe instructions like `div`, `cpuid`, `xgetbv`, and many more. This change was made before FIl-C supported nontrivial inline assembly. Based on reading this code, I believe that the inline assembly is only there as an optimization rather than to ensure constant time execution, so it's safe to just disable it. However, I may revert this change in the future now that Fil-C likely supports this code.
 
 ### Changes To `crypto/bn/build.info`
 

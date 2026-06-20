@@ -518,7 +518,7 @@ p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
 
 <p>The following call-related instructions in LLVM IR cause a compilatin failure in Fil-C: <code>callbr</code>, <code>catchswitch</code>, <code>cleanuppad</code>, <code>catchpad</code>, <code>catchreturn</code>, and <code>cleanupreturn</code>.</p>
 
-<p><code>callbr</code> is not supported because it's only used for inline assembly that can branch. Fil-C has very restricted inline assembly support, and doesn't support the branching kind at all.</p>
+<p><code>callbr</code> is not supported because it's only used for inline assembly that can branch. Fil-C does not support branching inline assembly; see <a href="inlineasm.html">inline assembly</a> for details about Fil-C's memory-safe inline assembly support.</p>
 
 <p>The other instructions are for exception handling ABIs that are different from the Itanium C++ one.</p>
 
@@ -636,7 +636,7 @@ p = (int*)(((uintptr_t)p &amp; MASK) + (stuff() ? get_offset() : 0));
 
 <p>GIMSO recognizes all safe inline assembly.</p>
 
-<p>Currently, that means only accepting blank inline assembly, like:</p>
+<p>Fil-C supports <a href="inlineasm.html">memory-safe inline assembly</a>, including instructions like <code>cpuid</code>, <code>xgetbv</code>, arithmetic operations for constant-time crypto, x87 FPU operations, fences, and many more. This includes blank inline assembly idioms like:</p>
 
 <pre><code>asm volatile ("" : : : "memory");
 </code></pre>
