@@ -47,7 +47,7 @@
 
 <p>Instructs the compiler to emit assembly based on the <code>roll %1, %0</code> template, where <code>%1</code> is filled in with <code>%cl</code>, <code>%0</code> is filled in with whichever register holds <code>x</code>, and <code>c</code> is moved into the <code>%ecx</code> register just before the <code>roll</code> instruction. Additionally, the compiler is told that the instruction will change the value of <code>x</code> and change the value of control flags.</p>
 
-<p>This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the <code>+</code> in <code>"+r"</code>, or forgot th the <code>"cc"</code> clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.</p>
+<p>This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the <code>+</code> in <code>"+r"</code>, or forgot the the <code>"cc"</code> clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.</p>
 
 <p>Yet <strong>Fil-C supports this inline assembly syntax</strong> and <em>it's completely safe!</em></p>
 

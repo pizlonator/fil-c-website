@@ -12,7 +12,7 @@ GCC and clang both support an incredibly powerful inline assembly syntax. For ex
 
 Instructs the compiler to emit assembly based on the `roll %1, %0` template, where `%1` is filled in with `%cl`, `%0` is filled in with whichever register holds `x`, and `c` is moved into the `%ecx` register just before the `roll` instruction. Additionally, the compiler is told that the instruction will change the value of `x` and change the value of control flags.
 
-This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the `+` in `"+r"`, or forgot th the `"cc"` clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.
+This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the `+` in `"+r"`, or forgot the the `"cc"` clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.
 
 Yet **Fil-C supports this inline assembly syntax** and *it's completely safe!*
 
