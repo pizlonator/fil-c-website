@@ -4,6 +4,8 @@ Lots of programs work in [Fil-C](index.html) with zero or minimal changes. This 
 
 This list is incomplete. It doesn't include ports done by folks who haven't reached out. It doesn't include all of the programs that Fil-C devs have ported.
 
+Some of the programs here claim non-zero changes because I did the port before implementing [memory safe inline assembly](inlineasm.html).
+
 - [abseil 20260107.1](https://github.com/pizlonator/fil-c/tree/deluge/projects/abseil-cpp-20260107.1). Small patch to change pointer tagging code.
 - acl 2.3.2. *No changes, works out of the box*.
 - [ada url](https://github.com/pizlonator/pizlonated-ada). *No changes, works out of the box*.

@@ -1,4 +1,4 @@
-Welcome to Fil-C, a memory safe implementation of the C and C++ programming languages you already know and love.
+Welcome to Fil-C, an actively supported memory safe implementation of the C and C++ programming languages you already know and love.
 
 ## What is Fil-C?
 
@@ -12,7 +12,7 @@ Fil-C is a fanatically compatible [memory-safe](gimso.html) implementation of C 
 
 ## Quick Links
 
-- [Download Fil-C 0.679](https://github.com/pizlonator/fil-c/releases/tag/v0.679)
+- [Download Fil-C 0.679](https://github.com/pizlonator/fil-c/releases/tag/v0.679) (*released 7 June 2026*)
 - [Installation Guide](installation.html)
 - [How Fil-C Works](how.html)
 - [InvisiCaps: The Fil-C Capability Model](invisicaps.html)

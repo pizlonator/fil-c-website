@@ -12,17 +12,17 @@ Instructs the compiler to emit assembly based on the `roll %1, %0` template, whe
 
 This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the `+` in `"+r"`, or forgot th the `"cc"` clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.
 
-Yet **Fil-C supports this inline assembly syntax** and *it's completely safe!*.
+Yet **Fil-C supports this inline assembly syntax** and *it's completely safe!*
 
-This document explains why Fil-C supports inline assembly at all and then goes into the details of how that support is achieved while maintaining both programmer intent (you still get the assembly template you asked for) and complete memory safety (if you do something wrong, you'll panic, at worst).
+This document explains why Fil-C supports inline assembly at all and then goes into the details of how that support is achieved while maintaining both programmer intent (you still get the assembly template you asked for) and complete memory safety (if you do something wrong, you'll panic or get an illegal instruction trap, at worst).
 
 ## Why Inline Assembly?
 
-While reviewing folks' C and C++ code, I've found the following reasons for inline assembly, where 1 is most common:
+While reviewing [folks' C and C++ code](programs_that_work.html), I've found the following reasons for inline assembly, where 1 is most common:
 
 1. Blank inline assembly to prevent compiler analysis. This includes things like `asm volatile("" : : : "memory")`, which is an old-school way of saying `atomic_signal_fence(memory_order_seq_cst)`. It works because we're telling the compiler that the inline assembly clobbers all memory, which forces the compiler to serialize memory accesses, just like a signal fence would have. The contract with the compiler is clear: the compiler must emit exactly the assembly we're asking it to emit (which is blank here) *without second-guessing our claims about the clobbers*. That is, the compiler must not infer that because the assembly is blank then there cannot be a memory clobber. We said memory clobber, so that's what the compiler sees. Similarly, folks do stuff like `asm("" : "+r(x))`. This means: the assembly may read and then write `x`. The assembly is blank, so this incurs no cost other than forcing the compiler to assume that it doesn't know anything about `x`'s value after the assembly executes. This kind of data flow fence is useful for writing constant-time crypto. **Fil-C has long supported blank inline assembly** since it's trivially safe. Fil-C even supports `"+r"` constraints on pointers, in which case both the [intval and lower](invisicaps.md) are threaded through their own `"+r"`-like constraints at the LLVM IR level.
 
-2. `cpuid` and `xgetbv`. Ironically, the inline assembly snippets for these two instructions occur in code that then goes on to use SIMD intrinsics. I think this is because the `__get_cpuid` API in `cpuid.h` is confusing to use and, as far as I can tell, does not work right in either GCC or clang. Hence, packages like zstd, simdutf, simdjson, and other SIMD-using programs tend to identify CPU features by using inline assembly that invokes `cpuid`. They often also use inline assembly to invoke to invoke `xgetbv` as well. In Fil-C, `__get_cpuid` is fixed, so you could use that, and `zxgetbv` is offered as an intrinsic. However, it's better to support those inline assembly snippets without requiring folks to change their code! And there's **nothing unsafe** about invoking `cpuid` and `xgetbv` so long as the code specifies the right clobbers and constraints.
+2. `cpuid` and `xgetbv`. The inline assembly snippets for these two instructions occur most often in code that then goes on to use SIMD intrinsics. I think this is because the `__get_cpuid` API in `cpuid.h` is confusing to use and, as far as I can tell, does not work right in either GCC or clang. Hence, packages like zstd, simdutf, simdjson, and other SIMD-using programs tend to identify CPU features by using inline assembly that invokes `cpuid`. They often also use inline assembly to invoke to invoke `xgetbv` as well. In Fil-C, `__get_cpuid` is fixed, so you could use that, and `zxgetbv` is offered as an intrinsic. However, it's better to support those inline assembly snippets without requiring folks to change their code! And there's **nothing unsafe** about invoking `cpuid` and `xgetbv` so long as the code specifies the right clobbers and constraints.
 
 3. Arithmetic over secrets in crypto code. A great example is [OpenSSH's sntrup761](https://github.com/mfriedl/openssh/blob/8933369b33c17b5f02479503d0a92d87bc3a574b/sntrup761.c) implementation, which wraps key arithmetic in inline assembly to ensure that it gets exactly the right instruction and not some instruction that might have varying execution time depending on inputs. Note that this kind of code often has fallbacks to try to get the compiler to emit constant-time code even if inline assembly is not supported, but those fallbacks are unlikely to be as rigorously validated, and often rely on "optimization blocking" idioms that hurt performance and could be circumvented by a sufficiently clever compiler. Hence, it's safest to support inline assembly snippets that do this. Luckily, these snippets are also completely safe, provided that the constraints and clobbers are correct.
 
@@ -60,7 +60,7 @@ Hence, we can validate if an inline assembly expression is safe by:
 
 Before the advent of AI, writing a parser for x86_64 assembly would have been such an annoying task that I might have never gotten around to implementing support for memory safe inline assembly other than the trivial kind (where the assembly is blank).
 
-But now, implementing a feature like this is as simple as writing a good prompt! The next section has my original prompt that I used to start work on this feature. I fed it to my own agent harness (called T800) running with Kimi K2.7-code.
+But now, implementing a feature like this is as simple as writing a good prompt! **The next section has my original prompt** that I used to start work on this feature. I fed it to my own private agent harness (called T800) running with Kimi K2.7-code.
 
 ### Initial Agent Prompt
 
@@ -158,25 +158,33 @@ I recommend breaking this task up into steps handled by separate subagents:
 6. Make sure that `./build_base.sh` builds. Grind on any failures you find until it builds.
 7. Make sure that `filc/run-tests` passes. Grind on any failures you find until it passes.
 
-### Initial Validation
+### Initial Implementation
 
-T800 wrote a [pretty good initial implementation](https://github.com/pizlonator/fil-c/commit/9e8707155e11a5e4985e344bcc839eede08a4eb6), including a healthy amount of tests. The C++ code that it added to FilPizlonator is all in a new function called `validateSafeInlineAsm`, which contains an assembly parser and assembly static analysis.
+Based on the above prompt, T800 wrote a [pretty good initial implementation](https://github.com/pizlonator/fil-c/commit/9e8707155e11a5e4985e344bcc839eede08a4eb6), including a healthy amount of tests. The C++ code that it added to FilPizlonator is all in a new function called `validateSafeInlineAsm`, which contains an assembly parser and assembly static analysis.
 
 I then validated that this works by writing some tests by hand and removing the `#undef __GNUC__` from `sntrup761.c`. I also reverted `cpuid` changes to zstd and simdutf, since it's now OK for them to use their original inline assembly for CPU identification.
 
-It's worth calling out the oddest part of Fil-C inline assembly: if you get it wrong, then there is no compile-time error. Instead the inline assembly snippet turns into a Fil-C panic at runtime. As weird as that is, it has the nice property that inline assembly in dead code doesn't get in the way of porting software to Fil-C.
+It's worth calling out the oddest part of Fil-C inline assembly: if you get it wrong, then there is no compile-time error. Instead the inline assembly snippet turns into a Fil-C panic or an illegal instruction trap at runtime.
+
+- If `FilPizlonator` determined that the inline assembly is not safe, then it'll replace it with a Fil-C panic. That panic will provide diagnostics about why the assembly was rejected.
+
+- If the instruction was safe, but your CPU doesn't support it, you'll get an illegal instruction trap. This is possible because there are lots of instructions recognized by `FilPizlonator` that are not supported by all x86_64 CPUs. Illegal instruction traps are safe because Fil-C provides no facility for catching them. For example, a `sigaction` call to register a handler for `SIGILL` will return `ENOSYS`. Hence, this is just a panic, but with with fewer diagnostics.
+
+Using runtime panics has the nice property that inline assembly in dead code doesn't get in the way of porting software to Fil-C. Also, it's consistent with how Fil-C usually reports errors.
 
 ### The Loop
 
 Finally I built a loop to implement every safe pre-AVX512 instruction.
 
-It's worth dwelling on what a *loop* is, since lots of folks talk about looping without necessarily explaining what they mean. Most agent harnesses have the ability to spawn subagents. T800 is based on this architecture, but so are many of the publicly available agents. Hence, the key is to tell the agent that you want it to keep doing something until it is done, with a crystal-clear criterion for what done looks like.
+It's worth dwelling on what a *loop* is, since lots of folks talk about looping without necessarily explaining what they mean. Most agent harnesses have the ability to spawn subagents. T800 is based on this architecture, but so are many of the publicly available agents. Hence, the key is to tell the agent that you want it to keep doing something by spawning subagents until it is done, with a crystal-clear criterion for what done looks like. Each subagent does a subtask and reports back. The toplevel agent decides what to do based on its understanding of what the subagents have done so far.
 
-To this end, I had T800 create an `instructions_list.txt` file that contains all of the X86_64 instructions with either no annotation (if it hadn't been considered), a REJECT annotation if we rejected it, or ACCEPT if we accepted and implemented it. Then I told T800 to write a script to find the first not-yet-considered instruction in that file. Finally, I told T800 to keep spawning subagents that use that script to find an instruction and then implement it until they could not find any more instructions.
+To this end, I had T800 create an `instructions_list.txt` file that contains all of the X86_64 instructions with either no annotation (if it hadn't been considered), a REJECT annotation if we rejected it, or ACCEPT if we accepted and implemented it. Then I told T800 to write a script to find the first not-yet-considered instructions in that file. These first two steps took very little time; they were just the groundwork. Finally, I told T800 to keep spawning subagents that use that script to find an instruction and then implement it until they could not find any more instructions. 
 
-Hence, the loop here isn't something I ever had to write in code myself. The "loop" was the toplevel agent itself and the instructions that it had to keep spawning subagents to perform a given task. LLMs are very good at this kind of delegation! For the first half of the loop, I used Kimi K2.7-code, but then I switched to GLM 5.2. Interestingly, I found that Kimi K2.7-code is more paranoid; it interpreted my instructions as requiring more tests. GLM 5.2 was faster and more brave. That said, most of the super hard groundwork (including supporting static analysis of x87 instructions and their constraints) was done by Kimi, so maybe the greater paranoia I observed was due to the fact that Kimi did the heaviest lift.
+Hence, the loop here is English prose that the agent takes as instruction, and those instructions lead the agent to spawn subagents. Those subagents are prompted to perform a task by the toplevel agent, not by me directly. The objective here is to get the human (me) out of the business of repeatedly telling the agent what to do, since that's exhausting. My loop instructions did include the following: if the agent detects a file called `instructions_stop`, then it should stop looping and instead move to the `terminate` phase of T800, where it performs a review/judge loop to check its work, and then stages everything for me to commit it. I did this maybe twice a day, so that I could sanity check what is happening and run some tests myself.
 
-It didn't take long for all of the X86_64 instructions to be implemented along with a plethora of tests to cover both the good case of those instructions and the bad case (which causes a Fil-C panic). This happened while I was away from the computer doing other things (like replaying Witcher 3 and [porting Fedora patches for quantum crypto support in OpenSSH](https://github.com/pizlonator/fil-c/commit/f3cd1f003163d39f17945a18cb4d7564e00ac32d), which I did by hand).
+For the first half of the looping, I used Kimi K2.7-code, but then I switched to GLM 5.2. Interestingly, I found that Kimi K2.7-code is more paranoid; it interpreted my instructions as requiring more tests. GLM 5.2 was faster and more brave. That said, most of the super hard groundwork (including supporting static analysis of x87 instructions and their constraints) was done by Kimi, so maybe the greater paranoia I observed was due to the fact that Kimi did the heaviest lift.
+
+It didn't take long for [all of the safe pre-AVX512 X86_64 instructions to be implemented](https://github.com/pizlonator/fil-c/blob/39512fe8f9d45860ae34290ba96d761caa344512/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp#L7983) along with a plethora of tests to cover both the good case of those instructions and the bad case (which causes a Fil-C panic). This happened while I was away from the computer doing other things (like replaying Witcher 3 and [porting Fedora patches for quantum crypto support in OpenSSH](https://github.com/pizlonator/fil-c/commit/f3cd1f003163d39f17945a18cb4d7564e00ac32d), which I did by hand).
 
 ## Conclusion
 
