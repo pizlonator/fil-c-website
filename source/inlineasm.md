@@ -1,5 +1,7 @@
 # Memory Safe Inline Assembly
 
+**NOTE: This is a pre-release feature. The [Fil-C 0.679 release](https://github.com/pizlonator/fil-c/releases/tag/v0.679) does not ship with this feature. To test this feature, you need to [build from source](https://github.com/pizlonator/fil-c/).**
+
 GCC and clang both support an incredibly powerful inline assembly syntax. For example:
 
     unsigned rotate(unsigned x, unsigned char c)
