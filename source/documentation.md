@@ -38,5 +38,7 @@
 
 [Memory Safe Inline Assembly](inlineasm.html)
 
+[Memory Safe Context Switches](context_switches.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 
