@@ -42,7 +42,7 @@
 
 <ul>
 <li><p><code>longjmp</code> and <code>setjmp</code> are used in C programs to implement exception handling. It's especially common to use them to implement exceptions "thrown" from signal handlers.</p></li>
-<li><p><code>getcontext</code>, <code>setcontext</code>, <code>makecontext</code>, and <code>swapcontext</code> (aka the <code>ucontext</code> APIs) are used to implement coroutines and fibers. For example, <a href="https://www.hoost.org/">Boost</a> uses <code>ucontext</code> as part of its fiber implementation.</p></li>
+<li><p><code>getcontext</code>, <code>setcontext</code>, <code>makecontext</code>, and <code>swapcontext</code> (aka the <code>ucontext</code> APIs) are used to implement coroutines and fibers. For example, <a href="https://www.boost.org/">Boost</a> uses <code>ucontext</code> as part of its fiber implementation.</p></li>
 </ul>
 
 <p>The <code>ucontext</code> APIs are less commonly used than <code>longjmp</code>/<code>setjmp</code> and some OSes (like Darwin) have deprecated them. However, they remain well supported in <a href="https://www.gnu.org/software/libc/">glibc</a>.</p>

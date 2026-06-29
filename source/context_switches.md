@@ -8,7 +8,7 @@ These APIs are widely used:
 
 - `longjmp` and `setjmp` are used in C programs to implement exception handling. It's especially common to use them to implement exceptions "thrown" from signal handlers.
 
-- `getcontext`, `setcontext`, `makecontext`, and `swapcontext` (aka the `ucontext` APIs) are used to implement coroutines and fibers. For example, [Boost](https://www.hoost.org/) uses `ucontext` as part of its fiber implementation.
+- `getcontext`, `setcontext`, `makecontext`, and `swapcontext` (aka the `ucontext` APIs) are used to implement coroutines and fibers. For example, [Boost](https://www.boost.org/) uses `ucontext` as part of its fiber implementation.
 
 The `ucontext` APIs are less commonly used than `longjmp`/`setjmp` and some OSes (like Darwin) have deprecated them. However, they remain well supported in [glibc](https://www.gnu.org/software/libc/).
 
