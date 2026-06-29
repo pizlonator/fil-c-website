@@ -69,7 +69,7 @@ Note that we have to mark `x` as `volatile` for the program to reliably print 66
 
 - The compiler could constant fold `x` to 42. This will happen in the example if we remove `volatile` and use any optimization level above `-O0`. Then `x = 42` gets printed.
 - Say that constant folding doesn't happen, maybe because we insert a `asm("" : "+r"(x))` right after the definition of `x`. In that case, the compiler could register-allocate `x` in a callee-save register, in which case the register ends up saved by `setjmp`. This also leads to `x = 42` being printed.
-- Say that we experience register pressure for some reason, and `x` doesn't make it into a callee-save register, but instead gets spilled. At any optimization level above `-O0`, the compiler will split `x` into two variables: one for `x = 42` and one for `x = 666`, and the printf will reference the first one (since `x = 42` [dominates](https://en.wikipedia.org/wiki/Dominator_(graph_theory)) the `printf). Those two variables will *almost always* get separate spill slots. Hence, when we come out of the `setjmp` the second time, reading `x` will still give 42.
+- Say that we experience register pressure for some reason, and `x` doesn't make it into a callee-save register, but instead gets spilled. At any optimization level above `-O0`, the compiler will split `x` into two variables: one for `x = 42` and one for `x = 666`, and the printf will reference the first one (since `x = 42` [dominates](https://en.wikipedia.org/wiki/Dominator_%28graph_theory%29) the `printf`). Those two variables will *almost always* get separate spill slots. Hence, when we come out of the `setjmp` the second time, reading `x` will still give 42.
 
 Three things to reflect upon:
 
