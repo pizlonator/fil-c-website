@@ -1,7 +1,5 @@
 # Memory Safe Context Switching
 
-**Support for `ucontext` APIs is new since release 0.680. If you want to play with `setcontext`, `getcontext`, `makecontext`, and `swapcontext` then you have to [build from source](install_source.html).**
-
 This document describes how Fil-C supports `longjmp`, `setjmp`, `setcontext`, `getcontext`, `makecontext`, and `swapcontext` in a totally memory-safe way. In particular, no misuse of those APIs in Fil-C can lead to stack corruption or any other violation of Fil-C's capability model.
 
 These APIs are widely used:
@@ -348,6 +346,6 @@ Note that Fil-C does not allow using `longjmp`/`setjmp` as an alternate context 
 
 # Conclusion
 
-Fil-C supports memory-safe context switches using either the `longjmp`/`setjmp` style and the `ucontext` style. The `ucontext` style is new since after version 0.680, so you'll need to build from source to play with it (and it's not yet thoroughly tested). The `longjmp`/`setjmp` implementation is older, and probably quite rugged by now.
+Fil-C supports memory-safe context switches using either the `longjmp`/`setjmp` style and the `ucontext` style. The `ucontext` style is new in version 0.681. The `longjmp`/`setjmp` implementation is older, and probably quite rugged by now.
 
 As this document shows, it's possible to have memory-safe C even if you make the effort to support even the most depraved features!
