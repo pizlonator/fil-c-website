@@ -45,12 +45,41 @@
 
 <p>This page provides a reference guide for functions in <code>stdfil.h</code>.</p>
 
+<p><a name="FILC_VERSION"></a></p>
+
+<h2><code>FILC_VERSION</code></h2>
+
+<pre><code>#define FILC_VERSION 681u
+</code></pre>
+
+<p>The Fil-C version. The convention is that the major version gets multiplied by 10000, and the low three digits are the minor version.</p>
+
+<p>Examples:</p>
+
+<ul>
+<li><p>If the version was 0.666 then <code>FILC_VERSION</code> would be <code>666u</code>.</p></li>
+<li><p>If the version was 1.23, then <code>FILC_VERSION</code> would be <code>10023</code>.</p></li>
+</ul>
+
+<p><a name="zversion"></a></p>
+
+<h2><code>zversion</code></h2>
+
+<pre><code>unsigned zversion(void);
+</code></pre>
+
+<p>Returns the Fil-C version according to the runtime. May be different than <code>FILC_VERSION</code> if you build against one version of Fil-C and run against a different version.</p>
+
+<p><a name="zerror"></a></p>
+
 <h2><code>zerror</code></h2>
 
 <pre><code>void zerror(const char* str);
 </code></pre>
 
 <p>Prints the given error message and shuts the program down using the Fil-C panic mechanism (prints a stack trace, kills the program in a way that the program cannot intercept).</p>
+
+<p><a name="zerrorf"></a></p>
 
 <h2><code>zerrorf</code></h2>
 
@@ -60,6 +89,8 @@
 <p>Prints the given formatted error message and shuts the program down using the Fil-C panic mechanism (prints a stack trace, kills the program in a way that the program cannot intercept).</p>
 
 <p>The error message is formatted using the Fil-C runtime's internal snprintf implementation (the same one used for <code>zprintf</code>).</p>
+
+<p><a name="ZASSERT"></a></p>
 
 <h2><code>ZASSERT</code></h2>
 
@@ -72,12 +103,16 @@
 
 <p>This is an <em>always on</em> assert macro. The <code>exp</code> is always executed, and its result is always checked. Use this assert macro if you want asserts that don't get disabled in any compilation mode (even if <code>NDEBUG</code> is set, even if optimizations are enabled).</p>
 
+<p><a name="zsafety_error"></a></p>
+
 <h2><code>zsafety_error</code></h2>
 
 <pre><code>void zsafety_error(const char* str);
 </code></pre>
 
 <p>Prints the given error message and shuts the program down using the Fil-C panic mechanism. Exactly like <code>zerror</code> except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of <code>zerror</code> if you want to emphasize that the error is memory safety related.</p>
+
+<p><a name="zsafety_errorf"></a></p>
 
 <h2><code>zsafety_errorf</code></h2>
 
@@ -87,6 +122,8 @@
 <p>Prints the given error message and shuts the program down using the Fil-C panic mechanism. Exactly like <code>zerrorf</code> except it uses exactly the same error message that Fil-C uses for memory safety violations. Use this instead of <code>zerrorf</code> if you want to emphasize that the error is memory safety related.</p>
 
 <p>The error message is formatted using the Fil-C runtime's internal snprintf implementation (the same one used for <code>zprintf</code>).</p>
+
+<p><a name="ZSAFETY_CHECK"></a></p>
 
 <h2><code>ZSAFETY_CHECK</code></h2>
 
@@ -102,6 +139,8 @@
 
 <p>This is exactly like <code>ZASSERT</code> except that failures use <code>zsafety_errorf</code>, so that the error message emphasizes that the failure has to do with memory safery violations.</p>
 
+<p><a name="zgc_alloc"></a></p>
+
 <h2><code>zgc_alloc</code></h2>
 
 <pre><code>void* zgc_alloc(__SIZE_TYPE__ count);
@@ -116,6 +155,8 @@ program is guaranteed to panic.</p>
 <p>libc's malloc just forwards to this. There is no difference between calling <code>malloc</code> and
 <code>zgc_alloc</code>.</p>
 
+<p><a name="zgc_aligned_alloc"></a></p>
+
 <h2><code>zgc_aligned_alloc</code></h2>
 
 <pre><code>void* zgc_aligned_alloc(__SIZE_TYPE__ alignment, __SIZE_TYPE__ count);
@@ -124,6 +165,8 @@ program is guaranteed to panic.</p>
 <p>Allocate <code>count</code> bytes of memory with the GC, aligned to <code>alignment</code>. Supports very large alignments,
 up to at least 128k (may support even larger ones in the future). Like with <code>zgc_alloc</code>, the memory
 is zero-initalized.</p>
+
+<p><a name="zgc_realloc"></a></p>
 
 <h2><code>zgc_realloc</code></h2>
 
@@ -138,6 +181,8 @@ zero initialized.</p>
 <p>libc's realloc just forwards to this. There is no difference between calling <code>realloc</code> and
 <code>zgc_realloc</code>.</p>
 
+<p><a name="zgc_aligned_realloc"></a></p>
+
 <h2><code>zgc_aligned_realloc</code></h2>
 
 <pre><code>void* zgc_aligned_realloc(void* old_ptr, __SIZE_TYPE__ alignment, __SIZE_TYPE__ count);
@@ -145,6 +190,8 @@ zero initialized.</p>
 
 <p>Just like <code>zgc_realloc</code>, but allows you to specify arbitrary alignment on the newly allocated
 memory.</p>
+
+<p><a name="zgc_realloc_preserving_alignment"></a></p>
 
 <h2><code>zgc_realloc_preserving_alignment</code></h2>
 
@@ -159,6 +206,8 @@ that the original memory was allocated with.</p>
 <p>This is a useful function and it would be great if something like it was part of the C stdlib.
 Note that you can call this even for memory returned from <code>malloc</code>, since <code>malloc</code> just forwards to
 <code>zgc_alloc</code>.</p>
+
+<p><a name="zgc_free"></a></p>
 
 <h2><code>zgc_free</code></h2>
 
@@ -191,6 +240,8 @@ the free singleton is not user-visible, except via ptr introspection like <code>
 
 <p>libc's free just forwards to this. There is no difference between calling <code>free</code> and <code>zgc_free</code>.</p>
 
+<p><a name="zgc_finq_new"></a></p>
+
 <h2><code>zgc_finq_new</code></h2>
 
 <pre><code>zgc_finq* zgc_finq_new(void);
@@ -202,6 +253,8 @@ the free singleton is not user-visible, except via ptr introspection like <code>
 
 <p>Objects that die and end up on the finalizer queue will be treated as dead for the purpose of any weak references or weak maps that were created before the object gets dequeued from the queue.</p>
 
+<p><a name="zgc_finq_poll"></a></p>
+
 <h2><code>zgc_finq_poll</code></h2>
 
 <pre><code>void* zgc_finq_poll(zgc_finq* finq);
@@ -209,12 +262,16 @@ the free singleton is not user-visible, except via ptr introspection like <code>
 
 <p>Poll to see if an object allocated with the finalizer queue has died. This always returns immediately. If there are no dead objects on the queue, this returns NULL. It's safe to call this from multiple threads.</p>
 
+<p><a name="zgc_finq_wait"></a></p>
+
 <h2><code>zgc_finq_wait</code></h2>
 
 <pre><code>void* zgc_finq_wait(zgc_finq* finq);
 </code></pre>
 
 <p>Wait until an object appears on the finalizer queue, and return it. This never returns NULL. It's safe to call this from multiple threads.</p>
+
+<p><a name="zgc_finq_alloc"></a></p>
 
 <h2><code>zgc_finq_alloc</code></h2>
 
@@ -234,12 +291,16 @@ zgc_finq_alloc(zgc_finq_new(), 666);
 <pre><code>zgc_alloc(666);
 </code></pre>
 
+<p><a name="zgc_finq_aligned_alloc"></a></p>
+
 <h2><code>zgc_finq_aligned_alloc</code></h2>
 
 <pre><code>void* zgc_finq_aligned_alloc(zgc_finq* finq, __SIZE_TYPE__ alignment, __SIZE_TYPE__ size);
 </code></pre>
 
 <p>Allocate an aligned finalizable object.</p>
+
+<p><a name="zgetlower"></a></p>
 
 <h2><code>zgetlower</code></h2>
 
@@ -248,12 +309,16 @@ zgc_finq_alloc(zgc_finq_new(), 666);
 
 <p>Return the lower bound of the capability associated with <code>ptr</code>. This will be NULL if the pointer has no capability. The returned lower bound has the capability of <code>ptr</code>.</p>
 
+<p><a name="zgetupper"></a></p>
+
 <h2><code>zgetupper</code></h2>
 
 <pre><code>void* zgetupper(void* ptr);
 </code></pre>
 
 <p>Return the upper bound of the capability associated with <code>ptr</code>. This will be NULL if the pointer has no capability. The returned upper bound has the capability of <code>ptr</code>.</p>
+
+<p><a name="zis_readonly"></a></p>
 
 <h2><code>zis_readonly</code></h2>
 
@@ -263,6 +328,8 @@ zgc_finq_alloc(zgc_finq_new(), 666);
 <p>Returns true if this is a readonly object. This will return false for special objects or NULL.</p>
 
 <p>The <code>filc_bool</code> type is <code>_Bool</code> in C and <code>bool</code> in C++.</p>
+
+<p><a name="zlength"></a></p>
 
 <h2><code>zlength</code></h2>
 
@@ -274,12 +341,16 @@ zgc_finq_alloc(zgc_finq_new(), 666);
 
 <p>Returns the array length of <code>ptr</code> - that is, how many elements of type <code>typeof(*ptr)</code> fit into the memory that is between where <code>ptr</code> points and <code>ptr</code>'s upper bound.</p>
 
+<p><a name="zhasvalidcap"></a></p>
+
 <h2><code>zhasvalidcap</code></h2>
 
 <pre><code>filc_bool zhasvalidcap(void* ptr);
 </code></pre>
 
 <p>Returns whether the <code>ptr</code> has a valid capability (not a NULL one) and that capability is not free.</p>
+
+<p><a name="zinbounds"></a></p>
 
 <h2><code>zinbounds</code></h2>
 
@@ -291,6 +362,8 @@ filc_bool zinbounds(void* ptr)
 </code></pre>
 
 <p>Tells you if the <code>ptr</code> is in bounds of its capability.</p>
+
+<p><a name="zvalinbounds"></a></p>
 
 <h2><code>zvalinbounds</code></h2>
 
@@ -304,6 +377,8 @@ filc_bool zvalinbounds(void* ptr, __SIZE_TYPE__ size)
 </code></pre>
 
 <p>Tells you if a <code>size</code> byte value is in bounds at the location pointed to by <code>ptr</code>.</p>
+
+<p><a name="zmkptr"></a></p>
 
 <h2><code>zmkptr</code></h2>
 
@@ -344,6 +419,8 @@ ptr -= (unsigned long)object;
 
 <p>You do not need to use <code>zmkptr</code> here; the compiler's gotchu.</p>
 
+<p><a name="zorptr"></a></p>
+
 <h2><code>zorptr</code></h2>
 
 <pre><code>static inline __attribute__((__always_inline__))
@@ -354,6 +431,8 @@ void* zorptr(void* ptr, unsigned long bits)
 </code></pre>
 
 <p>Helper to bitwise or some bits into a pointer.</p>
+
+<p><a name="zandptr"></a></p>
 
 <h2><code>zandptr</code></h2>
 
@@ -366,6 +445,8 @@ void* zandptr(void* ptr, unsigned long bits)
 
 <p>Helper to bitwise and some bits with a pointer.</p>
 
+<p><a name="zxorptr"></a></p>
+
 <h2><code>zxorptr</code></h2>
 
 <pre><code>static inline __attribute__((__always_inline__))
@@ -376,6 +457,8 @@ void* zxorptr(void* ptr, unsigned long bits)
 </code></pre>
 
 <p>Helper to bitwise xor some bits with a pointer.</p>
+
+<p><a name="zretagptr"></a></p>
 
 <h2><code>zretagptr</code></h2>
 
@@ -394,6 +477,8 @@ bits from <code>oldptr</code> masked by <code>~mask</code>. Also asserts that <c
 <p>Useful for situations where you want to reassign a pointer from <code>oldptr</code> to <code>newptr</code> but
 you have some kind of tagging in <code>~mask</code>.</p>
 
+<p><a name="zmemset"></a></p>
+
 <h2><code>zmemset</code></h2>
 
 <pre><code>void zmemset(void* dst, unsigned value, __SIZE_TYPE__ count);
@@ -402,6 +487,8 @@ you have some kind of tagging in <code>~mask</code>.</p>
 <p>This is exactly like <code>memset</code> except that <code>zmemset</code> strongly guarantees that the compiler does not know what it is, and so the compiler will not optimize calls to it. The memory pointed to by <code>dst</code> will really be set.</p>
 
 <p>Useful for debugging and testing the compiler. Also useful in security-critical situations (like if you want to clear a secret from memory).</p>
+
+<p><a name="zmemmove"></a></p>
 
 <h2><code>zmemmove</code></h2>
 
@@ -412,6 +499,8 @@ you have some kind of tagging in <code>~mask</code>.</p>
 
 <p>Useful for debugging and testing the compiler. It might also be useful in security-critical situations for similar reasons to why <code>zmemset</code> is useful.</p>
 
+<p><a name="zsetcap"></a></p>
+
 <h2><code>zsetcap</code></h2>
 
 <pre><code>void zsetcap(void* dst, void* object, __SIZE_TYPE__ size);
@@ -420,6 +509,8 @@ you have some kind of tagging in <code>~mask</code>.</p>
 <p>Set the capability of a range of memory, without altering the values in that memory.</p>
 
 <p><code>dst</code> must be pointer-aligned. <code>size</code> is in bytes, and must be pointer-aligned.</p>
+
+<p><a name="zptr_to_new_string"></a></p>
 
 <h2><code>zptr_to_new_string</code></h2>
 
@@ -430,6 +521,8 @@ you have some kind of tagging in <code>~mask</code>.</p>
 
 <p>This is exposed as <code>%P</code> in the <code>zprintf</code> family of functions.</p>
 
+<p><a name="zptr_contents_to_new_string"></a></p>
+
 <h2><code>zptr_contents_to_new_string</code></h2>
 
 <pre><code>char* zptr_contents_to_new_string(const void* ptr);
@@ -439,6 +532,8 @@ you have some kind of tagging in <code>~mask</code>.</p>
 object contents to that string. Returns that string.</p>
 
 <p>This is exposed as <code>%O</code> in the <code>zprintf</code> family of functions.</p>
+
+<p><a name="zptrtable_new"></a></p>
 
 <h2><code>zptrtable_new</code></h2>
 
@@ -478,6 +573,8 @@ that sort of thing).</p></li>
 
 <p>The <code>zptrtable</code> is useful if you're porting code that really needs to store pointers as integers somewhere.</p>
 
+<p><a name="zptrtable_encode"></a></p>
+
 <h2><code>zptrtable_encode</code></h2>
 
 <pre><code>__SIZE_TYPE__ zptrtable_encode(zptrtable* table, void* ptr);
@@ -485,12 +582,16 @@ that sort of thing).</p></li>
 
 <p>Encode a <code>ptr</code> as an integer and return that integer. Subsequent calls to <code>zptrtable_decode</code> with the same table and that same integer will give you back <code>ptr</code> along with its capability, so long as <code>ptr</code> is not freed.</p>
 
+<p><a name="zptrtable_decode"></a></p>
+
 <h2><code>zptrtable_decode</code></h2>
 
 <pre><code>void* zptrtable_decode(zptrtable* table, __SIZE_TYPE__ encoded_ptr);
 </code></pre>
 
 <p>Decode an integer for a pointer previously encoded into the given table. Returns that pointer along with its capability, or NULL if the pointer got freed, or if the integer doesn't correspond to any pointer that had ever been encoded.</p>
+
+<p><a name="zexact_ptrtable_new"></a></p>
 
 <h2><code>zexact_ptrtable_new</code></h2>
 
@@ -506,6 +607,8 @@ that sort of thing).</p></li>
 capability (so you cannot dereference it).</p></li>
 </ul>
 
+<p><a name="zexact_ptrtable_new_weak"></a></p>
+
 <h2><code>zexact_ptrtable_new_weak</code></h2>
 
 <pre><code>zexact_ptrtable* zexact_ptrtable_new_weak(void);
@@ -515,6 +618,17 @@ capability (so you cannot dereference it).</p></li>
 are either freed, or if the only references left to them are weak. So, for example, if the last
 reference to a pointer is from the weak exact ptrtable, then the weak exact ptrtable will drop the
 reference. Decoding that pointer will then give an invalid pointer.</p>
+
+<p><a name="zexact_ptrtable_is_weak"></a></p>
+
+<h2><code>zexact_ptrtable_is_weak</code></h2>
+
+<pre><code>filc_bool zexact_ptrtable_is_weak(zexact_ptrtable* table);
+</code></pre>
+
+<p>Tells you if this exact ptrtable is weak or not.</p>
+
+<p><a name="zexact_ptrtable_encode"></a></p>
 
 <h2><code>zexact_ptrtable_encode</code></h2>
 
@@ -529,12 +643,16 @@ reference. Decoding that pointer will then give an invalid pointer.</p>
 
 <p>If the table is strong (allocated with <code>zexact_ptrtable_new</code>), then the pointer will no longer be tracked by the table if it is freed.</p>
 
+<p><a name="zexact_ptrtable_decode"></a></p>
+
 <h2><code>zexact_ptrtable_decode</code></h2>
 
 <pre><code>void* zexact_ptrtable_decode(zexact_ptrtable* table, __SIZE_TYPE__ encoded_ptr);
 </code></pre>
 
 <p>Given an integer value for a pointer encoded with <code>zexact_ptrtable_encode</code> in the given <code>table</code>, returns that pointer along with its capability.</p>
+
+<p><a name="zweak_new"></a></p>
 
 <h2><code>zweak_new</code></h2>
 
@@ -547,6 +665,8 @@ roots.</p>
 
 <p>Weak pointers also become NULL if the pointed-at object is freed.</p>
 
+<p><a name="zweak_get"></a></p>
+
 <h2><code>zweak_get</code></h2>
 
 <pre><code>void* zweak_get(zweak* weak);
@@ -555,6 +675,8 @@ roots.</p>
 <p>Get the value of the weak pointer. This returns exactly the pointer passed to <code>zweak_new</code>, or it
 returns NULL, if the object was established to be dead by GC.</p>
 
+<p><a name="zweak_map_new"></a></p>
+
 <h2><code>zweak_map_new</code></h2>
 
 <pre><code>zweak_map* zweak_map_new(void);
@@ -562,6 +684,8 @@ returns NULL, if the object was established to be dead by GC.</p>
 
 <p>Create a new weak_map. Weak maps maintain key-value pairs such that if the key is live during GC
 then the value is marked, but otherwise it isn't.</p>
+
+<p><a name="zweak_map_set"></a></p>
 
 <h2><code>zweak_map_set</code></h2>
 
@@ -580,6 +704,8 @@ have different capabilities.</p>
 
 <p>This is an atomic operation with respect to other calls to <code>zweak_map_set</code> and <code>zweak_map_get</code>.</p>
 
+<p><a name="zweak_map_get"></a></p>
+
 <h2><code>zweak_map_get</code></h2>
 
 <pre><code>void* zweak_map_get(zweak_map* map, void* key);
@@ -589,6 +715,8 @@ have different capabilities.</p>
 
 <p>This is an atomic operation with respect to other calls to <code>zweak_map_set</code> and <code>zweak_map_get</code>.</p>
 
+<p><a name="zweak_map_size"></a></p>
+
 <h2><code>zweak_map_size</code></h2>
 
 <pre><code>__SIZE_TYPE__ zweak_map_size(zweak_map* map);
@@ -597,6 +725,8 @@ have different capabilities.</p>
 <p>Reports the number of entries currently in the weak map.</p>
 
 <p>Note that the value returned by this function is sensitive to GC. For example, if the weak map contains mappings based on dead keys but the GC hasn't run yet, then this will count those keys.</p>
+
+<p><a name="zweak_map_get_iter"></a></p>
 
 <h2><code>zweak_map_get_iter</code></h2>
 
@@ -617,12 +747,16 @@ while (zweak_map_iter_next(iter)) {
 
 <p>It's possible that this will return keys that were otherwise dead because the GC hadn't run. If it does so, then those keys will become live, by virtue of <code>zweak_map_iter_key</code> returning them as ordinary (i.e. strong) references.</p>
 
+<p><a name="zweak_map_iter_next"></a></p>
+
 <h2><code>zweak_map_iter_next</code></h2>
 
 <pre><code>filc_bool zweak_map_iter_next(zweak_map_iter* iter);
 </code></pre>
 
 <p>Advance the iterator to the next element and return whether there is a next element. Note that an iterator freshly returned from <code>zweak_map_get_iter</code> is at a position "before" the first element, so you must call <code>zweak_map_iter_next</code> to get it to the first element.</p>
+
+<p><a name="zweak_map_iter_key"></a></p>
 
 <h2><code>zweak_map_iter_key</code></h2>
 
@@ -631,6 +765,8 @@ while (zweak_map_iter_next(iter)) {
 
 <p>Get the key of the iterator from the current position. Only valid to call if you have called <code>zweak_map_iter_next</code> and it returned true.</p>
 
+<p><a name="zweak_map_iter_value"></a></p>
+
 <h2><code>zweak_map_iter_value</code></h2>
 
 <pre><code>void* zweak_map_iter_value(zweak_map_iter* iter);
@@ -638,12 +774,16 @@ while (zweak_map_iter_next(iter)) {
 
 <p>Get the value of the iterator from the current position. Only valid to call if you have called <code>zweak_map_iter_next</code> and it returned true.</p>
 
+<p><a name="zprint"></a></p>
+
 <h2><code>zprint</code></h2>
 
 <pre><code>void zprint(const char* str);
 </code></pre>
 
 <p>Low level printing function. This prints to <code>stderr</code> (i.e. FD 2). It prints directly, without logging, and it bypasses libc.</p>
+
+<p><a name="zprint_long"></a></p>
 
 <h2><code>zprint_long</code></h2>
 
@@ -654,6 +794,8 @@ while (zweak_map_iter_next(iter)) {
 
 <p>This function is barely used. It's useful for very low level bring-up of the Fil-C userland.</p>
 
+<p><a name="zprint_ptr"></a></p>
+
 <h2><code>zprint_ptr</code></h2>
 
 <pre><code>void zprint_ptr(const void* ptr);
@@ -663,6 +805,8 @@ while (zweak_map_iter_next(iter)) {
 
 <p>This function is barely used. It's useful for very low level bring-up of the Fil-C userland.</p>
 
+<p><a name="zstrlen"></a></p>
+
 <h2><code>zstrlen</code></h2>
 
 <pre><code>__SIZE_TYPE__ zstrlen(const char* str);
@@ -670,12 +814,16 @@ while (zweak_map_iter_next(iter)) {
 
 <p>Low level string length function. This is not particularly efficient. This is useful for low level bring-up of the Fil-C userland.</p>
 
+<p><a name="zisdigit"></a></p>
+
 <h2><code>zisdigit</code></h2>
 
 <pre><code>int zisdigit(int chr);
 </code></pre>
 
 <p>Low level function that tells if the character is a digit. This is not particularly efficient. This is useful for low level bring-up of the Fil-C userland.</p>
+
+<p><a name="zvsprintf"></a></p>
 
 <h2><code>zvsprintf</code></h2>
 
@@ -699,12 +847,16 @@ This is based on the samba <code>snprintf</code>, origindally by Patrick Powell,
 <p>It's not obvious that this code will do the right thing for floating point formats. But this code is
 pizlonated, so if it goes wrong, at least it'll stop your program from causing any more damage.</p>
 
+<p><a name="zsprintf"></a></p>
+
 <h2><code>zsprintf</code></h2>
 
 <pre><code>int zsprintf(char* buf, const char* format, ...);
 </code></pre>
 
 <p>Like <code>zvsprintf</code>, but takes variadic arguments rather than the <code>va_list</code>.</p>
+
+<p><a name="zvsnprintf"></a></p>
 
 <h2><code>zvsnprintf</code></h2>
 
@@ -713,12 +865,16 @@ pizlonated, so if it goes wrong, at least it'll stop your program from causing a
 
 <p>Like <code>zvsprintf</code>, but takes the size explicitly.</p>
 
+<p><a name="zsnprintf"></a></p>
+
 <h2><code>zsnprintf</code></h2>
 
 <pre><code>int zsnprintf(char* buf, __SIZE_TYPE__ size, const char* format, ...);
 </code></pre>
 
 <p>Like <code>zsprintf</code>, but takes the size explicitly.</p>
+
+<p><a name="zvasprintf"></a></p>
 
 <h2><code>zvasprintf</code></h2>
 
@@ -727,12 +883,16 @@ pizlonated, so if it goes wrong, at least it'll stop your program from causing a
 
 <p>Uses <code>zvsnprintf</code> to allocate a string and return it.</p>
 
+<p><a name="zasprintf"></a></p>
+
 <h2><code>zasprintf</code></h2>
 
 <pre><code>char* zasprintf(const char* format, ...);
 </code></pre>
 
 <p>Uses <code>zvsnprintf</code> to allocate a string and return it.</p>
+
+<p><a name="zvprintf"></a></p>
 
 <h2><code>zvprintf</code></h2>
 
@@ -741,12 +901,16 @@ pizlonated, so if it goes wrong, at least it'll stop your program from causing a
 
 <p>Like <code>zvsprintf</code> but prints to FD 2 (stderr). The whole string gets printed in one syscall if possible but without any other buffering.</p>
 
+<p><a name="zprintf"></a></p>
+
 <h2><code>zprintf</code></h2>
 
 <pre><code>void zprintf(const char* format, ...);
 </code></pre>
 
 <p>Like <code>zvsprintf</code> but prints to FD 2 (stderr). The whole string gets printed in one syscall if possible but without any other buffering.</p>
+
+<p><a name="zargs"></a></p>
 
 <h2><code>zargs</code></h2>
 
@@ -757,6 +921,8 @@ pizlonated, so if it goes wrong, at least it'll stop your program from causing a
 had written a struct with the arguments as fields, provided that you padded those fields just like your platform's calling convention would (so for example, a function taking two <code>char</code> arguments would have 7 bytes of padding between them).</p>
 
 <p>This is useful for implementing <code>libffi</code>. It's also appropriate to use directly, if you understand the calling convention.</p>
+
+<p><a name="zcall"></a></p>
 
 <h2><code>zcall</code></h2>
 
@@ -780,6 +946,8 @@ special parameter that is a pointer to the buffer where the return value is stor
 
 <p>Returns from the calling function, passing the contents of the rets object as the return value.</p>
 
+<p><a name="zunsafe_call"></a></p>
+
 <h2><code>zunsafe_call</code></h2>
 
 <pre><code>unsigned long zunsafe_call(const char* symbol_name, ...);
@@ -796,6 +964,30 @@ that need to be written in assembly.</p>
 <p>The first argument is the Yolo symbol name of the function to be called. It must be a string
 literal. The remaining arguments are passed along using Yolo C ABI conventions.</p>
 
+<p><a name="zunsafe_fast_call"></a></p>
+
+<h2><code>zunsafe_fast_call</code></h2>
+
+<pre><code>unsigned long zunsafe_fast_call(const char* symbol_name, ...);
+</code></pre>
+
+<p>Exactly like <code>zunsafe_call</code>, but for those cases where you know that the call will complete in a bounded (and sufficiently short) amount of time.</p>
+
+<p>In the worst case, if you call this instead of <code>zunsafe_call</code>, then you're just delaying GC progress. It's not the end of the world. Maybe we're talking about denial of service, at worst.</p>
+
+<p>This only turns into a big problem if you use <code>zunsafe_fast_call</code> to do something that has truly unbounded execution time (like a syscall that blocks indefinitely, or an infinite loop). Otherwise it's a perf pathology that you may or may not care enough to fix.</p>
+
+<p><a name="zunsafe_buf_call"></a></p>
+
+<h2><code>zunsafe_buf_call</code></h2>
+
+<pre><code>unsigned long zunsafe_buf_call(__SIZE_TYPE__ size, const char* symbol_name, ...);
+</code></pre>
+
+<p>Performs either a <code>zunsafe_fast_call</code> or <code>zunsafe_call</code> depending on the <code>size</code>.</p>
+
+<p><a name="zcheck"></a></p>
+
 <h2><code>zcheck</code></h2>
 
 <pre><code>void zcheck(void* ptr, __SIZE_TYPE__ size);
@@ -803,12 +995,16 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.<
 
 <p>Checks that you can read and write <code>size</code> bytes at <code>ptr</code> using a similar kind of safety check that Fil-C would use if you accessed a <code>size</code> byte struct at <code>ptr</code>.</p>
 
+<p><a name="zcheck_readonly"></a></p>
+
 <h2><code>zcheck_readonly</code></h2>
 
 <pre><code>void zcheck_readonly(void* ptr, __SIZE_TYPE__ size);
 </code></pre>
 
 <p>Checks that you can <em>read</em> <code>size</code> bytes at <code>ptr</code> using a similar kind of safety check that Fil-C would use if you read a <code>size</code> byte struct at <code>ptr</code>.</p>
+
+<p><a name="zchecked_add"></a></p>
 
 <h2><code>zchecked_add</code></h2>
 
@@ -823,6 +1019,8 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.<
 
 <p>Overflow-checked addition of <code>size_t</code> integers. If the overflow check fails, the process panics like it would from a Fil-C safety check.</p>
 
+<p><a name="zchecked_mul"></a></p>
+
 <h2><code>zchecked_mul</code></h2>
 
 <pre><code>static inline __SIZE_TYPE__ zchecked_mul(__SIZE_TYPE__ a, __SIZE_TYPE__ b)
@@ -836,6 +1034,8 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.<
 
 <p>Overflow-checked multiplication of <code>size_t</code> integers. If the overflow check fails, the process panics like it would from a Fil-C safety check.</p>
 
+<p><a name="zcan_va_arg"></a></p>
+
 <h2><code>zcan_va_arg</code></h2>
 
 <pre><code>static inline filc_bool
@@ -847,12 +1047,63 @@ zcan_va_arg(__builtin_va_list list)
 
 <p>Tells you if a <code>va_list</code> has another argument available.</p>
 
+<p><a name="zget_jmp_buf_impl_frame"></a></p>
+
+<h2><code>zget_jmp_buf_impl_frame</code></h2>
+
+<pre><code>void* zget_jmp_buf_impl_frame(zjmp_buf* jmp_buf_impl);
+</code></pre>
+
+<p>Given the internal jmp_buf object, return the frame that it jumps to. This is the <code>__builtin_frame_address()</code> or <code>_Unwind_GetCFA()</code> value for that frame. Note that this is a pointer that has no capability (it might as well be an integer).</p>
+
+<p><a name="zget_jmp_buf_frame"></a></p>
+
 <h2><code>zget_jmp_buf_frame</code></h2>
 
 <pre><code>void* zget_jmp_buf_frame(void* jmp_buf);
 </code></pre>
 
 <p>Call this with a <code>jmp_buf</code>. Returns the frame that you would have gotten from <code>__builtin_frame_address</code> of the frame that this <code>jmp_buf</code> jumps to.</p>
+
+<p><a name="zfence"></a></p>
+
+<h2><code>zfence</code></h2>
+
+<pre><code>static inline void zfence(void)
+{
+    __c11_atomic_thread_fence(__ATOMIC_SEQ_CST);
+}
+</code></pre>
+
+<p>Full memory fence (sequentially consistent).</p>
+
+<p><a name="zstore_store_fence"></a></p>
+
+<h2><code>zstore_store_fence</code></h2>
+
+<pre><code>static inline void zstore_store_fence(void)
+{
+#if defined(__x86_64__) || defined(__x86__)
+    __c11_atomic_signal_fence(__ATOMIC_SEQ_CST);
+#else
+    __c11_atomic_thread_fence(__ATOMIC_SEQ_CST);
+#endif
+}
+</code></pre>
+
+<p>Store-store fence. On x86/x86_64 this is just a compiler fence. On other architectures, this may be a full memory fence.</p>
+
+<p><a name="zcompiler_fence"></a></p>
+
+<h2><code>zcompiler_fence</code></h2>
+
+<pre><code>static inline void zcompiler_fence(void)
+{
+    __c11_atomic_signal_fence(__ATOMIC_SEQ_CST);
+}
+</code></pre>
+
+<p>Compiler fence only - prevents compiler reordering but emits no instructions on most architectures.</p>
 
 <p><a name="zcallee"></a></p>
 
@@ -890,6 +1141,8 @@ static void bar(void)
 
 <p>Note that the Fil-C implementation of closures does not rely on JIT permissions.</p>
 
+<p><a name="zclosure_get_data"></a></p>
+
 <h2><code>zclosure_get_data</code></h2>
 
 <pre><code>void* zclosure_get_data(void* closure);
@@ -897,6 +1150,8 @@ static void bar(void)
 
 <p>Get the data for the given closure. If the passed-in pointer is not a closure pointer, then this
 panics.</p>
+
+<p><a name="zclosure_set_data"></a></p>
 
 <h2><code>zclosure_set_data</code></h2>
 
@@ -917,6 +1172,8 @@ panics.</p>
 
 <p>This is a fast shorthand for <code>zclosure_get_data(zcallee())</code>.</p>
 
+<p><a name="zgc_request_and_wait"></a></p>
+
 <h2><code>zgc_request_and_wait</code></h2>
 
 <pre><code>void zgc_request_and_wait(void);
@@ -936,6 +1193,8 @@ stop all threads to do the GC.</p>
 
 <p>This is equivalent to <code>zgc_wait(zgc_request_fresh())</code>.</p>
 
+<p><a name="zgc_completed_cycle"></a></p>
+
 <h2><code>zgc_completed_cycle</code></h2>
 
 <pre><code>zgc_cycle_number zgc_completed_cycle(void);
@@ -949,6 +1208,8 @@ whatever data structures you have that hold onto them (like if you have an array
 this number is greater than the last time you swept weak references, then you should probably do it
 again.</p>
 
+<p><a name="zgc_requested_cycle"></a></p>
+
 <h2><code>zgc_requested_cycle</code></h2>
 
 <pre><code>zgc_cycle_number zgc_requested_cycle(void);
@@ -956,6 +1217,8 @@ again.</p>
 
 <p>Get the last requested GC cycle number. If this number is greater than the last completed cycle,
 then it means that the GC is either running right now or is about to be running.</p>
+
+<p><a name="zgc_try_request"></a></p>
 
 <h2><code>zgc_try_request</code></h2>
 
@@ -972,6 +1235,8 @@ will "float" (i.e. won't collect) garbage created during those cycles.</p>
 
 <p>This returns immediately, since the GC is concurrent.</p>
 
+<p><a name="zgc_request_fresh"></a></p>
+
 <h2><code>zgc_request_fresh</code></h2>
 
 <pre><code>zgc_cycle_number zgc_request_fresh(void);
@@ -982,12 +1247,16 @@ this one. Returns the requested cycle number.</p>
 
 <p>Call this if you know you created garbage, and you want it cleaned up.</p>
 
+<p><a name="zgc_wait"></a></p>
+
 <h2><code>zgc_wait</code></h2>
 
 <pre><code>void zgc_wait(zgc_cycle_number cycle);
 </code></pre>
 
 <p>Wait for the given GC cycle to finish.</p>
+
+<p><a name="zscavenge_synchronously"></a></p>
 
 <h2><code>zscavenge_synchronously</code></h2>
 
@@ -1004,6 +1273,8 @@ suspended, this will scavenge synchronously. If the scavenger is not suspended, 
 contend on some locks with the scavenger thread (and at best cause the scavenge to happen faster due to
 parallelism).</p>
 
+<p><a name="zscavenger_suspend"></a></p>
+
 <h2><code>zscavenger_suspend</code></h2>
 
 <pre><code>void zscavenger_suspend(void);
@@ -1017,12 +1288,16 @@ parallelism).</p>
 
 <p>You can call this function multiple times. Then, to resume the scavenger, you'd have to call <code>zscavenger_resume()</code> the same number of times.</p>
 
+<p><a name="zscavenger_resume"></a></p>
+
 <h2><code>zscavenger_resume</code></h2>
 
 <pre><code>void zscavenger_resume(void);
 </code></pre>
 
 <p>Resume the scavenger, if it was suspended by a prior <code>zscavenger_suspend()</code>.</p>
+
+<p><a name="zlock_runtime_threads"></a></p>
 
 <h2><code>zlock_runtime_threads</code></h2>
 
@@ -1033,6 +1308,8 @@ parallelism).</p>
 
 <p>This is useful if you're about to install a seccomp filter that prevents thread creation.</p>
 
+<p><a name="zdump_stack"></a></p>
+
 <h2><code>zdump_stack</code></h2>
 
 <pre><code>void zdump_stack(void);
@@ -1040,10 +1317,11 @@ parallelism).</p>
 
 <p>Dumps a Fil-C stack trace to stderr (FD 2).</p>
 
+<p><a name="zstack_scan"></a></p>
+
 <h2><code>zstack_scan</code></h2>
 
-<pre><code>struct zstack_frame_description;
-typedef struct zstack_frame_description zstack_frame_description;
+<pre><code>typedef struct zstack_frame_description zstack_frame_description;
 
 struct zstack_frame_description {
     const char* function_name;
@@ -1095,6 +1373,8 @@ void zstack_scan(filc_bool (*callback)(
 
 <p>Walk the Fil-C stack and get a bunch of internal data about each frame.</p>
 
+<p><a name="zthread_self_id"></a></p>
+
 <h2><code>zthread_self_id</code></h2>
 
 <pre><code>unsigned zthread_self_id(void);
@@ -1102,12 +1382,61 @@ void zstack_scan(filc_bool (*callback)(
 
 <p>Return an integer identifying the current thread. This is equivalent to Linux <code>gettid(2)</code>. Note that this value will change after <code>fork(2)</code>. Unlike <code>gettid(2)</code>, this is not a system call. It's very fast.</p>
 
+<p><a name="zstack_pointer"></a></p>
+
+<h2><code>zstack_pointer</code></h2>
+
+<pre><code>void* zstack_pointer(void);
+</code></pre>
+
+<p>Returns the current stack pointer.</p>
+
+<p><a name="zstack_limit"></a></p>
+
+<h2><code>zstack_limit</code></h2>
+
+<pre><code>void* zstack_limit(void);
+</code></pre>
+
+<p>Returns the stack limit (the lowest address of the stack).</p>
+
+<p><a name="zstack_top"></a></p>
+
+<h2><code>zstack_top</code></h2>
+
+<pre><code>void* zstack_top(void);
+</code></pre>
+
+<p>Returns the top of the stack (the highest address).</p>
+
+<p><a name="zxgetbv"></a></p>
+
 <h2><code>zxgetbv</code></h2>
 
 <pre><code>unsigned long zxgetbv(void);
 </code></pre>
 
 <p>X86 xgetbv intrinsic. Reads XCR0. May trap if the CPU doesn't support the xsave feature.</p>
+
+<p><a name="zdump_heap"></a></p>
+
+<h2><code>zdump_heap</code></h2>
+
+<pre><code>void zdump_heap(int fd);
+</code></pre>
+
+<p>Dumps the heap to the given file descriptor.</p>
+
+<p><a name="zdump_stacks"></a></p>
+
+<h2><code>zdump_stacks</code></h2>
+
+<pre><code>void zdump_stacks(void);
+</code></pre>
+
+<p>Dumps all stacks to stderr (FD 2).</p>
+
+<p><a name="zis_unsafe_signal_for_kill"></a></p>
 
 <h2><code>zis_unsafe_signal_for_kill</code></h2>
 
@@ -1118,6 +1447,8 @@ void zstack_scan(filc_bool (*callback)(
 
 <p>Signals used internally by the libc are flagged as being unsafe for kill.</p>
 
+<p><a name="zis_unsafe_signal_for_handlers"></a></p>
+
 <h2><code>zis_unsafe_signal_for_handlers</code></h2>
 
 <pre><code>filc_bool zis_unsafe_signal_for_handlers(int signo);
@@ -1127,6 +1458,8 @@ void zstack_scan(filc_bool (*callback)(
 
 <p>Signals like SIGILL, SIGSEGV, SIGTRAP, and SIGBUS are flagged as being unsafe for handlers in Fil-C.</p>
 
+<p><a name="zset_quiet_panic"></a></p>
+
 <h2><code>zset_quiet_panic</code></h2>
 
 <pre><code>void zset_quiet_panic(filc_bool value);
@@ -1134,12 +1467,23 @@ void zstack_scan(filc_bool (*callback)(
 
 <p>If you pass true, this enables quiet panics, where the Fil-C runtime does not print any output in case of a Fil-C panic.</p>
 
+<p><a name="zget_quiet_panic"></a></p>
+
 <h2><code>zget_quiet_panic</code></h2>
 
 <pre><code>filc_bool zget_quiet_panic(void);
 </code></pre>
 
 <p>Tells if quiet panic mode is enabled.</p>
+
+<p><a name="zsetproctitle"></a></p>
+
+<h2><code>zsetproctitle</code></h2>
+
+<pre><code>void zsetproctitle(const char* title);
+</code></pre>
+
+<p>Set the process title. <code>title</code> must be a null-terminated string (otherwise you may get a panic). The title may be truncated.</p>
         </main>
     </div>
     <script>
