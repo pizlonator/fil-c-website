@@ -13,7 +13,7 @@ This page provides a reference guide for functions in `stdfil.h`.
 <a name="FILC_VERSION"></a>
 ## `FILC_VERSION`
 
-    #define FILC_VERSION 681u
+    #define FILC_VERSION 682u
 
 The Fil-C version. The convention is that the major version gets multiplied by 10000, and the low three digits are the minor version.
 
@@ -774,7 +774,8 @@ This barely works! It's not intended for full-blown interop with Yolo code. In p
 now Fil-C code expects to live in a Fil-C runtime, which precludes the use of a Yolo libc.
 
 This function is mostly useful for implementing constant-time crypto libraries or other kernels
-that need to be written in assembly.
+that need to be written in assembly. Currently the only user of this function is [OpenSSL if you
+compile it with assembly enabled](constant_time_crypto.html).
 
 The first argument is the Yolo symbol name of the function to be called. It must be a string
 literal. The remaining arguments are passed along using Yolo C ABI conventions.
@@ -788,6 +789,9 @@ Exactly like `zunsafe_call`, but for those cases where you know that the call wi
 
 In the worst case, if you call this instead of `zunsafe_call`, then you're just delaying GC progress. It's not the end of the world. Maybe we're talking about denial of service, at worst.
 
+Currently the only user of this function is [OpenSSL if you compile it with assembly
+enabled](constant_time_crypto.html).
+
 This only turns into a big problem if you use `zunsafe_fast_call` to do something that has truly unbounded execution time (like a syscall that blocks indefinitely, or an infinite loop). Otherwise it's a perf pathology that you may or may not care enough to fix.
 
 <a name="zunsafe_buf_call"></a>
@@ -796,6 +800,9 @@ This only turns into a big problem if you use `zunsafe_fast_call` to do somethin
     unsigned long zunsafe_buf_call(__SIZE_TYPE__ size, const char* symbol_name, ...);
 
 Performs either a `zunsafe_fast_call` or `zunsafe_call` depending on the `size`.
+
+Currently the only user of this function is [OpenSSL if you compile it with assembly
+enabled](constant_time_crypto.html).
 
 <a name="zcheck"></a>
 ## `zcheck`

@@ -1,5 +1,7 @@
 # Memory Safe Inline Assembly
 
+**Inline assembly support only works on X86_64 for now.**
+
 GCC and clang both support an incredibly powerful inline assembly syntax. For example:
 
     unsigned rotate(unsigned x, unsigned char c)

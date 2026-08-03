@@ -20,7 +20,7 @@ Fil-C supports both musl and glibc. Because of the coupling between the loader, 
 
 Let's review the components:
 
-- `ld-yolo-x86_64.so`. This is the ELF loader. Because Fil-C currently uses musl as the libc, this is really a symbolic link to `libyoloc.so` (this loader-symlibs-libc trick is a musl-ism). It's compiled with Yolo-C.
+- `ld-fil1-x86_64.so` (or `ld-fil1-aarch64.so` on ARM64). This is the ELF loader. Because Fil-C currently uses musl as the libc, this is really a symbolic link to `libyoloc.so` (this loader-symlibs-libc trick is a musl-ism). It's compiled with Yolo-C.
 
 - `libyoloc.so`. This is a mostly unmodified musl libc, compiled with Yolo-C. The only changes are to expose some libc internal functionality that is useful for implementing `libpizlo.so`. Note that `libpizlo.so` only relies on this library for system calls and a few low level functions. In the future, it's possible that the Fil-C runtime would not have a libc in Yolo Land, but instead `libpizlo.so` would make syscalls directly.
 
@@ -42,7 +42,7 @@ Let's review the components:
 
 - Your program and your libraries. Your whole program must be compiled with Fil-C. Your programs dependencies must be compiled with Fil-C as well.
 
-Note that while I'm showing shared libraries (`.so`s), it's possible to compile a static Fil-C executable, in which case `ld-yolo-x86_64` doesn't come into play at all and the rest of the stack is statically linked into your program.
+Note that while I'm showing shared libraries (`.so`s), it's possible to compile a static Fil-C executable, in which case `ld-fil1-x86_64` doesn't come into play at all and the rest of the stack is statically linked into your program.
 
 You can see a bit of this architecture by calling the [stdfil.h](stdfil.html) `zdump_stack` function:
 
@@ -100,7 +100,7 @@ Linking and loading "just works" because of the following four ABI modifications
 
 - Demotion of ODR to Any: Fil-C does not allow the compiler or linker to assume that multiple definitions by the same name are equivalent; it forces the more conservative assumption that they may differ.
 
-- The compiler and loader (`ld-yolo-x86_64.so`) both search for headers and libraries in the [pizfix](pizfix.html), so that Fil-C gets its own *slice* separate from system libraries that follow Yolo-C ABI rather than Fil-C ABI.
+- The compiler and loader (`ld-fil1-x86_64.so`) both search for headers and libraries in the [pizfix](pizfix.html), so that Fil-C gets its own *slice* separate from system libraries that follow Yolo-C ABI rather than Fil-C ABI.
 
 Put together, this means that even wild misuse of linker capabilities in your Fil-C program will at worst result in a memory safe outcome (like a Fil-C panic).
 

@@ -49,7 +49,7 @@
 
 <h2><code>FILC_VERSION</code></h2>
 
-<pre><code>#define FILC_VERSION 681u
+<pre><code>#define FILC_VERSION 682u
 </code></pre>
 
 <p>The Fil-C version. The convention is that the major version gets multiplied by 10000, and the low three digits are the minor version.</p>
@@ -959,7 +959,8 @@ special parameter that is a pointer to the buffer where the return value is stor
 now Fil-C code expects to live in a Fil-C runtime, which precludes the use of a Yolo libc.</p>
 
 <p>This function is mostly useful for implementing constant-time crypto libraries or other kernels
-that need to be written in assembly.</p>
+that need to be written in assembly. Currently the only user of this function is <a href="constant_time_crypto.html">OpenSSL if you
+compile it with assembly enabled</a>.</p>
 
 <p>The first argument is the Yolo symbol name of the function to be called. It must be a string
 literal. The remaining arguments are passed along using Yolo C ABI conventions.</p>
@@ -975,6 +976,9 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.<
 
 <p>In the worst case, if you call this instead of <code>zunsafe_call</code>, then you're just delaying GC progress. It's not the end of the world. Maybe we're talking about denial of service, at worst.</p>
 
+<p>Currently the only user of this function is <a href="constant_time_crypto.html">OpenSSL if you compile it with assembly
+enabled</a>.</p>
+
 <p>This only turns into a big problem if you use <code>zunsafe_fast_call</code> to do something that has truly unbounded execution time (like a syscall that blocks indefinitely, or an infinite loop). Otherwise it's a perf pathology that you may or may not care enough to fix.</p>
 
 <p><a name="zunsafe_buf_call"></a></p>
@@ -985,6 +989,9 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.<
 </code></pre>
 
 <p>Performs either a <code>zunsafe_fast_call</code> or <code>zunsafe_call</code> depending on the <code>size</code>.</p>
+
+<p>Currently the only user of this function is <a href="constant_time_crypto.html">OpenSSL if you compile it with assembly
+enabled</a>.</p>
 
 <p><a name="zcheck"></a></p>
 

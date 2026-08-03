@@ -6,11 +6,11 @@ My favorite way to install Fil-C is using the [`/opt/fil`](optfil.html) binary d
 - Puts the Fil-C compiler in `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
 - Includes useful programs compiled with Fil-C, like memory safe sudo, OpenSSH, tmux, curl, and git.
 
-Fil-C currently only supports Linux/X86_64.
+The `/opt/fil` distribution of Fil-C currently only supports Linux/X86_64. If you want to try Fil-C on ARM64, [install the pizfix distribution](install_pizfix.html).
 
 ## Download And Install
 
-You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.681-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.681/optfil-0.681-linux-x86_64.tar.xz).
+You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.682-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.682/optfil-0.682-linux-x86_64.tar.xz).
 
 Once you download a release and unpack it, simply run:
 
