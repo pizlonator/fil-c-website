@@ -34,6 +34,8 @@
         <main class="content">
 <h1>Installing From Source</h1>
 
+<p>Building Fil-C from source is supported on Linux/X86_64 and Linux/ARM64.</p>
+
 <p>Clone Fil-C from GitHub:</p>
 
 <pre><code>git clone https://github.com/pizlonator/fil-c.git
@@ -43,11 +45,11 @@
 
 <ol>
 <li>Fast build with musl using <code>./build_all_fast.sh</code>.</li>
-<li>Fast build with glibc using <code>./build_all_fast_glibc.sh</code>.</li>
+<li>Fast build with glibc using <code>./build_all_fast_glibc.sh</code>. <em>glibc is not yet supported on ARM64.</em></li>
 <li>Full build with musl using <code>./build_all.sh</code>.</li>
-<li>Full build with glibc using <code>./build_all_glibc.sh</code>.</li>
-<li><a href="optfil.html"><code>/opt/fil</code></a> build using <code>cd optfil; sudo ./build.sh</code>. This builds the glibc-based <code>/opt/fil</code> slice and requires root privileges.</li>
-<li><a href="pizlix.html">Pizlix</a> build using <code>cd pizlix; sudo ./build.sh</code>. This builds the glibc-based Pizlix Linux distribution where all of userland is compiled with Fil-C. Requires root privileges and a <a href="pizlix.html">specific set of preparations inspired by LFS</a>.</li>
+<li>Full build with glibc using <code>./build_all_glibc.sh</code>. <em>glibc is not yet supported on ARM64.</em></li>
+<li><a href="optfil.html"><code>/opt/fil</code></a> build using <code>cd optfil; sudo ./build.sh</code>. This builds the glibc-based <code>/opt/fil</code> slice and requires root privileges. <em><code>/opt/fil</code> is not yet supported on ARM64.</em></li>
+<li><a href="pizlix.html">Pizlix</a> build using <code>cd pizlix; sudo ./build.sh</code>. This builds the glibc-based Pizlix Linux distribution where all of userland is compiled with Fil-C. Requires root privileges and a <a href="pizlix.html">specific set of preparations inspired by LFS</a>. <em>Pizlix is not yet supported on ARM64.</em></li>
 </ol>
 
 <p>The fast build (options 1 and 2) just builds the compiler, runtime, libc (either musl or glibc), libc++abi, and libc++. When building with glibc, the fast build also builds libxcrypt.</p>

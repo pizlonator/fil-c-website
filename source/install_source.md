@@ -1,5 +1,7 @@
 # Installing From Source
 
+Building Fil-C from source is supported on Linux/X86_64 and Linux/ARM64.
+
 Clone Fil-C from GitHub:
 
     git clone https://github.com/pizlonator/fil-c.git
@@ -7,11 +9,11 @@ Clone Fil-C from GitHub:
 Source releases can be built in four different ways:
 
 1. Fast build with musl using `./build_all_fast.sh`.
-2. Fast build with glibc using `./build_all_fast_glibc.sh`.
+2. Fast build with glibc using `./build_all_fast_glibc.sh`. *glibc is not yet supported on ARM64.*
 3. Full build with musl using `./build_all.sh`.
-4. Full build with glibc using `./build_all_glibc.sh`.
-5. [`/opt/fil`](optfil.html) build using `cd optfil; sudo ./build.sh`. This builds the glibc-based `/opt/fil` slice and requires root privileges.
-6. [Pizlix](pizlix.html) build using `cd pizlix; sudo ./build.sh`. This builds the glibc-based Pizlix Linux distribution where all of userland is compiled with Fil-C. Requires root privileges and a [specific set of preparations inspired by LFS](pizlix.html).
+4. Full build with glibc using `./build_all_glibc.sh`. *glibc is not yet supported on ARM64.*
+5. [`/opt/fil`](optfil.html) build using `cd optfil; sudo ./build.sh`. This builds the glibc-based `/opt/fil` slice and requires root privileges. *`/opt/fil` is not yet supported on ARM64.*
+6. [Pizlix](pizlix.html) build using `cd pizlix; sudo ./build.sh`. This builds the glibc-based Pizlix Linux distribution where all of userland is compiled with Fil-C. Requires root privileges and a [specific set of preparations inspired by LFS](pizlix.html). *Pizlix is not yet supported on ARM64.*
 
 The fast build (options 1 and 2) just builds the compiler, runtime, libc (either musl or glibc), libc++abi, and libc++. When building with glibc, the fast build also builds libxcrypt.
 

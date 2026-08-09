@@ -13,7 +13,7 @@ This page provides a reference guide for functions in `stdfil.h`.
 <a name="FILC_VERSION"></a>
 ## `FILC_VERSION`
 
-    #define FILC_VERSION 682u
+    #define FILC_VERSION 683u
 
 The Fil-C version. The convention is that the major version gets multiplied by 10000, and the low three digits are the minor version.
 

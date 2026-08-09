@@ -53,6 +53,7 @@
 <li><p>The compiler is called <code>/usr/bin/clang-20</code> but there are many symlinks to it (<code>gcc</code>, <code>g++</code>, <code>cc</code>, <code>c++</code>, <code>clang</code>, <code>clang++</code>, <code>filcc</code>, and <code>fil++</code> all point at <code>clang-20</code>).</p></li>
 <li><p>All of the other building-related tools (like <code>ld</code>, <code>make</code>, <code>ninja</code>, etc) are compiled with Fil-C (or Fil-C++).</p></li>
 </ul></li>
+<li><p>Currently only supported on X86_64.</p></li>
 </ul>
 
 <p>Pizlix is possible because Fil-C is so compatible with C and C++ that many packages in LFS need no changes, and the rest of them mostly just require small changes. That said, it's not as simple as just replacing LFS's compiler with the Fil-C compiler because:</p>

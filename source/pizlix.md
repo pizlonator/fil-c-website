@@ -21,6 +21,8 @@ Caveats:
 
     - All of the other building-related tools (like `ld`, `make`, `ninja`, etc) are compiled with Fil-C (or Fil-C++).
 
+- Currently only supported on X86_64.
+
 Pizlix is possible because Fil-C is so compatible with C and C++ that many packages in LFS need no changes, and the rest of them mostly just require small changes. That said, it's not as simple as just replacing LFS's compiler with the Fil-C compiler because:
 
 - The Fil-C compiler isn't set up to do the cross-compilation hacks that LFS uses in Chapters 5-7. Therefore, Pizlix uses the Yolo-C toolchain and vanilla versions of the temporary cross-tools in those chapters.
