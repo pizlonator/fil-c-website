@@ -27,9 +27,11 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - kerberos5 
     - keyutils    
     - less      
-    - libaudit    
+    - libaudit
+    - libedit
     - libevent    
-    - libidn2     
+    - libidn2
+    - libpq
     - libpsl      
     - libselinux  
     - libtasn1  
@@ -44,11 +46,13 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - **openssl**     
     - p11-kit
     - **pam**         
-    - patch     
+    - patch
+    - patchelf
     - pcre2       
     - pkgconf     
     - procps-ng   
     - psmisc
+    - readline
     - **rsync**
     - sed         
     - **sudo**      

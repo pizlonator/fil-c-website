@@ -10,7 +10,7 @@ The `/opt/fil` distribution of Fil-C currently only supports Linux/X86_64. If yo
 
 ## Download And Install
 
-You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.683-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.683/optfil-0.683-linux-x86_64.tar.xz).
+You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.684-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.684/optfil-0.684-linux-x86_64.tar.xz).
 
 Once you download a release and unpack it, simply run:
 
