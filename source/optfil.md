@@ -12,10 +12,13 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - acl
     - attr
     - bash        
-    - binutils    
+    - binutils
+    - blake3
+    - brotli
     - bzip2       
     - coreutils   
     - **curl**
+    - dash
     - diff        
     - find        
     - flex        
@@ -58,10 +61,13 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
     - **sudo**      
     - tar         
     - tmux        
-    - unistring   
+    - unistring
+    - unzip
     - wget
     - xxhash
     - xz
+    - zip
+    - zsh
     - zlib        
     - zstd        
 
