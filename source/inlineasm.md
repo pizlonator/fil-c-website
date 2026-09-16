@@ -1,6 +1,6 @@
 # Memory Safe Inline Assembly
 
-**Inline assembly support only works on X86_64 for now.**
+**Since Fil-C 0.685, inline assembly is supported on X86_64 and ARM64. This document only describes the original X86_64 inline assembly.**
 
 GCC and clang both support an incredibly powerful inline assembly syntax. For example:
 

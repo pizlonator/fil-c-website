@@ -1,6 +1,6 @@
 # Constant-Time Crypto
 
-**NOTE: This document was written based on the OpenSSL 3.3.1 port. The patch described here has since been rebased to OpenSSL 3.5.7, which involved minor changes. Those changes are not described here.**
+**NOTE: This document was written based on the OpenSSL 3.3.1 port. The patch described here has since been rebased to OpenSSL 3.5.7 and again to 3.6.4, which involved minor changes. Also, the Fil-C port of OpenSSL 3.6.4 includes ARM64 support. Those changes are not described here. This document only describes the original 3.3.1 port to X86_64.**
 
 Cryptographic libraries like OpenSSL are engineered to ensure that timing side channels cannot be used to extract secrets. For example, it should not be possible to guess the key used to encrypt data based on how long the encryption took. It's hard to guarantee the lack of timing side channels! The tradecraft used to maintain this guarantee is called *constant-time crypto*. Note that this does not mean that the crypto has running time that is constant in input size (encrypting a larger data set is expected to take longer and that's not a problem). It just means that time does not vary based on secrets.
 
