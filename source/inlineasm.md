@@ -1,8 +1,8 @@
 # Memory Safe Inline Assembly
 
-**Since Fil-C 0.685, inline assembly is supported on X86_64 and ARM64. This document only describes the original X86_64 inline assembly.**
+**Since Fil-C 0.685, memory-safe inline assembly is supported on both X86\_64 and ARM64.**
 
-GCC and clang both support an incredibly powerful inline assembly syntax. For example:
+GCC and clang both support an incredibly powerful inline assembly syntax. For example, on X86\_64:
 
     unsigned rotate(unsigned x, unsigned char c)
     {
@@ -12,11 +12,21 @@ GCC and clang both support an incredibly powerful inline assembly syntax. For ex
 
 Instructs the compiler to emit assembly based on the `roll %1, %0` template, where `%1` is filled in with `%cl`, `%0` is filled in with whichever register holds `x`, and `c` is moved into the `%ecx` register just before the `roll` instruction. Additionally, the compiler is told that the instruction will change the value of `x` and change the value of control flags.
 
-This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the `+` in `"+r"`, or forgot the the `"cc"` clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.
+The same kind of thing works on ARM64:
 
-Yet **Fil-C supports this inline assembly syntax** and *it's completely safe!*
+    unsigned rotate(unsigned x, unsigned c)
+    {
+        asm("ror %w0, %w0, %w1" : "+r"(x) : "r"(c));
+        return x;
+    }
 
-This document explains why Fil-C supports inline assembly at all and then goes into the details of how that support is achieved while maintaining both programmer intent (you still get the assembly template you asked for) and complete memory safety (if you do something wrong, you'll panic or get an illegal instruction trap, at worst).
+Instructs the compiler to emit assembly based on the `ror %w0, %w0, %w1` template, where `%w0` is filled in with the `w` register (the 32-bit view of an `x` register) that holds `x`, and `%w1` is filled in with the `w` register that holds `c`. This emits the ARM64 `ror` instruction, which rotates `x` right by `c` bits, with the rotation amount taken modulo 32 just like with `roll`. Additionally, the compiler is told that the instruction will change the value of `x`. Unlike `roll`, the ARM64 `ror` does not set any flags, so no flags clobber is needed.
+
+This seems like it cannot possibly be safe! What if the programmer did something wrong, like omitted the `+` in `"+r"`, or forgot the `"cc"` clobber? In Yolo-C, if you make such a mistake, the compiler happily miscompiles your code in those cases.
+
+Yet **Fil-C supports this inline assembly syntax on both X86\_64 and ARM64** and *it's completely safe!*
+
+This document explains why Fil-C supports inline assembly at all and then goes into the details of how that support is achieved while maintaining both programmer intent (you still get the assembly template you asked for) and complete memory safety (if you do something wrong, you'll panic or get an illegal instruction trap, at worst). The story is told in the order that it happened: the original work was X86\_64-only, and ARM64 support came later.
 
 ## Why Inline Assembly?
 
@@ -24,11 +34,11 @@ While reviewing [folks' C and C++ code](programs_that_work.html), I've found the
 
 1. Blank inline assembly to prevent compiler analysis. This includes things like `asm volatile("" : : : "memory")`, which is an old-school way of saying `atomic_signal_fence(memory_order_seq_cst)`. It works because we're telling the compiler that the inline assembly clobbers all memory, which forces the compiler to serialize memory accesses, just like a signal fence would have. The contract with the compiler is clear: the compiler must emit exactly the assembly we're asking it to emit (which is blank here) *without second-guessing our claims about the clobbers*. That is, the compiler must not infer that because the assembly is blank then there cannot be a memory clobber. We said memory clobber, so that's what the compiler sees. Similarly, folks do stuff like `asm("" : "+r(x))`. This means: the assembly may read and then write `x`. The assembly is blank, so this incurs no cost other than forcing the compiler to assume that it doesn't know anything about `x`'s value after the assembly executes. This kind of data flow fence is useful for writing constant-time crypto. **Fil-C has long supported blank inline assembly** since it's trivially safe. Fil-C even supports `"+r"` constraints on pointers, in which case both the [intval and lower](invisicaps.html) are threaded through their own `"+r"`-like constraints at the LLVM IR level.
 
-2. `cpuid` and `xgetbv`. The inline assembly snippets for these two instructions occur most often in code that then goes on to use SIMD intrinsics. I think this is because the `__get_cpuid` API in `cpuid.h` is confusing to use and, as far as I can tell, does not work right in either GCC or clang. Hence, packages like zstd, simdutf, simdjson, and other SIMD-using programs tend to identify CPU features by using inline assembly that invokes `cpuid`. They often also use inline assembly to invoke `xgetbv` as well. In Fil-C, `__get_cpuid` is fixed, so you could use that, and `zxgetbv` is offered as an intrinsic. However, it's better to support those inline assembly snippets without requiring folks to change their code! And there's **nothing unsafe** about invoking `cpuid` and `xgetbv` so long as the code specifies the right clobbers and constraints.
+2. `cpuid` and `xgetbv`. The inline assembly snippets for these two instructions occur most often in code that then goes on to use SIMD intrinsics. I think this is because the `__get_cpuid` API in `cpuid.h` is confusing to use and, as far as I can tell, does not work right in either GCC or clang. Hence, packages like zstd, simdutf, simdjson, and other SIMD-using programs tend to identify CPU features by using inline assembly that invokes `cpuid`. They often also use inline assembly to invoke `xgetbv` as well. In Fil-C, `__get_cpuid` is fixed, so you could use that, and `zxgetbv` is offered as an intrinsic. However, it's better to support those inline assembly snippets without requiring folks to change their code! And there's **nothing unsafe** about invoking `cpuid` and `xgetbv` so long as the code specifies the right clobbers and constraints. On ARM64, the same job is often done with `mrs` instructions that read system registers, like `ctr_el0` for cache geometry. Fil-C supports `mrs` reads of a small allowlist of harmless system registers as well.
 
 3. Arithmetic over secrets in crypto code. A great example is [OpenSSH's sntrup761](https://github.com/mfriedl/openssh/blob/8933369b33c17b5f02479503d0a92d87bc3a574b/sntrup761.c) implementation, which wraps key arithmetic in inline assembly to ensure that it gets exactly the right instruction and not some instruction that might have varying execution time depending on inputs. Note that this kind of code often has fallbacks to try to get the compiler to emit constant-time code even if inline assembly is not supported, but those fallbacks are unlikely to be as rigorously validated, and often rely on "optimization blocking" idioms that hurt performance and could be circumvented by a sufficiently clever compiler. Hence, it's safest to support inline assembly snippets that do this. Luckily, these snippets are also completely safe, provided that the constraints and clobbers are correct.
 
-4. Atomics. Compilers have long supported intrinsics for atomic instructions. Compilers also have a long history of implementing these intrinsics incorrectly! Most recently, clang had bugs in how it lowered CAS to LL/SC on ARM64. Hence, serious lock-free programmers tend to write their atomic instructions using inline assembly *at least some of the time*, like in those cases where they had encountered a miscompile and so dropping to assembly was their only path to fixing the bug. Supporting atomics in inline assembly would require allowing inline assembly that accesses memory, which would mean somehow inferring what Fil-C bounds checks to do. **Inline assembly that accesses memory is currently out of scope.** However, memory-safe inline assembly does support fences (`lfence`, `sfence`, `mfence`, and `serialize`).
+4. Atomics. Compilers have long supported intrinsics for atomic instructions. Compilers also have a long history of implementing these intrinsics incorrectly! Most recently, clang had bugs in how it lowered CAS to LL/SC on ARM64. Hence, serious lock-free programmers tend to write their atomic instructions using inline assembly *at least some of the time*, like in those cases where they had encountered a miscompile and so dropping to assembly was their only path to fixing the bug. Supporting atomics in inline assembly would require allowing inline assembly that accesses memory, which would mean somehow inferring what Fil-C bounds checks to do. **Inline assembly that accesses memory is currently out of scope.** However, memory-safe inline assembly does support fences (`lfence`, `sfence`, `mfence`, and `serialize` on X86\_64, and `dmb`, `dsb`, and `isb` on ARM64).
 
 5. System calls. These are currently out of scope for inline assembly in Fil-C, and that's fine, since using inline assembly for syscalls is only necessary in the guts of libc implementations. Fil-C already has ports of musl and glibc, and in both cases the inline assembly for syscalls is replaced with calls to the `pizlonated_syscalls.h` API that Fil-C provides. However, I can imagine adding support for inline assembly that does syscalls in the future, to make it easier to port new libc's to Fil-C.
 
@@ -65,6 +75,8 @@ Before the advent of AI, writing a parser for x86_64 assembly would have been su
 But now, implementing a feature like this is as simple as writing a good prompt! **The next section has my original prompt** that I used to start work on this feature. I fed it to my own private agent harness (called T800) running with Kimi K2.7-code.
 
 ### Initial Agent Prompt
+
+Note that everything in this prompt is about X86\_64: at this point, inline assembly support was X86\_64-only. Here's the prompt, verbatim:
 
 Let's add more support to Fil-C for safe, harmless inline assembly!
 
@@ -162,7 +174,7 @@ I recommend breaking this task up into steps handled by separate subagents:
 
 ### Initial Implementation
 
-Based on the above prompt, T800 wrote a [pretty good initial implementation](https://github.com/pizlonator/fil-c/commit/9e8707155e11a5e4985e344bcc839eede08a4eb6), including a healthy amount of tests. The C++ code that it added to FilPizlonator is all in a new function called `validateSafeInlineAsm`, which contains an assembly parser and assembly static analysis.
+Based on the above prompt, T800 wrote a [pretty good initial implementation](https://github.com/pizlonator/fil-c/commit/9e8707155e11a5e4985e344bcc839eede08a4eb6) of X86\_64 support, including a healthy amount of tests. The C++ code that it added to FilPizlonator is all in a new function called `validateSafeInlineAsm`, which contains an assembly parser and assembly static analysis.
 
 I then validated that this works by writing some tests by hand and removing the `#undef __GNUC__` from `sntrup761.c`. I also reverted `cpuid` changes to zstd and simdutf, since it's now OK for them to use their original inline assembly for CPU identification.
 
@@ -176,20 +188,38 @@ Using runtime panics has the nice property that inline assembly in dead code doe
 
 ### The Loop
 
-Finally I built a loop to implement every safe pre-AVX512 instruction.
+Finally I built a loop to implement every safe pre-AVX512 X86\_64 instruction. This loop was entirely about X86\_64; ARM64 support came later, as described below.
 
 It's worth dwelling on what a *loop* is, since lots of folks talk about looping without necessarily explaining what they mean. Most agent harnesses have the ability to spawn subagents. T800 is based on this architecture, but so are many of the publicly available agents. Hence, the key is to tell the agent that you want it to keep doing something by spawning subagents until it is done, with a crystal-clear criterion for what done looks like. Each subagent does a subtask and reports back. The toplevel agent decides what to do based on its understanding of what the subagents have done so far.
 
-To this end, I had T800 create an `instructions_list.txt` file that contains all of the X86_64 instructions with either no annotation (if it hadn't been considered), a REJECT annotation if we rejected it, or ACCEPT if we accepted and implemented it. Then I told T800 to write a script to find the first not-yet-considered instructions in that file. These first two steps took very little time; they were just the groundwork. Finally, I told T800 to keep spawning subagents that use that script to find an instruction and then implement it until they could not find any more instructions. 
+To this end, I had T800 create an `instructions_list.txt` file that contains all of the X86\_64 instructions with either no annotation (if it hadn't been considered), a REJECT annotation if we rejected it, or ACCEPT if we accepted and implemented it. Then I told T800 to write a script to find the first not-yet-considered instructions in that file. These first two steps took very little time; they were just the groundwork. Finally, I told T800 to keep spawning subagents that use that script to find an instruction and then implement it until they could not find any more instructions. 
 
 Hence, the loop here is English prose that the agent takes as instruction, and those instructions lead the agent to spawn subagents. Those subagents are prompted to perform a task by the toplevel agent, not by me directly. The objective here is to get the human (me) out of the business of repeatedly telling the agent what to do, since that's exhausting. My loop instructions did include the following: if the agent detects a file called `instructions_stop`, then it should stop looping and instead move to the `terminate` phase of T800, where it performs a review/judge loop to check its work, and then stages everything for me to commit it. I did this maybe twice a day, so that I could sanity check what is happening and run some tests myself.
 
 For the first half of the looping, I used Kimi K2.7-code, but then I switched to GLM 5.2. Interestingly, I found that Kimi K2.7-code is more paranoid; it interpreted my instructions as requiring more tests. GLM 5.2 was faster and more brave. That said, most of the super hard groundwork (including supporting static analysis of x87 instructions and their constraints) was done by Kimi, so maybe the greater paranoia I observed was due to the fact that Kimi did the heaviest lift.
 
-It didn't take long for [all of the safe pre-AVX512 X86_64 instructions to be implemented](https://github.com/pizlonator/fil-c/blob/39512fe8f9d45860ae34290ba96d761caa344512/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp#L7983) along with a plethora of tests to cover both the good case of those instructions and the bad case (which causes a Fil-C panic). This happened while I was away from the computer doing other things (like replaying Witcher 3 and [porting Fedora patches for quantum crypto support in OpenSSH](https://github.com/pizlonator/fil-c/commit/f3cd1f003163d39f17945a18cb4d7564e00ac32d), which I did by hand).
+It didn't take long for [all of the safe pre-AVX512 X86\_64 instructions to be implemented](https://github.com/pizlonator/fil-c/blob/39512fe8f9d45860ae34290ba96d761caa344512/llvm/lib/Transforms/Instrumentation/FilPizlonator.cpp#L7983) along with a plethora of tests to cover both the good case of those instructions and the bad case (which causes a Fil-C panic). This happened while I was away from the computer doing other things (like replaying Witcher 3 and [porting Fedora patches for quantum crypto support in OpenSSH](https://github.com/pizlonator/fil-c/commit/f3cd1f003163d39f17945a18cb4d7564e00ac32d), which I did by hand).
+
+## Adding ARM64 Support
+
+When the loop was done, inline assembly support was still entirely X86\_64-specific: on any other architecture, `handleInlineAsm` rejected all inline assembly with the reason `inline assembly is only supported on x86_64`. That was a shame, since Fil-C runs great on ARM64, and ARM64 software uses inline assembly for all of the same reasons that x86_64 software does.
+
+So, I used T800 — this time running with GLM-5.3-flash — to add ARM64 support. The whole feature landed in [one commit](https://github.com/pizlonator/fil-c/commit/843f986c48426d92bf2f2d8f9621251c880e2c6f) ("Add support for ARM64 inline assembly"), which shipped in Fil-C 0.685. From then on, the rejection reason on unsupported architectures read `inline assembly is only supported on x86_64 and aarch64`. It's a big commit, but most of it is about a hundred new tests. It added a new function to FilPizlonator called `validateSafeAArch64InlineAsm`, which follows the same design as the X86\_64 validator:
+
+- an ARM64 assembly parser and static analyzer. Anything that isn't recognized gets rejected. The parser understands operand placeholders, including modifiers like the `w` in `${0:w}` (which is how the C-level `%w0` is spelled at the LLVM IR level), vector arrangement specifiers like `.4s`, and lane indices like `[1]`.
+
+- an instruction database with hundreds of ARM64 instructions, covering arithmetic, logic, shifts, and rotates; bitfield and extend instructions; conditional selection and flags management (`csel`, `ccmp`, `cset`, and friends); carries, multiplies, and divides; scalar floating point instructions; tons of NEON SIMD instructions; crypto instructions (AES and SHA); pointer authentication instructions (`pacia`, `autia`, `xpaci`, and friends); no-ops, hints, and memory barriers (`nop`, `dmb`, `dsb`, `isb`, and friends); non-faulting prefetches (`prfm`); and `mrs` reads of a small allowlist of harmless system registers (like `ctr_el0` for cache geometry and `rndr` for random numbers).
+
+- an ARM64 constraint parser, which understands the register families: `x0`-`x30` along with their `w` views, `v0`-`v31` along with their `b`/`h`/`s`/`d`/`q` views, SVE `z` and `p` registers, and system registers like `nzcv`, `fpsr`, and `fpcr`.
+
+- comprehensive error checking that rejects memory accesses (`ldr`, `str`, and friends), branches and labels, syscalls (`svc`), system register writes (`msr`), atomics, `adrp` and other symbol references, and anything else that could break memory safety.
+
+Just like on X86\_64, rejected inline assembly turns into a Fil-C panic at runtime, and safe instructions that the CPU doesn't support cause an illegal instruction trap. The tests handle CPU variation by detecting CPU features using HWCAP flags from `getauxval`, so that tests for optional features (like SVE, CRC32, SHA3, or pointer authentication) get skipped on CPUs that don't support them.
+
+Two follow-up commits polished things further. [One](https://github.com/pizlonator/fil-c/commit/bf51f96bb96b8309d48929a80ae3560fe5076109) split SVE `z` registers into their own register family, since a write to `z0` can cover the whole SVE vector length, which can be much larger than the 128 bits covered by `v0`. [The other](https://github.com/pizlonator/fil-c/commit/47a39b21554840a6e8a2b59dee861eabc1981536) made `__builtin_arm_yield` and friends safe by passing through the `aarch64_hint` intrinsic that clang emits for them.
 
 ## Conclusion
 
-As far as I know, Fil-C has the first ever implementation of memory-safe X86_64 inline assembly. It supports hundreds of instructions, including useful x87, SIMD, bitmath, flags management, and fence instructions. Basically anything that is safe within the Fil-C [garbage-in, memory safety out](gimso.html) model.
+As far as I know, Fil-C has the first ever implementation of memory-safe inline assembly, and it works on both X86\_64 and ARM64. On X86\_64, it supports hundreds of instructions, including useful x87, SIMD, bitmath, flags management, and fence instructions. On ARM64, it supports hundreds of instructions as well, including general-purpose register, NEON SIMD, crypto, and pointer authentication instructions, along with SVE registers and memory barriers. Basically anything that is safe within the Fil-C [garbage-in, memory safety out](gimso.html) model, on either architecture.
 
 
