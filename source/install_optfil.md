@@ -6,11 +6,11 @@ My favorite way to install Fil-C is using the [`/opt/fil`](optfil.html) binary d
 - Puts the Fil-C compiler in `/opt/fil/bin/filcc` and `/opt/fil/bin/fil++`.
 - Includes useful programs compiled with Fil-C, like memory safe sudo, OpenSSH, tmux, curl, and git.
 
-The `/opt/fil` distribution of Fil-C supports Linux/X86\_64 and Linux/ARM64. The ARM64 port is still experimental. The latest 0.685 release is the first release of `/opt/fil` to support ARM64. While the X86\_64 version of `/opt/fil` has been tested on many Linux distributions (Fedora, CentOS, Ubuntu, Debian, MintOS, etc), the ARM64 version has only been tested on Ubuntu.
+The `/opt/fil` distribution of Fil-C supports Linux/X86\_64 and Linux/ARM64. The ARM64 port is still experimental. The latest release is 0.686; `/opt/fil` has supported ARM64 since the 0.685 release. While the X86\_64 version of `/opt/fil` has been tested on many Linux distributions (Fedora, CentOS, Ubuntu, Debian, MintOS, etc), the ARM64 version has only been tested on Ubuntu.
 
 ## Download And Install
 
-You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.685-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.685/optfil-0.685-linux-x86_64.tar.xz) and [`optfil-0.685-linux-aarch64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.685/optfil-0.685-linux-aarch64.tar.xz).
+You can [download binary releases from the Fil-C GitHub](https://github.com/pizlonator/fil-c/releases). The `/opt/fil` binary releases are named [`optfil-0.686-linux-x86_64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.686/optfil-0.686-linux-x86_64.tar.xz) and [`optfil-0.686-linux-aarch64.tar.xz`](https://github.com/pizlonator/fil-c/releases/download/v0.686/optfil-0.686-linux-aarch64.tar.xz).
 
 Once you download a release and unpack it, simply run:
 

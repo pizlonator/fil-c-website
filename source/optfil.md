@@ -6,7 +6,7 @@ My favorite way to [install Fil-C is the `/opt/fil` distribution](install_optfil
 
 - **Installs the compiler** as `filcc` (for C) and `fil++` (for C++), so there's no ambiguity between invoking your system compiler (`gcc` or `clang`) and the Fil-C compiler.
 
-- Uses the Fil-C port of **glibc 2.40** as the C library. This gives you the **maximum compatibility** with modern Linux software.
+- Uses the Fil-C port of **glibc 2.44** as the C library. This gives you the **maximum compatibility** with modern Linux software.
 
 - Comes with **a bunch useful programs and libraries** compiled with Fil-C so they are memory safe:
     - acl

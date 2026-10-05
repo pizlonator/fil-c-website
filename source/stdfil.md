@@ -770,6 +770,8 @@ Returns from the calling function, passing the contents of the rets object as th
 
 Performs an unsafe call to Yolo-land.
 
+Only supported when compiling with `-yolo-assembler`. This function will be removed once [sarcasm](https://github.com/pizlonator/fil-c/tree/deluge/projects/sarcasm) matures.
+
 This barely works! It's not intended for full-blown interop with Yolo code. In particular, right
 now Fil-C code expects to live in a Fil-C runtime, which precludes the use of a Yolo libc.
 
@@ -787,6 +789,8 @@ literal. The remaining arguments are passed along using Yolo C ABI conventions.
 
 Exactly like `zunsafe_call`, but for those cases where you know that the call will complete in a bounded (and sufficiently short) amount of time.
 
+Only supported when compiling with `-yolo-assembler`. This function will be removed once [sarcasm](https://github.com/pizlonator/fil-c/tree/deluge/projects/sarcasm) matures.
+
 In the worst case, if you call this instead of `zunsafe_call`, then you're just delaying GC progress. It's not the end of the world. Maybe we're talking about denial of service, at worst.
 
 Currently the only user of this function is [OpenSSL if you compile it with assembly
@@ -800,6 +804,8 @@ This only turns into a big problem if you use `zunsafe_fast_call` to do somethin
     unsigned long zunsafe_buf_call(__SIZE_TYPE__ size, const char* symbol_name, ...);
 
 Performs either a `zunsafe_fast_call` or `zunsafe_call` depending on the `size`.
+
+Only supported when compiling with `-yolo-assembler`. This function will be removed once [sarcasm](https://github.com/pizlonator/fil-c/tree/deluge/projects/sarcasm) matures.
 
 Currently the only user of this function is [OpenSSL if you compile it with assembly
 enabled](constant_time_crypto.html).
