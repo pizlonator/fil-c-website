@@ -40,5 +40,7 @@
 
 [Memory Safe Context Switches](context_switches.html)
 
+[Peregrine Fil-C](peregrine.html)
+
 [More on GitHub](https://www.github.com/pizlonator/fil-c/)
 
