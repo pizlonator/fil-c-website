@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peregrine Fil-C: Actually Portable Memory Safe Executables</title>
+    <link rel="stylesheet" href="/fil.css">
+</head>
+<body>
+    <header class="header">
+<h1>Fil-C</h1>
+
+<p><em>Memory Safety</em> &bull; <em>C/C++ Compatibility</em> &bull; <em>Modern Tooling</em></p>
+    </header>
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+<p><a href="index.html">Home</a></p>
+
+<p><a href="installation.html">Installing</a></p>
+
+<p><a href="documentation.html">Documentation</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/releases">Releases</a></p>
+
+<p><a href="https://github.com/pizlonator/fil-c/">GitHub</a></p>
+
+<p><a href="meet_fil.html">Meet Fil</a></p>
+        </aside>
+        <main class="content">
+<h1>Peregrine Fil-C: Actually Portable Memory Safe Executables</h1>
+
+<p>Since version 0.687, Fil-C can build a <a href="runtime.html">runtime sandwich</a> using a fork of
+<a href="https://github.com/jart/cosmopolitan">Cosmopolitan</a>. This combination is called <strong>Peregrine Fil-C</strong>
+and gives you a compiler that:</p>
+
+<ul>
+<li>Supports all of Fil-C's <a href="gimso.html">memory safety</a> and <a href="fugc.html">garbage collection</a> features.</li>
+<li>Produces executables that run on Linux/x86_64, Darwin/aarch64, and Windows/x86_64.</li>
+</ul>
+
+<p>This is still experimental. Simple programs seem to work great. The main limitations are that the
+libc doesn't support nearly the same API surface as either native Cosmopolitan, or the
+<a href="pizfix.html">musl</a> or <a href="optfil.html">glibc</a> releases of Fil-C.</p>
+
+<p>Download: <a href="https://github.com/pizlonator/fil-c/releases/download/v0.687/perefil-0.687-linux-x86_64.tar.xz">perefil-0.687-linux-x86_64.tar.xz</a></p>
+        </main>
+    </div>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(event.target) && 
+                !hamburger.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
